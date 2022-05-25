@@ -81,12 +81,19 @@ class scope_table{
 #endif
             return ;
         }
-        else if( head->getName() == name && head->getType() == type )
+        else if( head->getName() == name && head->getType() == type ){
+#ifdef PROMPT
+            cout<<"<"<<head->getName()<<","<<head->getType()<<">"<<" already exists in current ScopeTable"<<endl;
+#endif
             return ;
+        }
         else {
             while( head->next != nullptr ){
                 if( head->next->getName() == name && head->next->getType() == type ){
-                    return ;
+#ifdef PROMPT
+                    cout<<"<"<<head->getName()<<","<<head->getType()<<">"<<" already exists in current ScopeTable"<<endl;
+#endif
+                    return;
                 }
                 head = head->next;
                 i++;
@@ -128,7 +135,13 @@ class scope_table{
             i++;
         }
 
-        return (parent_scope==nullptr)? nullptr: parent_scope->lookup(name);
+        if( parent_scope == nullptr ){
+#ifdef PROMPT
+            cout<<"Not found";
+#endif
+            return nullptr ;
+        }
+        return parent_scope->lookup(name);
     }
 
     void remove(string name, string type){
@@ -139,7 +152,8 @@ class scope_table{
         if( head == nullptr ){
             if( parent_scope == nullptr )
                 return ;
-            else parent_scope->remove(name,type);
+            parent_scope->remove(name,type);
+            return ;
         }  
         else if( head->getName() == name && head->getType() == type ){
             table[id] = head->next;
@@ -160,7 +174,7 @@ class scope_table{
 
         if( parent_scope == nullptr )
             return ;
-        else parent_scope->remove(name,type);
+        parent_scope->remove(name,type);
     } 
 
     void remove(string name){
@@ -176,7 +190,9 @@ class scope_table{
 #endif
                 return ;
             }
-            else parent_scope->remove(name);
+            
+            parent_scope->remove(name);
+            return ;
         }  
         else if( head->getName() == name ){
             table[id] = head->next;
@@ -209,7 +225,7 @@ class scope_table{
 #endif
             return ;
         }
-        else parent_scope->remove(name);
+        parent_scope->remove(name);
     } 
 
     void print(){
@@ -223,6 +239,7 @@ class scope_table{
             }
             cout<<endl;
         }
+        cout<<endl;
     }
 };
 
@@ -278,7 +295,7 @@ class symbol_table{
     void print_all_scope_table(){
         if( scopes.empty())
             throw underflow_error("empty symboltable");
-        for(int i=0;i<scopes.size();i++)
+        for(int i=(int)scopes.size()-1;i>=0;i--)
             scopes[i]->print();
     }
 };
