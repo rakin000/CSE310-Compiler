@@ -137,7 +137,7 @@ class scope_table{
 
         if( parent_scope == nullptr ){
 #ifdef PROMPT
-            cout<<"Not found";
+            cout<<"Not found\n";
 #endif
             return nullptr ;
         }
@@ -186,11 +186,10 @@ class scope_table{
         if( head == nullptr ){
             if( parent_scope == nullptr ){
 #ifdef PROMPT
-                cout<<"Not found\n";
+                cout<<name<<" not found\n";
 #endif
                 return ;
-            }
-            
+            }            
             parent_scope->remove(name);
             return ;
         }  
@@ -221,9 +220,9 @@ class scope_table{
 
         if( parent_scope == nullptr ){
 #ifdef PROMPT
-            cout<<"Not found\n";
+            cout<<name<<" not found\n";
 #endif
-            return ;
+            return;
         }
         parent_scope->remove(name);
     } 

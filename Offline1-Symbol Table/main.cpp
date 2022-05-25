@@ -31,6 +31,7 @@ int main(){
         }
         else if( cmd=="D"){
             cin>>name;
+            theSymbolTable.lookup(name);
             theSymbolTable.remove(name);
         }
         else if( cmd == "P"){
