@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std ;
-#define PROMPT 1
+// #define PROMPT 1
 
 class symbol{
     string name;
@@ -60,12 +60,13 @@ class scope_table{
     int size(){
         return table.size();
     }
-    uint64_t hashfunc(string s){
-        uint64_t hash = 0;
+    uint32_t hashfunc(string s){
+        uint32_t hash = 0;
         for( char c: s)
             hash = c + (hash<<6) + (hash<<16)-hash;
         return (hash%table.size());
     }
+
 
     void insert(string name,string type){
         uint64_t id = hashfunc(name);

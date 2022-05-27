@@ -1,17 +1,17 @@
 New ScopeTable with id 1 created
-Inserted in ScopeTable# 1 at position 6, 0
-Inserted in ScopeTable# 1 at position 0, 0
-Found in ScopeTable# 1 at position 6, 0
-Not found
 Inserted in ScopeTable# 1 at position 4, 0
+Inserted in ScopeTable# 1 at position 0, 0
+Found in ScopeTable# 1 at position 4, 0
+Not found
+Inserted in ScopeTable# 1 at position 4, 1
 ScopeTable # 1
 0 -->  < i : VAR >
 1 -->
 2 -->
 3 -->
-4 -->  < 5 : NUMBER >
+4 -->  < foo : FUNCTION >  < 5 : NUMBER >
 5 -->
-6 -->  < foo : FUNCTION >
+6 -->
 
 Not found
 j not found
@@ -22,9 +22,9 @@ ScopeTable # 1
 1 -->
 2 -->
 3 -->
-4 -->  < 5 : NUMBER >
+4 -->  < foo : FUNCTION >  < 5 : NUMBER >
 5 -->
-6 -->  < foo : FUNCTION >
+6 -->
 
 New ScopeTable with id 1.1 created
 Inserted in ScopeTable# 1.1 at position 6, 0
@@ -43,12 +43,12 @@ ScopeTable # 1
 1 -->
 2 -->
 3 -->
-4 -->  < 5 : NUMBER >
+4 -->  < foo : FUNCTION >  < 5 : NUMBER >
 5 -->
-6 -->  < foo : FUNCTION >
+6 -->
 
 <<=,RELOP> already exists in current ScopeTable
-Inserted in ScopeTable# 1.1 at position 6, 1
+Inserted in ScopeTable# 1.1 at position 4, 0
 Found in ScopeTable# 1.1 at position 1, 0
 Deleted Entry 1, 0 from current ScopeTable
 ScopeTable # 1.1
@@ -56,88 +56,31 @@ ScopeTable # 1.1
 1 -->
 2 -->
 3 -->
-4 -->
+4 -->  < foo : FUNCTION >
 5 -->
-6 -->  < <= : RELOP >  < foo : FUNCTION >
+6 -->  < <= : RELOP >
 
 ScopeTable # 1
 0 -->
 1 -->
 2 -->
 3 -->
-4 -->  < 5 : NUMBER >
+4 -->  < foo : FUNCTION >  < 5 : NUMBER >
 5 -->
-6 -->  < foo : FUNCTION >
+6 -->
 
 ScopeTable with id 1.1 removed
-Inserted in ScopeTable# 1 at position 4, 1
+Inserted in ScopeTable# 1 at position 4, 2
 Inserted in ScopeTable# 1 at position 2, 0
 ScopeTable # 1
 0 -->
 1 -->
 2 -->  < k : k >
 3 -->
-4 -->  < 5 : NUMBER >  < t : t >
+4 -->  < foo : FUNCTION >  < 5 : NUMBER >  < t : t >
 5 -->
-6 -->  < foo : FUNCTION >
+6 -->
 
 ScopeTable with id 1 removed
 New ScopeTable with id 1 created
 Inserted in ScopeTable# 1 at position 2, 0
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable
-<A,A> already exists in current ScopeTable

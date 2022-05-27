@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
+#define PROMPT 1
 #include "symbol_table.cpp"
 using namespace std ;
 
-#define PROMPT 1
 
 int main(){
     int bucket_size ;
@@ -12,10 +12,7 @@ int main(){
     string cmd;
     string name;
     string type ;
-    while(1){
-        
-        cin>>cmd;
-
+    while(cin>>cmd){
         if( cmd == "I"){
             cin>>name>>type ;
             theSymbolTable.insert(name,type);
@@ -40,6 +37,7 @@ int main(){
                 theSymbolTable.print_all_scope_table();
             else theSymbolTable.print_current_scope_table();
         }
+        else cout<<"Invalid Operation\n";
     }
 
 }
