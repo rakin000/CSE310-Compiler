@@ -252,7 +252,10 @@ class symbol_table{
         this->bucket_size = bucket_size;
         scopes.push_back(new scope_table(bucket_size));
     }
-
+	~symbol_table(){
+		for( scope_table *scope: scopes )
+			delete scope;
+	}
     void enter_scope(){
         if( scopes.empty() )
             scopes.push_back(new scope_table(bucket_size));
