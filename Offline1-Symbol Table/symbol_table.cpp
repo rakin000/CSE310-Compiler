@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std ;
-#define PROMPT 1
+// #define PROMPT 1
 
 class symbol{
     string name;
@@ -60,12 +60,13 @@ class scope_table{
     int size(){
         return table.size();
     }
-    uint64_t hashfunc(string s){
-        uint64_t hash = 0;
+    uint32_t hashfunc(string s){
+        uint32_t hash = 0;
         for( char c: s)
             hash = c + (hash<<6) + (hash<<16)-hash;
         return (hash%table.size());
     }
+
 
     void insert(string name,string type){
         uint64_t id = hashfunc(name);
@@ -137,7 +138,7 @@ class scope_table{
 
         if( parent_scope == nullptr ){
 #ifdef PROMPT
-            cout<<"Not found";
+            cout<<"Not found\n";
 #endif
             return nullptr ;
         }
@@ -186,11 +187,10 @@ class scope_table{
         if( head == nullptr ){
             if( parent_scope == nullptr ){
 #ifdef PROMPT
-                cout<<"Not found\n";
+                cout<<name<<" not found\n";
 #endif
                 return ;
-            }
-            
+            }            
             parent_scope->remove(name);
             return ;
         }  
@@ -221,9 +221,9 @@ class scope_table{
 
         if( parent_scope == nullptr ){
 #ifdef PROMPT
-            cout<<"Not found\n";
+            cout<<name<<" not found\n";
 #endif
-            return ;
+            return;
         }
         parent_scope->remove(name);
     } 
@@ -252,7 +252,10 @@ class symbol_table{
         this->bucket_size = bucket_size;
         scopes.push_back(new scope_table(bucket_size));
     }
-
+	~symbol_table(){
+		for( scope_table *scope: scopes )
+			delete scope;
+	}
     void enter_scope(){
         if( scopes.empty() )
             scopes.push_back(new scope_table(bucket_size));
