@@ -1,0 +1,193 @@
+Line No. 0: Token INT Lexeme INT found
+Line No. 0: Token ID Lexeme main found
+Line No. 0: Token LPAREN Lexeme ( found
+Line No. 0: Token RPAREN Lexeme ) found
+Line No. 0: Token LCURL Lexeme { found
+ScopeTable # 1.1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 1: Token INT Lexeme INT found
+Line No. 1: Token ID Lexeme a found
+Line No. 1: Token COMMA Lexeme , found
+Line No. 1: Token ID Lexeme b found
+Line No. 1: Token SEMICOLON Lexeme ; found
+ScopeTable # 1.1
+0 -->  < b : ID >
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < a : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 2: Token ID Lexeme a found
+Line No. 2: Token ASSIGNOP Lexeme = found
+Line No. 2: Token ID Lexeme a found
+Line No. 2: Token ADDOP Lexeme + found
+Line No. 2: Token CONST_INT Lexeme 1 found
+Line No. 2: Token SEMICOLON Lexeme ; found
+ScopeTable # 1.1
+0 -->  < b : ID >
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < a : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 3: Token CHAR Lexeme CHAR found
+Line No. 3: Token ID Lexeme ch found
+Line No. 3: Token ASSIGNOP Lexeme = found
+Line No. 3: Token CONST_CHAR Lexeme a found
+Line No. 3: Token SEMICOLON Lexeme ; found
+ScopeTable # 1.1
+0 -->  < b : ID >
+1 -->  < ch : ID >
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < a : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 4: Token ID Lexeme ch found
+Line No. 4: Token ASSIGNOP Lexeme = found
+unrecognized character
+unrecognized character
+Line No. 4: Token ID Lexeme t found
+unrecognized character
+Line No. 4: Token SEMICOLON Lexeme ; found
+ScopeTable # 1.1
+0 -->  < b : ID >
+1 -->  < ch : ID >
+2 -->
+3 -->
+4 -->  < t : ID >
+5 -->
+6 -->  < a : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 5: Token CHAR Lexeme CHAR found
+Line No. 5: Token ID Lexeme c found
+Line No. 5: Token LTHIRD Lexeme [ found
+Line No. 5: Token RTHIRD Lexeme ] found
+Line No. 5: Token ASSIGNOP Lexeme = found
+Line No. 5: ab	d
+Line No. 5: Token SEMICOLON Lexeme ; found
+ScopeTable # 1.1
+0 -->  < b : ID >
+1 -->  < ch : ID >  < c : ID >
+2 -->
+3 -->
+4 -->  < t : ID >
+5 -->
+6 -->  < a : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 6: Token ID Lexeme printf found
+Line No. 6: Token LPAREN Lexeme ( found
+Line No. 6: unfinished string, missing "
+Line No. 7: Token ID Lexeme def found
+unrecognized character
+ScopeTable # 1.1
+0 -->  < b : ID >
+1 -->  < ch : ID >  < c : ID >
+2 -->
+3 -->  < def : ID >
+4 -->  < t : ID >
+5 -->
+6 -->  < a : ID >  < printf : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 8: Token ID Lexeme ghi found
+Line No. 8: unfinished string, missing "
+Line No. 9: single line comment  a comment
+ScopeTable # 1.1
+0 -->  < b : ID >
+1 -->  < ch : ID >  < c : ID >
+2 -->
+3 -->  < def : ID >
+4 -->  < t : ID >
+5 -->  < ghi : ID >
+6 -->  < a : ID >  < printf : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 11: multiline comment * another*** comment **
+Line No. 12: Token RETURN Lexeme RETURN found
+Line No. 12: Token CONST_INT Lexeme 0 found
+Line No. 12: Token SEMICOLON Lexeme ; found
+Line No. 13: Token RCURL Lexeme } found
+End of File encountered
