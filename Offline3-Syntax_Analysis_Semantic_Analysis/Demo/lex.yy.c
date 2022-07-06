@@ -364,7 +364,7 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[19] =
     {   0,
         0,    0,   11,   10,    9,    8,    6,    7,    5,    2,
-        3,    4,    1,    9,    1,    0,    1,    0
+        3,    4,    1,    9,    0,    1,    1,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -407,30 +407,28 @@ static const YY_CHAR yy_meta[12] =
 
 static const flex_int16_t yy_base[19] =
     {   0,
-        0,    0,   19,   20,   16,   20,   20,   20,   20,   20,
-        6,   20,    3,   14,    0,    4,    2,   20
+        0,    0,   18,   19,   15,   19,   19,   19,   19,   19,
+       19,   19,    3,   14,    4,    0,    2,   19
     } ;
 
 static const flex_int16_t yy_def[19] =
     {   0,
        18,    1,   18,   18,   18,   18,   18,   18,   18,   18,
-       18,   18,   18,   18,   13,   18,   18,    0
+       18,   18,   18,   18,   18,   13,   18,    0
     } ;
 
-static const flex_int16_t yy_nxt[32] =
+static const flex_int16_t yy_nxt[31] =
     {   0,
         4,    5,    6,    7,    8,    9,   10,   11,    4,   12,
-       13,   16,   17,   15,   17,   14,   15,   14,   18,    3,
-       18,   18,   18,   18,   18,   18,   18,   18,   18,   18,
-       18
+       13,   15,   17,   16,   17,   14,   14,   18,    3,   18,
+       18,   18,   18,   18,   18,   18,   18,   18,   18,   18
     } ;
 
-static const flex_int16_t yy_chk[32] =
+static const flex_int16_t yy_chk[31] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,   13,   17,   13,   16,   14,   11,    5,    3,   18,
-       18,   18,   18,   18,   18,   18,   18,   18,   18,   18,
-       18
+        1,   13,   17,   13,   15,   14,    5,    3,   18,   18,
+       18,   18,   18,   18,   18,   18,   18,   18,   18,   18
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -454,9 +452,9 @@ char *yytext;
 #include <stdlib.h>
 #include "y.tab.h"
 
-//extern double yylval
-#line 459 "lex.yy.c"
-#line 460 "lex.yy.c"
+extern YYSTYPE yylval;
+#line 457 "lex.yy.c"
+#line 458 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -676,7 +674,7 @@ YY_DECL
 #line 17 "simplecalc.l"
 
 
-#line 680 "lex.yy.c"
+#line 678 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -709,7 +707,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 20 );
+		while ( yy_base[yy_current_state] != 19 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -789,7 +787,7 @@ YY_RULE_SETUP
 #line 34 "simplecalc.l"
 ECHO;
 	YY_BREAK
-#line 793 "lex.yy.c"
+#line 791 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

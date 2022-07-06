@@ -31,6 +31,8 @@ term: term ASTERISK factor   { $$ = $1 * $3; }
     ;
 factor: LPAREN expr RPAREN  { $$ = $2; }
       | NUMBER
+      | PLUS NUMBER         { $$ = $2; }
+      | MINUS NUMBER        { $$ = -$2; }
       ;
 %%
 

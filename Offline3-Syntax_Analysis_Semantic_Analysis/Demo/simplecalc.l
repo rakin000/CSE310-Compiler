@@ -6,13 +6,13 @@
 #include <stdlib.h>
 #include "y.tab.h"
 
-//extern double yylval
+extern YYSTYPE yylval;
 %}
 
 
 WS [ \t]+
 DIGIT [0-9]
-NUMBER [-]?{DIGIT}+(\.{DIGIT}+)?
+NUMBER {DIGIT}+(\.{DIGIT}+)?
 
 %%
 
