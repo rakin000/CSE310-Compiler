@@ -14,7 +14,6 @@ char *a = "this\ is a\
  string";
 char *str = "this\tis a\t string";
 
-
 /*** 
     THIS IS A COMMENT 
     MULTILINE TO 
@@ -27,3 +26,17 @@ comment alright?
 // i think so
 // Are you alright\
 ???
+char *s = "this\
+ is \
+ a string"
+ "abc\
+    def\
+    ghi" 
+printf("abc\
+def\
+ghi");
+char c = '\t';
+char b= '\n';
+char d = '\'';
+char e = '\\';
+char e = '' ;

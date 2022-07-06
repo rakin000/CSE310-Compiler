@@ -167,6 +167,7 @@ ScopeTable # 1
 Line No. 8: Token ID Lexeme ghi found
 Line No. 8: unfinished string, missing "
 Line No. 9: single line comment  a comment
+Line No. 11: multiline comment * another*** comment **
 ScopeTable # 1.1
 0 -->  < b : ID >
 1 -->  < ch : ID >  < c : ID >
@@ -185,7 +186,6 @@ ScopeTable # 1
 5 -->
 6 -->  < main : ID >
 
-Line No. 11: multiline comment * another*** comment **
 Line No. 12: Token RETURN Lexeme RETURN found
 Line No. 12: Token CONST_INT Lexeme 0 found
 Line No. 12: Token SEMICOLON Lexeme ; found

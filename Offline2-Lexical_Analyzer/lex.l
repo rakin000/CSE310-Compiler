@@ -5,6 +5,7 @@
 %x STRING_STATE 
 %x MULTI_COMMENT_STATE 
 %x SINGLE_COMMENT_STATE 
+%x CONST_CHAR_STATE 
 
 %{
     #include <stdio.h>
@@ -16,10 +17,10 @@
     #define writeLog(s) cout<<"Line No. "<<line_count<<": Token "<<s<<" Lexeme "<<yytext<<" found\n"
     #define writeToken(s) tokenfile<<"<"<<s<<","<<yytext<<"> ";
 
-    int line_count = 0;
+    int line_count = 1;
     int error_count = 0;
     int id_count = 0;
-    fstream tokenfile("token.txt",ios_base::out);
+    fstream tokenfile("1805012_token.txt",ios_base::out);
     symbol_table symbolTable(7);
     string str; 
 
@@ -38,7 +39,8 @@ DIGIT           [0-9]
 CONST_INT       {DIGIT}+
 EXP             [Ee][+-]?{CONST_INT}
 CONST_FLOAT     ({DIGIT}*"."{DIGIT}+{EXP}?)|({DIGIT}+{EXP}) 
-CONST_CHAR      "\'"[^\n\t\\\'\a\f\r\b\v\0]"\'" 
+CONST_CHAR      ("\'"[^\n\t\\\'\a\f\r\b\v\0]"\'")
+CONST_CHAR_ES   ("\'\\"[ntafrbv0\\\']"\'")
 IDENTIFIER      [a-zA-Z_][a-zA-Z0-9_]*
 
 
@@ -162,6 +164,7 @@ EMPT_CHAR_CONST             "\'\'"
   writeLog("ID");
   writeToken("ID");
   symbolTable.insert(yytext,"ID");
+  symbolTable.print_all_scope_table();
   id_count++;
 }
 {CONST_INT} {
@@ -178,9 +181,16 @@ EMPT_CHAR_CONST             "\'\'"
   writeLog("CONST_CHAR");
   writeToken("CONST_CHAR");
 }
-
-[\"] {
+{CONST_CHAR_ES} {
+  yytext[0] = yytext[1];
+  yytext[1] = yytext[2];
+  yytext[2] = 0;
+  writeLog("CONST_CHAR");
+  writeToken("CONST_CHAR");
+}
+\" {
   str = "";
+  yymore();
   BEGIN STRING_STATE;
 }
 "\/\/" {
@@ -192,40 +202,45 @@ EMPT_CHAR_CONST             "\'\'"
   BEGIN MULTI_COMMENT_STATE ;
 }
 
-<STRING_STATE>[\"] {
-  cout<<"Line No. "<<line_count<<": "<<str<<endl;
+<STRING_STATE>"\"" {
+  cout<<"Line No. "<<line_count<<": Token <STRING> Lexeme "<<yytext<<" found"<<" --> <STRING, "<<"\""<<str<<"\">"<<endl; 
   tokenfile<<"<CONST_STRING,"<<str<<"> ";
-  BEGIN INITIAL;
+  BEGIN(INITIAL);
 }
-<STRING_STATE>[\\] {
+<STRING_STATE>"\\" {
+  yymore();
+}
+<STRING_STATE>"\\\n" {
+  yymore();
+  line_count++;
+}
+<STRING_STATE>"\\n" {
+  yymore();
+  str = str+char('\n') ;
+}
+<STRING_STATE>"\\t" {
+  yymore();
+  str = str+char('\t') ;
 }
 <STRING_STATE>"\n" {
   cout<<"Line No. "<<line_count<<": unfinished string, missing \""<<endl;
   line_count++;
-  BEGIN INITIAL ;
-}
-<STRING_STATE>[\\][\n] {
-  line_count++;
-}
-<STRING_STATE>"\\n" {
-  str = str+char('\n') ;
-}
-<STRING_STATE>"\\t" {
-  str = str+char('\t') ;
+  ++error_count;
+  BEGIN(INITIAL) ;
 }
 <STRING_STATE>. {
-  str = str+string(yytext);
+  yymore();
+  str = str+char(yytext[yyleng-1]);
 }
 <STRING_STATE><<EOF>> {
   cout<<"Line No. "<<line_count<<": unfinished string."<<endl;
-  BEGIN INITIAL;
+  BEGIN(INITIAL);
 }
 
 
 <SINGLE_COMMENT_STATE>"\n" {
   cout<<"Line No. "<<line_count<<": single line comment "<<str<<endl;
- // line_count++;
-  unput('\n');
+  line_count++;
   BEGIN INITIAL;
 }
 <SINGLE_COMMENT_STATE>[\\][\n] {
@@ -235,12 +250,13 @@ EMPT_CHAR_CONST             "\'\'"
   str += string(yytext);
 }
 <SINGLE_COMMENT_STATE><<EOF>> {
-  BEGIN INITIAL;
+  BEGIN(INITIAL);
 }
 
 <MULTI_COMMENT_STATE>"*\/" {
+  ++error_count;
   cout<<"Line No. "<<line_count<<": multiline comment "<<str<<endl;
-  BEGIN INITIAL;
+  BEGIN(INITIAL);
 }
 <MULTI_COMMENT_STATE>. {
   str += string(yytext) ;
@@ -249,24 +265,29 @@ EMPT_CHAR_CONST             "\'\'"
   line_count++;
 }
 <MULTI_COMMENT_STATE><<EOF>> {
+  ++error_count;
   cout<<"Line No. "<<line_count<<": error, unfinished comment";
-  BEGIN INITIAL;
+  BEGIN(INITIAL);
 }
 
 
 {ILL_FORMED_NUMBER} {
+  ++error_count;
   cout<<"Line No. "<<line_count<<": ill formed number, "<<yytext<<endl;
 }
 
 {INV_SUF_ON_NUM} {
+  ++error_count;
   cout<<"Line No. "<<line_count<<": invalid suffix on a numeric constand of invalid prefix on an identifier, "<<yytext<<endl;
 }
 
 {MULTI_CHAR_CONST} {
+  ++error_count;
   cout<<"Line No. "<<line_count<<": multiple character constant, "<<yytext<<endl;
 }
 
 {EMPT_CHAR_CONST} {
+  ++error_count;
   cout<<"Line No. "<<line_count<<": empty character constant, "<<yytext<<endl;
 }
 
@@ -275,25 +296,18 @@ EMPT_CHAR_CONST             "\'\'"
   
 }
 
-[\.] {
-  printf("dot found\n");
-}
 . {
   printf("unrecognized character\n");
+  ++error_count;
 }
 
 \n  {
   line_count++;
-  if( id_count ){
-    symbolTable.print_all_scope_table();
-    id_count=0;
-  }
-  // printf("new new new line!!!\n"); 
-  //return 0; 
 }
-
-
 <<EOF>> {
+
+  cout<<"\nTotal lines = "<<line_count<<endl;
+  cout<<"Total errors = "<<error_count<<endl;
   cout<<"End of File encountered\n";
   return 0;
 }
@@ -308,7 +322,7 @@ int main(int argc,char** argv){
   }
   // infile = fstream(argv[1],ios_base::in) ;
   freopen(argv[1],"r",stdin);
-  freopen("log.txt","w",stdout);
+  freopen("1805012_log.txt","w",stdout);
   // symbolTable = symbol_table(SYMBOL_TABLE_BUCKET_SIZE);
   yyFlexLexer lexer;
   lexer.yylex();
