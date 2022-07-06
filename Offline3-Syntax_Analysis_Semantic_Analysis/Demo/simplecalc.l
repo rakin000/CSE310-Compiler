@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "y.tab.h"
 
-extern double yylval;
+//extern double yylval
 %}
 
 
@@ -27,5 +27,7 @@ NUMBER [-]?{DIGIT}+(\.{DIGIT}+)?
 "*"       { return ASTERISK; }
 "("       { return LPAREN; }
 ")"       { return RPAREN; }
-"\n"      { return NEWLINE; }
+"\n" {
+	return NEWLINE; 
+}
 {WS} { /* No action and no return */}
