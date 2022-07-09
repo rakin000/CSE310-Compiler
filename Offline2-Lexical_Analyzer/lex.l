@@ -175,18 +175,11 @@ EMPT_CHAR_CONST             "\'\'"
   writeLog("CONST_FLOAT");
   writeToken("CONST_FLOAT");
 }
-{CONST_CHAR} {
-  yytext[0] = yytext[1];
-  yytext[1] = 0;
-  writeLog("CONST_CHAR");
-  writeToken("CONST_CHAR");
-}
-{CONST_CHAR_ES} {
-  yytext[0] = yytext[1];
-  yytext[1] = yytext[2];
-  yytext[2] = 0;
-  writeLog("CONST_CHAR");
-  writeToken("CONST_CHAR");
+
+\' {
+  str = "";
+  yymore();
+  BEGIN CONST_CHAR_STATE;
 }
 \" {
   str = "";
@@ -201,6 +194,50 @@ EMPT_CHAR_CONST             "\'\'"
   str = "" ;
   BEGIN MULTI_COMMENT_STATE ;
 }
+
+<CONST_CHAR_STATE>"\'" {
+  str = yytext ;
+  str = str.substr(1,str.length()-2);
+  if( str.length() > 2 ) {
+    ++error_count;
+    cout<<"Line No. "<<line_count<<": multiple character constant, "<<yytext<<endl; 
+  }
+  else if( str.length() == 2 && str[0] != '\\'){
+      ++error_count;
+      cout<<"Line No. "<<line_count<<": multiple character constant, "<<yytext<<endl;
+  }
+  else if( str.length() == 1 && str[0] == '\\'){
+      ++error_count;
+      cout<<"Line No. "<<line_count<<": invalid character constant "<<yytext<<endl;
+  }
+  else if( str.length() == 0 ){
+      ++error_count;
+      cout<<"Line No. "<<line_count<<": empty character constant "<<yytext<<endl;
+  }
+  else {
+    cout<<"Line No. "<<line_count<<": Token "<<"CONST_CHAR"<<" Lexeme "<<str<<" found\n";
+    tokenfile<<"<"<<"CONST_CHAR"<<","<<str<<"> ";
+  }
+  BEGIN(INITIAL);
+}
+<CONST_CHAR_STATE>"\\[ntafrbv0\\\']" {
+  yymore();
+}
+<CONST_CHAR_STATE>. {
+  yymore();
+}
+<CONST_CHAR_STATE>"\n"|"\r\n" {
+  ++error_count;
+  ++line_count;
+  cout<<"Line No. "<<line_count<<": unfinished character constant, "<<yytext<<endl; 
+  BEGIN(INITIAL);
+}
+<CONST_CHAR_STATE><<EOF>> {
+  ++error_count;
+  cout<<"Line No. "<<line_count<<": unfinished character constant, "<<yytext<<endl; 
+  BEGIN(INITIAL);
+}
+
 
 <STRING_STATE>"\"" {
   cout<<"Line No. "<<line_count<<": Token <STRING> Lexeme "<<yytext<<" found"<<" --> <STRING, "<<"\""<<str<<"\">"<<endl; 
@@ -280,17 +317,6 @@ EMPT_CHAR_CONST             "\'\'"
   ++error_count;
   cout<<"Line No. "<<line_count<<": invalid suffix on a numeric constand of invalid prefix on an identifier, "<<yytext<<endl;
 }
-
-{MULTI_CHAR_CONST} {
-  ++error_count;
-  cout<<"Line No. "<<line_count<<": multiple character constant, "<<yytext<<endl;
-}
-
-{EMPT_CHAR_CONST} {
-  ++error_count;
-  cout<<"Line No. "<<line_count<<": empty character constant, "<<yytext<<endl;
-}
-
 
 {WS}* {  
   
