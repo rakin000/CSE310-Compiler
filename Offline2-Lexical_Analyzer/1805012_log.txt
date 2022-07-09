@@ -1,28 +1,129 @@
-Line No. 1: ill formed number, 1.2.345
-Line No. 2: ill formed number, 1E10.7
-Line No. 3: invalid suffix on a numeric constand of invalid prefix on an identifier, 12abcd
-Line No. 4: multiple character constant, 'ab'
-Line No. 6: unfinished character constant, 'a
-
-Line No. 7: unfinished character constant, '
-
-Line No. 7: multiple character constant, 'ab cd'
-Line No. 8: invalid character constant '\'
-Line No. 9: empty character constant ''
-Line No. 10: unfinished string, missing "
-Line No. 12: unfinished string, missing "
-Line No. 13: Token ID Lexeme ijk found
+Line No. 1: Token INT Lexeme INT found
+Line No. 1: Token ID Lexeme main found
 ScopeTable # 1
 0 -->
 1 -->
 2 -->
 3 -->
-4 -->  < ijk : ID >
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 1: Token LPAREN Lexeme ( found
+Line No. 1: Token RPAREN Lexeme ) found
+Line No. 1: Token LCURL Lexeme { found
+Line No. 2: Token INT Lexeme INT found
+Line No. 2: Token ID Lexeme a found
+ScopeTable # 1.1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < a : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 2: Token SEMICOLON Lexeme ; found
+Line No. 3: Token IF Lexeme IF found
+Line No. 3: Token LPAREN Lexeme ( found
+Line No. 3: Token ID Lexeme a found
+ScopeTable # 1.1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < a : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 3: Token RELOP Lexeme == found
+Line No. 3: Token CONST_INT Lexeme 2 found
+Line No. 3: Token RPAREN Lexeme ) found
+Line No. 3: Token LCURL Lexeme { found
+Line No. 4: Token INT Lexeme INT found
+Line No. 4: Token ID Lexeme b found
+ScopeTable # 1.1.1
+0 -->  < b : ID >
+1 -->
+2 -->
+3 -->
+4 -->
 5 -->
 6 -->
 
-Line No. 13: unfinished string, missing "
-Line No. 15: error, unfinished comment
-Total lines = 15
-Total errors = 13
+ScopeTable # 1.1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < a : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 4: Token SEMICOLON Lexeme ; found
+Line No. 5: Token CHAR Lexeme CHAR found
+Line No. 5: Token ID Lexeme b found
+ScopeTable # 1.1.1
+0 -->  < b : ID >
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->
+
+ScopeTable # 1.1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < a : ID >
+
+ScopeTable # 1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->  < main : ID >
+
+Line No. 5: Token SEMICOLON Lexeme ; found
+Line No. 6: Token RCURL Lexeme } found
+Line No. 7: Token RETURN Lexeme RETURN found
+Line No. 7: Token CONST_INT Lexeme 0 found
+Line No. 7: Token SEMICOLON Lexeme ; found
+Line No. 8: Token RCURL Lexeme } found
+
+Total lines = 9
+Total errors = 0
 End of File encountered

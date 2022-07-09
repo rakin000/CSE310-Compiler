@@ -259,6 +259,38 @@ EMPT_CHAR_CONST             "\'\'"
   yymore();
   str = str+char('\t') ;
 }
+<STRING_STATE>"\\a" {
+  yymore();
+  str = str+char('\a');
+}
+<STRING_STATE>"\\f" {
+  yymore();
+  str = str+char('\f');
+}
+<STRING_STATE>"\\r" {
+  yymore();
+  str = str+char('\r');
+}
+<STRING_STATE>"\\b" {
+  yymore();
+  str = str+char('\b');
+}
+<STRING_STATE>"\\v" {
+  yymore();
+  str = str + char('\v');
+}
+<STRING_STATE>"\\\\" {
+  yymore(); 
+  str = str+char('\\');
+}
+<STRING_STATE>"\\\'" {
+  yymore();
+  str = str +char('\'');
+}
+<STRING_STATE>"\\\"" {
+  yymore();
+  str = str + char('\"');
+}
 <STRING_STATE>"\n" {
   cout<<"Line No. "<<line_count<<": unfinished string, missing \""<<endl;
   line_count++;
@@ -298,8 +330,9 @@ EMPT_CHAR_CONST             "\'\'"
 <MULTI_COMMENT_STATE>. {
   str += string(yytext) ;
 }
-<MULTI_COMMENT_STATE>"\n" {
+<MULTI_COMMENT_STATE>"\n"|"\r\n" {
   line_count++;
+  str += string(yytext);
 }
 <MULTI_COMMENT_STATE><<EOF>> {
   ++error_count;
