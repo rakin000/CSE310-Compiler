@@ -190,13 +190,13 @@ def\
 ghi" found --> <STRING, "abcdefghi">
 Line No. 9: Token RPAREN Lexeme ) found
 Line No. 9: Token SEMICOLON Lexeme ; found
-Line No. 10: single line comment  a comment 
-Line No. 12: multiline comment * another *** comment **
+Line No. 10: single line comment  a comment
+Line No. 12: multiline comment * another*** comment **
 Line No. 13: Token RETURN Lexeme RETURN found
 Line No. 13: Token CONST_INT Lexeme 0 found
 Line No. 13: Token SEMICOLON Lexeme ; found
 Line No. 14: Token RCURL Lexeme } found
 
 Total lines = 14
-Total errors = 1
+Total errors = 0
 End of File encountered

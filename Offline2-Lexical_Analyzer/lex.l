@@ -210,7 +210,7 @@ EMPT_CHAR_CONST             "\'\'"
 <STRING_STATE>"\\" {
   yymore();
 }
-<STRING_STATE>"\\\n" {
+<STRING_STATE>"\\\n"|"\\\r\n" {
   yymore();
   line_count++;
 }
@@ -243,7 +243,7 @@ EMPT_CHAR_CONST             "\'\'"
   line_count++;
   BEGIN INITIAL;
 }
-<SINGLE_COMMENT_STATE>[\\][\n] {
+<SINGLE_COMMENT_STATE>"\\\n"|"\\\r\n" {
   line_count++;
 }
 <SINGLE_COMMENT_STATE>. {
@@ -254,7 +254,7 @@ EMPT_CHAR_CONST             "\'\'"
 }
 
 <MULTI_COMMENT_STATE>"*\/" {
-  ++error_count;
+  // ++error_count;
   cout<<"Line No. "<<line_count<<": multiline comment "<<str<<endl;
   BEGIN(INITIAL);
 }

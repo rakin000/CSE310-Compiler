@@ -119,6 +119,25 @@ parameter_list1 : type_specifier ID
 parameter_list2 : type_specifier 
                 | type_specifier COMMA parameter_list2 
                 ;
+statements: statement
+            | statement statements
+            
+statement:  var_declaration
+            | expression_statement      // expr
+            | compound_statement    // compound statement 
+            | FOR LPAREN expression_statement expression_statement expression RPAREN statement // for/while/do statement 
+            | WHILE LPAREN expression RPAREN statement 
+            | DO statement WHILE LPAREN expression RPAREN SEMICOLON 
+            | IF LPAREN expression RPAREN statement   //if statement 
+            | IF LPAREN expression RPAREN statement ELSE statement  
+            | PRINTLN LPAREN ID RPAREN SEMICOLON 
+            | RETURN expression SEMICOLON 
+            ; // assignment
+            // function call
+expression_statement:   SEMICOLON 
+                        |expression SEMICOLON
+                        ;
+expresssion :   
 
 
 %%
