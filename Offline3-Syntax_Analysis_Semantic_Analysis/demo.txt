@@ -1,0 +1,3 @@
+int txt = 3;
+char ch = 4;
+float df=2.5;
