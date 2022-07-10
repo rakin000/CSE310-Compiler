@@ -582,11 +582,11 @@ using namespace std ;
 
 extern symbol_table* symbolTable;
 extern YYSTYPE yylval;
+extern int line_count;
+extern int error_count;
 
 int id_count = 0;
 string str; 
-int line_count = 1;
-int error_count = 0;
 
 char * toUpper(char *s){
 	while( *s ){
@@ -1118,7 +1118,7 @@ YY_RULE_SETUP
 case 26:
 YY_RULE_SETUP
 #line 234 "scanner.l"
-{return MAIN;}
+{return ID;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP

@@ -23,11 +23,11 @@ using namespace std ;
 
 extern symbol_table* symbolTable;
 extern YYSTYPE yylval;
+extern int line_count;
+extern int error_count;
 
 int id_count = 0;
 string str; 
-int line_count = 1;
-int error_count = 0;
 
 char * toUpper(char *s){
 	while( *s ){
@@ -231,7 +231,7 @@ EMPT_CHAR_CONST             "\'\'"
 "char" {return CHAR;}
 "return" {return RETURN;}
 "void" {return VOID;}
-"main"	{return MAIN;}
+"main"	{return ID;}
 "println"	{return PRINTLN;}
 
 {IDENTIFIER} {

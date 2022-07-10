@@ -1,0 +1,11 @@
+Line 1: INT
+Line 1: ID
+Line 1: type_specifier declaration_list SEMICOLON
+Line 1: var_declaration
+Line 1: unit
+Line 2: FLOAT
+Line 2: ID
+Line 2: type_specifier declaration_list SEMICOLON
+Line 2: var_declaration
+Line 2: program unit
+Line 3: program

@@ -1,3 +1,6 @@
-int txt = 3;
-char ch = 4;
-float df=2.5;
+int txt;
+float df;
+if( i )
+    if( j == 3 )
+        k = 4;
+    else k = 2;
