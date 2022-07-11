@@ -5,7 +5,6 @@ using namespace std ;
 class symbol{
     string name;
     string type;
-    string value;
     public:
     symbol *next;
     symbol(){
@@ -15,11 +14,6 @@ class symbol{
         this->name=name;
         this->type=type;
         next = nullptr;
-    }
-    symbol(string name, string type, string value):
-        symbol(name,type)
-    {
-        this->value = value ;
     }
     ~symbol(){
         delete next;

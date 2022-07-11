@@ -12,9 +12,10 @@
 #include <fstream>
 #include <string.h>
 #include <stdlib.h>
-#define PROMPT 1 
+// #define PROMPT 1 
 #define SYMBOL_TABLE_BUCKET_SIZE 7
 #include "symbol_table.cpp"
+#include "grammer_info.cpp"
 #include "y.tab.h"
 
 #define writeLog(s) cout<<"Line No. "<<line_count<<": Token "<<s<<" Lexeme "<<yytext<<" found\n"
@@ -238,8 +239,6 @@ EMPT_CHAR_CONST             "\'\'"
 "char" {return CHAR;}
 "return" {return RETURN;}
 "void" {return VOID;}
-"main"	{return ID;}
-"println"	{return PRINTLN;}
 
 {IDENTIFIER} {
   symbolTable->insert(yytext,"ID");

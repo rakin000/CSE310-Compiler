@@ -151,11 +151,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 83 "parser.y"
+#line 41 "parser.y"
 
     symbol* symbolInfo;
+    grammer_info* grammerInfo;
 
-#line 159 "y.tab.h"
+#line 160 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
