@@ -1,11 +1,167 @@
-Line 1: INT
-Line 1: ID
-Line 1: type_specifier declaration_list SEMICOLON
-Line 1: var_declaration
-Line 1: unit
-Line 2: FLOAT
+Line 1: VOID
 Line 2: ID
-Line 2: type_specifier declaration_list SEMICOLON
-Line 2: var_declaration
-Line 2: program unit
-Line 3: program
+Line 2: variable
+Line 2: factor
+Line 2: unary_expression
+Line 2: term
+Line 2: CONST_INT
+Line 2: factor
+Line 2: unary_expression
+Line 2: term
+Line 2: simple_expression RELOP simple_expression
+Line 2: rel_expression
+Line 2: logic_expression
+Line 3: ID
+Line 3: CONST_INT
+Line 3: factor
+Line 3: unary_expression
+Line 3: term
+Line 3: simple_expression
+Line 3: rel_expression
+Line 3: variable ASSIGNOP logic_expression
+Line 3: expression SEMICOLON
+Line 3: expression_statement
+Line 5: IF LPAREN expression RPAREN statement
+Line 5: statement
+Line 5: CONST_INT
+Line 5: factor
+Line 5: unary_expression
+Line 5: term
+Line 5: CONST_INT
+Line 5: factor
+Line 5: unary_expression
+Line 5: term
+Line 5: simple_expression RELOP simple_expression
+Line 5: rel_expression
+Line 5: logic_expression
+Line 6: ID
+Line 6: CONST_INT
+Line 6: factor
+Line 6: unary_expression
+Line 6: term
+Line 6: simple_expression
+Line 6: rel_expression
+Line 6: variable ASSIGNOP logic_expression
+Line 6: expression SEMICOLON
+Line 6: expression_statement
+Line 7: ID
+Line 7: CONST_INT
+Line 7: factor
+Line 7: unary_expression
+Line 7: term
+Line 7: simple_expression
+Line 7: rel_expression
+Line 7: variable ASSIGNOP logic_expression
+Line 7: expression SEMICOLON
+Line 7: expression_statement
+Line 7: IF LPAREN expression RPAREN statement ELSE statement
+Line 7: statements statement
+Line 9: ID
+Line 9: variable
+Line 9: factor
+Line 9: unary_expression
+Line 9: term
+Line 9: CONST_INT
+Line 9: factor
+Line 9: unary_expression
+Line 9: term
+Line 9: simple_expression RELOP simple_expression
+Line 9: rel_expression
+Line 9: logic_expression
+Line 10: ID
+Line 10: variable
+Line 10: factor
+Line 10: unary_expression
+Line 10: term
+Line 10: CONST_INT
+Line 10: factor
+Line 10: unary_expression
+Line 10: term
+Line 10: simple_expression RELOP simple_expression
+Line 10: rel_expression
+Line 10: logic_expression
+Line 11: ID
+Line 11: CONST_INT
+Line 11: factor
+Line 11: unary_expression
+Line 11: term
+Line 11: simple_expression
+Line 11: rel_expression
+Line 11: variable ASSIGNOP logic_expression
+Line 11: expression SEMICOLON
+Line 11: expression_statement
+Line 12: ID
+Line 12: CONST_INT
+Line 12: factor
+Line 12: unary_expression
+Line 12: term
+Line 12: simple_expression
+Line 12: rel_expression
+Line 12: variable ASSIGNOP logic_expression
+Line 12: expression SEMICOLON
+Line 12: expression_statement
+Line 12: IF LPAREN expression RPAREN statement ELSE statement
+Line 14: IF LPAREN expression RPAREN statement
+Line 14: statements statement
+Line 14: ID
+Line 14: variable
+Line 14: factor
+Line 14: unary_expression
+Line 14: term
+Line 14: CONST_INT
+Line 14: factor
+Line 14: unary_expression
+Line 14: term
+Line 14: simple_expression RELOP simple_expression
+Line 14: rel_expression
+Line 14: logic_expression
+Line 15: ID
+Line 15: variable
+Line 15: factor
+Line 15: unary_expression
+Line 15: term
+Line 15: CONST_INT
+Line 15: factor
+Line 15: unary_expression
+Line 15: term
+Line 15: simple_expression RELOP simple_expression
+Line 15: rel_expression
+Line 15: logic_expression
+Line 16: ID
+Line 16: CONST_INT
+Line 16: factor
+Line 16: unary_expression
+Line 16: term
+Line 16: simple_expression
+Line 16: rel_expression
+Line 16: variable ASSIGNOP logic_expression
+Line 16: expression SEMICOLON
+Line 16: expression_statement
+Line 17: ID
+Line 17: CONST_INT
+Line 17: factor
+Line 17: unary_expression
+Line 17: term
+Line 17: simple_expression
+Line 17: rel_expression
+Line 17: variable ASSIGNOP logic_expression
+Line 17: expression SEMICOLON
+Line 17: expression_statement
+Line 17: IF LPAREN expression RPAREN statement ELSE statement
+Line 18: ID
+Line 18: CONST_INT
+Line 18: factor
+Line 18: unary_expression
+Line 18: term
+Line 18: simple_expression
+Line 18: rel_expression
+Line 18: variable ASSIGNOP logic_expression
+Line 18: expression SEMICOLON
+Line 18: expression_statement
+Line 18: IF LPAREN expression RPAREN statement ELSE statement
+Line 18: statements statement
+Line 20: LCURL statements RCURL
+Line 20: type_specifier ID LPAREN RPAREN compound_statement
+Line 20: func_definition
+Line 20: unit
+Line 20: program

@@ -1,300 +1,46 @@
-Line No. 1: Token FLOAT Lexeme FLOAT found
-Line No. 1: Token ID Lexeme floater found
+Line No. 1: Token IF Lexeme IF found
+Line No. 1: Token LPAREN Lexeme ( found
+Line No. 1: Token ID Lexeme x found
 ScopeTable # 1
 0 -->
-1 -->
+1 -->  < x : ID >
 2 -->
 3 -->
-4 -->  < floater : ID >
+4 -->
 5 -->
 6 -->
 
-Line No. 1: Token ASSIGNOP Lexeme = found
-Line No. 1: Token CONST_FLOAT Lexeme 5.5 found
-Line No. 1: Token SEMICOLON Lexeme ; found
-Line No. 2: Token DOUBLE Lexeme DOUBLE found
-Line No. 2: Token ID Lexeme doer found
+Line No. 1: Token RELOP Lexeme == found
+Line No. 1: Token CONST_INT Lexeme 0 found
+Line No. 1: Token RPAREN Lexeme ) found
+Line No. 2: Token ID Lexeme y found
 ScopeTable # 1
 0 -->
-1 -->
-2 -->
+1 -->  < x : ID >
+2 -->  < y : ID >
 3 -->
-4 -->  < floater : ID >
+4 -->
 5 -->
-6 -->  < doer : ID >
+6 -->
 
 Line No. 2: Token ASSIGNOP Lexeme = found
-Line No. 2: Token CONST_FLOAT Lexeme 0.5e7 found
+Line No. 2: Token CONST_INT Lexeme 05 found
 Line No. 2: Token SEMICOLON Lexeme ; found
-Line No. 3: Token FLOAT Lexeme FLOAT found
-Line No. 3: Token ID Lexeme two found
+Line No. 3: Token ELSE Lexeme ELSE found
+Line No. 3: Token ID Lexeme z found
 ScopeTable # 1
 0 -->
-1 -->
-2 -->
-3 -->
-4 -->  < floater : ID >
+1 -->  < x : ID >
+2 -->  < y : ID >
+3 -->  < z : ID >
+4 -->
 5 -->
-6 -->  < doer : ID >  < two : ID >
+6 -->
 
 Line No. 3: Token ASSIGNOP Lexeme = found
-Line No. 3: Token CONST_FLOAT Lexeme 2e-4 found
+Line No. 3: Token CONST_INT Lexeme 5 found
 Line No. 3: Token SEMICOLON Lexeme ; found
-Line No. 4: Token FLOAT Lexeme FLOAT found
-Line No. 4: Token ID Lexeme three found
-ScopeTable # 1
-0 -->  < three : ID >
-1 -->
-2 -->
-3 -->
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >
 
-Line No. 4: Token ASSIGNOP Lexeme = found
-Line No. 4: Token ADDOP Lexeme - found
-Line No. 4: Token CONST_FLOAT Lexeme 3e-4 found
-Line No. 4: Token SEMICOLON Lexeme ; found
-Line No. 5: Token CHAR Lexeme CHAR found
-Line No. 5: Token ID Lexeme character found
-ScopeTable # 1
-0 -->  < three : ID >
-1 -->
-2 -->  < character : ID >
-3 -->
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >
-
-Line No. 5: Token ASSIGNOP Lexeme = found
-Line No. 5: Token CONST_CHAR Lexeme a found
-Line No. 5: Token SEMICOLON Lexeme ; found
-Line No. 6: Token CHAR Lexeme CHAR found
-Line No. 6: Token MULOP Lexeme * found
-Line No. 6: Token ID Lexeme string found
-ScopeTable # 1
-0 -->  < three : ID >
-1 -->
-2 -->  < character : ID >
-3 -->  < string : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >
-
-Line No. 6: Token ASSIGNOP Lexeme = found
-Line No. 6: Token <STRING> Lexeme "hi i am a gabchod" found --> <STRING, "hi i am a gabchod">
-Line No. 6: Token SEMICOLON Lexeme ; found
-Line No. 7: Token CHAR Lexeme CHAR found
-Line No. 7: invalid suffix on a numeric constand of invalid prefix on an identifier, 1234sry
-Line No. 7: Token ASSIGNOP Lexeme = found
-Line No. 7: ill formed number, 23.23.123
-Line No. 7: Token SEMICOLON Lexeme ; found
-Line No. 8: Token DOUBLE Lexeme DOUBLE found
-Line No. 8: Token ID Lexeme ds found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >
-1 -->
-2 -->  < character : ID >
-3 -->  < string : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >
-
-Line No. 8: Token ASSIGNOP Lexeme = found
-Line No. 8: ill formed number, 234.234e134.23
-Line No. 8: Token SEMICOLON Lexeme ; found
-Line No. 9: Token CHAR Lexeme CHAR found
-Line No. 9: Token ID Lexeme a found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >
-1 -->
-2 -->  < character : ID >
-3 -->  < string : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >
-
-Line No. 9: Token ASSIGNOP Lexeme = found
-Line No. 9: empty character constant ''
-Line No. 9: Token SEMICOLON Lexeme ; found
-Line No. 10: Token CHAR Lexeme CHAR found
-Line No. 10: Token ID Lexeme a found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >
-1 -->
-2 -->  < character : ID >
-3 -->  < string : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >
-
-Line No. 10: Token ASSIGNOP Lexeme = found
-Line No. 10: multiple character constant, 'agb'
-Line No. 10: Token SEMICOLON Lexeme ; found
-Line No. 11: Token CHAR Lexeme CHAR found
-Line No. 11: Token MULOP Lexeme * found
-Line No. 11: Token ID Lexeme a found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >
-1 -->
-2 -->  < character : ID >
-3 -->  < string : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >
-
-Line No. 11: Token ASSIGNOP Lexeme = found
-Line No. 12: Token <STRING> Lexeme "this is \
-            a string" found --> <STRING, "this is             a string">
-Line No. 12: Token SEMICOLON Lexeme ; found
-Line No. 13: Token CHAR Lexeme CHAR found
-Line No. 13: Token MULOP Lexeme * found
-Line No. 13: Token ID Lexeme a found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >
-1 -->
-2 -->  < character : ID >
-3 -->  < string : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >
-
-Line No. 13: Token ASSIGNOP Lexeme = found
-Line No. 14: Token <STRING> Lexeme "this\ is a\
- string" found --> <STRING, "this is a string">
-Line No. 14: Token SEMICOLON Lexeme ; found
-Line No. 15: Token CHAR Lexeme CHAR found
-Line No. 15: Token MULOP Lexeme * found
-Line No. 15: Token ID Lexeme str found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >
-1 -->
-2 -->  < character : ID >
-3 -->  < string : ID >  < str : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >
-
-Line No. 15: Token ASSIGNOP Lexeme = found
-Line No. 15: Token <STRING> Lexeme "this\tis a\t string" found --> <STRING, "this	is a	 string">
-Line No. 15: Token SEMICOLON Lexeme ; found
-Line No. 22: multiline comment ** 
-    THIS IS A COMMENT 
-    MULTILINE TO 
-    BE SPECIFIC 
-
-
-Line No. 23: single line comment  this is a single line comment
-Line No. 25: single line comment  A multiple linecomment alright?
-Line No. 26: single line comment  i think so
-Line No. 28: single line comment  Are you alright???
-Line No. 29: Token CHAR Lexeme CHAR found
-Line No. 29: Token MULOP Lexeme * found
-Line No. 29: Token ID Lexeme s found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >
-1 -->
-2 -->  < character : ID >
-3 -->  < string : ID >  < str : ID >  < s : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >
-
-Line No. 29: Token ASSIGNOP Lexeme = found
-Line No. 31: Token <STRING> Lexeme "this\
- is \
- a string" found --> <STRING, "this is  a string">
-Line No. 34: Token <STRING> Lexeme "abc\
-    def\
-    ghi" found --> <STRING, "abc    def    ghi">
-Line No. 35: Token ID Lexeme printf found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >
-1 -->
-2 -->  < character : ID >
-3 -->  < string : ID >  < str : ID >  < s : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >  < printf : ID >
-
-Line No. 35: Token LPAREN Lexeme ( found
-Line No. 37: Token <STRING> Lexeme "abc\
-def\
-ghi" found --> <STRING, "abcdefghi">
-Line No. 37: Token RPAREN Lexeme ) found
-Line No. 37: Token SEMICOLON Lexeme ; found
-Line No. 38: Token CHAR Lexeme CHAR found
-Line No. 38: Token ID Lexeme c found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >
-1 -->  < c : ID >
-2 -->  < character : ID >
-3 -->  < string : ID >  < str : ID >  < s : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >  < printf : ID >
-
-Line No. 38: Token ASSIGNOP Lexeme = found
-Line No. 38: Token CONST_CHAR Lexeme \t found
-Line No. 38: Token SEMICOLON Lexeme ; found
-Line No. 39: Token CHAR Lexeme CHAR found
-Line No. 39: Token ID Lexeme b found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >  < b : ID >
-1 -->  < c : ID >
-2 -->  < character : ID >
-3 -->  < string : ID >  < str : ID >  < s : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >  < printf : ID >
-
-Line No. 39: Token ASSIGNOP Lexeme = found
-Line No. 39: Token CONST_CHAR Lexeme \n found
-Line No. 39: Token SEMICOLON Lexeme ; found
-Line No. 40: Token CHAR Lexeme CHAR found
-Line No. 40: Token ID Lexeme d found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >  < b : ID >
-1 -->  < c : ID >
-2 -->  < character : ID >  < d : ID >
-3 -->  < string : ID >  < str : ID >  < s : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >  < printf : ID >
-
-Line No. 40: Token ASSIGNOP Lexeme = found
-Line No. 40: invalid character constant '\'
-Line No. 41: unfinished character constant, ';
-
-Line No. 41: Token CHAR Lexeme CHAR found
-Line No. 41: Token ID Lexeme e found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >  < b : ID >
-1 -->  < c : ID >
-2 -->  < character : ID >  < d : ID >
-3 -->  < string : ID >  < str : ID >  < s : ID >  < e : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >  < printf : ID >
-
-Line No. 41: Token ASSIGNOP Lexeme = found
-Line No. 41: Token CONST_CHAR Lexeme \\ found
-Line No. 41: Token SEMICOLON Lexeme ; found
-Line No. 42: Token CHAR Lexeme CHAR found
-Line No. 42: Token ID Lexeme e found
-ScopeTable # 1
-0 -->  < three : ID >  < ds : ID >  < b : ID >
-1 -->  < c : ID >
-2 -->  < character : ID >  < d : ID >
-3 -->  < string : ID >  < str : ID >  < s : ID >  < e : ID >
-4 -->  < floater : ID >
-5 -->
-6 -->  < doer : ID >  < two : ID >  < a : ID >  < printf : ID >
-
-Line No. 42: Token ASSIGNOP Lexeme = found
-Line No. 42: empty character constant ''
-Line No. 42: Token SEMICOLON Lexeme ; found
-
-Total lines = 42
-Total errors = 8
+Total lines = 3
+Total errors = 0
 End of File encountered

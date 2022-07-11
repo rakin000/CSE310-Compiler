@@ -73,7 +73,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "symbol_table.cpp"
-
+// #define PROMPT 1
 using namespace std; 
 
 extern int yylex(void);
@@ -187,7 +187,8 @@ extern int yydebug;
     CONST_INT = 292,               /* CONST_INT  */
     CONST_FLOAT = 293,             /* CONST_FLOAT  */
     PRINTLN = 294,                 /* PRINTLN  */
-    MAIN = 295                     /* MAIN  */
+    MAIN = 295,                    /* MAIN  */
+    LOWER_THAN_ELSE = 296          /* LOWER_THAN_ELSE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -234,16 +235,17 @@ extern int yydebug;
 #define CONST_FLOAT 293
 #define PRINTLN 294
 #define MAIN 295
+#define LOWER_THAN_ELSE 296
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 81 "parser.y"
+#line 83 "parser.y"
 
     symbol* symbolInfo;
 
-#line 247 "y.tab.c"
+#line 249 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -304,30 +306,31 @@ enum yysymbol_kind_t
   YYSYMBOL_CONST_FLOAT = 38,               /* CONST_FLOAT  */
   YYSYMBOL_PRINTLN = 39,                   /* PRINTLN  */
   YYSYMBOL_MAIN = 40,                      /* MAIN  */
-  YYSYMBOL_YYACCEPT = 41,                  /* $accept  */
-  YYSYMBOL_start = 42,                     /* start  */
-  YYSYMBOL_program = 43,                   /* program  */
-  YYSYMBOL_unit = 44,                      /* unit  */
-  YYSYMBOL_var_declaration = 45,           /* var_declaration  */
-  YYSYMBOL_type_specifier = 46,            /* type_specifier  */
-  YYSYMBOL_declaration_list = 47,          /* declaration_list  */
-  YYSYMBOL_func_declaration = 48,          /* func_declaration  */
-  YYSYMBOL_parameter_list = 49,            /* parameter_list  */
-  YYSYMBOL_func_definition = 50,           /* func_definition  */
-  YYSYMBOL_compound_statement = 51,        /* compound_statement  */
-  YYSYMBOL_statements = 52,                /* statements  */
-  YYSYMBOL_statement = 53,                 /* statement  */
-  YYSYMBOL_expression_statement = 54,      /* expression_statement  */
-  YYSYMBOL_expression = 55,                /* expression  */
-  YYSYMBOL_variable = 56,                  /* variable  */
-  YYSYMBOL_logic_expression = 57,          /* logic_expression  */
-  YYSYMBOL_rel_expression = 58,            /* rel_expression  */
-  YYSYMBOL_simple_expression = 59,         /* simple_expression  */
-  YYSYMBOL_term = 60,                      /* term  */
-  YYSYMBOL_unary_expression = 61,          /* unary_expression  */
-  YYSYMBOL_factor = 62,                    /* factor  */
-  YYSYMBOL_argument_list = 63,             /* argument_list  */
-  YYSYMBOL_arguments = 64                  /* arguments  */
+  YYSYMBOL_LOWER_THAN_ELSE = 41,           /* LOWER_THAN_ELSE  */
+  YYSYMBOL_YYACCEPT = 42,                  /* $accept  */
+  YYSYMBOL_start = 43,                     /* start  */
+  YYSYMBOL_program = 44,                   /* program  */
+  YYSYMBOL_unit = 45,                      /* unit  */
+  YYSYMBOL_var_declaration = 46,           /* var_declaration  */
+  YYSYMBOL_type_specifier = 47,            /* type_specifier  */
+  YYSYMBOL_declaration_list = 48,          /* declaration_list  */
+  YYSYMBOL_func_declaration = 49,          /* func_declaration  */
+  YYSYMBOL_parameter_list = 50,            /* parameter_list  */
+  YYSYMBOL_func_definition = 51,           /* func_definition  */
+  YYSYMBOL_compound_statement = 52,        /* compound_statement  */
+  YYSYMBOL_statements = 53,                /* statements  */
+  YYSYMBOL_statement = 54,                 /* statement  */
+  YYSYMBOL_expression_statement = 55,      /* expression_statement  */
+  YYSYMBOL_expression = 56,                /* expression  */
+  YYSYMBOL_variable = 57,                  /* variable  */
+  YYSYMBOL_logic_expression = 58,          /* logic_expression  */
+  YYSYMBOL_rel_expression = 59,            /* rel_expression  */
+  YYSYMBOL_simple_expression = 60,         /* simple_expression  */
+  YYSYMBOL_term = 61,                      /* term  */
+  YYSYMBOL_unary_expression = 62,          /* unary_expression  */
+  YYSYMBOL_factor = 63,                    /* factor  */
+  YYSYMBOL_argument_list = 64,             /* argument_list  */
+  YYSYMBOL_arguments = 65                  /* arguments  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -658,7 +661,7 @@ union yyalloc
 #define YYLAST   175
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  41
+#define YYNTOKENS  42
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  24
 /* YYNRULES -- Number of rules.  */
@@ -667,7 +670,7 @@ union yyalloc
 #define YYNSTATES  118
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   295
+#define YYMAXUTOK   296
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -710,20 +713,20 @@ static const yytype_int8 yytranslate[] =
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40
+      35,    36,    37,    38,    39,    40,    41
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    88,    88,    92,    95,   100,   103,   106,   110,   115,
-     118,   121,   125,   128,   131,   134,   139,   142,   146,   149,
-     152,   155,   160,   163,   167,   170,   174,   177,   181,   184,
-     187,   190,   193,   196,   199,   202,   205,   209,   212,   216,
-     219,   223,   226,   230,   233,   237,   240,   244,   247,   251,
-     254,   258,   261,   264,   269,   272,   275,   278,   281,   284,
-     287,   292,   297,   300
+       0,    91,    91,    95,    98,   103,   106,   109,   113,   118,
+     121,   124,   128,   131,   134,   137,   142,   145,   149,   152,
+     155,   158,   163,   166,   170,   173,   177,   180,   184,   187,
+     190,   193,   196,   199,   202,   205,   208,   213,   216,   220,
+     223,   227,   230,   234,   237,   241,   244,   248,   251,   255,
+     258,   262,   265,   268,   273,   276,   279,   282,   285,   288,
+     291,   296,   301,   304
 };
 #endif
 
@@ -744,13 +747,14 @@ static const char *const yytname[] =
   "CHAR", "DOUBLE", "RETURN", "CASE", "CONTINUE", "LCURL", "RCURL",
   "LPAREN", "RPAREN", "LTHIRD", "RTHIRD", "COMMA", "SEMICOLON", "ADDOP",
   "MULOP", "INCOP", "DECOP", "RELOP", "ASSIGNOP", "LOGICOP", "NOT", "ID",
-  "CONST_CHAR", "CONST_INT", "CONST_FLOAT", "PRINTLN", "MAIN", "$accept",
-  "start", "program", "unit", "var_declaration", "type_specifier",
-  "declaration_list", "func_declaration", "parameter_list",
-  "func_definition", "compound_statement", "statements", "statement",
-  "expression_statement", "expression", "variable", "logic_expression",
-  "rel_expression", "simple_expression", "term", "unary_expression",
-  "factor", "argument_list", "arguments", YY_NULLPTR
+  "CONST_CHAR", "CONST_INT", "CONST_FLOAT", "PRINTLN", "MAIN",
+  "LOWER_THAN_ELSE", "$accept", "start", "program", "unit",
+  "var_declaration", "type_specifier", "declaration_list",
+  "func_declaration", "parameter_list", "func_definition",
+  "compound_statement", "statements", "statement", "expression_statement",
+  "expression", "variable", "logic_expression", "rel_expression",
+  "simple_expression", "term", "unary_expression", "factor",
+  "argument_list", "arguments", YY_NULLPTR
 };
 
 static const char *
@@ -874,30 +878,30 @@ static const yytype_int8 yycheck[] =
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     7,     8,     9,    42,    43,    44,    45,    46,    48,
-      50,     0,    44,    35,    47,    21,    23,    25,    26,    22,
-      46,    49,    37,    35,    19,    26,    51,    35,    22,    25,
+       0,     7,     8,     9,    43,    44,    45,    46,    47,    49,
+      51,     0,    45,    35,    48,    21,    23,    25,    26,    22,
+      47,    50,    37,    35,    19,    26,    52,    35,    22,    25,
       24,    23,     3,     5,    12,    16,    20,    21,    26,    27,
-      34,    35,    37,    38,    39,    45,    46,    51,    52,    53,
-      54,    55,    56,    57,    58,    59,    60,    61,    62,    26,
-      51,    46,    37,    21,    21,    21,    55,    55,    56,    61,
-      61,    21,    23,    21,    35,    20,    53,    26,    29,    30,
-      32,    33,    27,    31,    28,    35,    24,    55,    54,    55,
-      26,    22,    57,    63,    64,    55,    35,    57,    58,    60,
-      59,    61,    22,    54,    22,    22,    25,    24,    22,    53,
-      54,    53,    57,    26,     4,    22,    53,    53
+      34,    35,    37,    38,    39,    46,    47,    52,    53,    54,
+      55,    56,    57,    58,    59,    60,    61,    62,    63,    26,
+      52,    47,    37,    21,    21,    21,    56,    56,    57,    62,
+      62,    21,    23,    21,    35,    20,    54,    26,    29,    30,
+      32,    33,    27,    31,    28,    35,    24,    56,    55,    56,
+      26,    22,    58,    64,    65,    56,    35,    58,    59,    61,
+      60,    62,    22,    55,    22,    22,    25,    24,    22,    54,
+      55,    54,    58,    26,     4,    22,    54,    54
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    41,    42,    43,    43,    44,    44,    44,    45,    46,
-      46,    46,    47,    47,    47,    47,    48,    48,    49,    49,
-      49,    49,    50,    50,    51,    51,    52,    52,    53,    53,
-      53,    53,    53,    53,    53,    53,    53,    54,    54,    55,
-      55,    56,    56,    57,    57,    58,    58,    59,    59,    60,
-      60,    61,    61,    61,    62,    62,    62,    62,    62,    62,
-      62,    63,    64,    64
+       0,    42,    43,    44,    44,    45,    45,    45,    46,    47,
+      47,    47,    48,    48,    48,    48,    49,    49,    50,    50,
+      50,    50,    51,    51,    52,    52,    53,    53,    54,    54,
+      54,    54,    54,    54,    54,    54,    54,    55,    55,    56,
+      56,    57,    57,    58,    58,    59,    59,    60,    60,    61,
+      61,    62,    62,    62,    63,    63,    63,    63,    63,    63,
+      63,    64,    65,    65
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -1373,503 +1377,503 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* start: program  */
-#line 88 "parser.y"
+#line 91 "parser.y"
                 {
             writeLog("program");
         }
-#line 1381 "y.tab.c"
+#line 1385 "y.tab.c"
     break;
 
   case 3: /* program: program unit  */
-#line 92 "parser.y"
+#line 95 "parser.y"
                       {
             writeLog("program unit");
         }
-#line 1389 "y.tab.c"
+#line 1393 "y.tab.c"
     break;
 
   case 4: /* program: unit  */
-#line 95 "parser.y"
+#line 98 "parser.y"
                    {
             writeLog("unit");
         }
-#line 1397 "y.tab.c"
+#line 1401 "y.tab.c"
     break;
 
   case 5: /* unit: var_declaration  */
-#line 100 "parser.y"
+#line 103 "parser.y"
                         { 
             writeLog("var_declaration"); 
         }
-#line 1405 "y.tab.c"
+#line 1409 "y.tab.c"
     break;
 
   case 6: /* unit: func_declaration  */
-#line 103 "parser.y"
+#line 106 "parser.y"
                            {
             writeLog("func_declaration");
         }
-#line 1413 "y.tab.c"
+#line 1417 "y.tab.c"
     break;
 
   case 7: /* unit: func_definition  */
-#line 106 "parser.y"
+#line 109 "parser.y"
                          {
             writeLog("func_definition");
         }
-#line 1421 "y.tab.c"
+#line 1425 "y.tab.c"
     break;
 
   case 8: /* var_declaration: type_specifier declaration_list SEMICOLON  */
-#line 110 "parser.y"
+#line 113 "parser.y"
                                                            {
                     writeLog("type_specifier declaration_list SEMICOLON");
                 }
-#line 1429 "y.tab.c"
+#line 1433 "y.tab.c"
     break;
 
   case 9: /* type_specifier: INT  */
-#line 115 "parser.y"
+#line 118 "parser.y"
                     {
                     writeLog("INT");
                 }
-#line 1437 "y.tab.c"
+#line 1441 "y.tab.c"
     break;
 
   case 10: /* type_specifier: FLOAT  */
-#line 118 "parser.y"
+#line 121 "parser.y"
                        {
                     writeLog("FLOAT");
                 }
-#line 1445 "y.tab.c"
+#line 1449 "y.tab.c"
     break;
 
   case 11: /* type_specifier: VOID  */
-#line 121 "parser.y"
+#line 124 "parser.y"
                       {
                     writeLog("VOID");
                 }
-#line 1453 "y.tab.c"
+#line 1457 "y.tab.c"
     break;
 
   case 12: /* declaration_list: declaration_list COMMA ID LTHIRD CONST_INT RTHIRD  */
-#line 125 "parser.y"
+#line 128 "parser.y"
                                                                     {
                     writeLog("declaration_list COMMA ID LTHIRD CONST_INT RTHIRD");
                 }
-#line 1461 "y.tab.c"
+#line 1465 "y.tab.c"
     break;
 
   case 13: /* declaration_list: declaration_list COMMA ID  */
-#line 128 "parser.y"
+#line 131 "parser.y"
                                            {
                     writeLog("declaration_list COMMA ID");
                 }
-#line 1469 "y.tab.c"
+#line 1473 "y.tab.c"
     break;
 
   case 14: /* declaration_list: ID LTHIRD CONST_INT RTHIRD  */
-#line 131 "parser.y"
+#line 134 "parser.y"
                                              {
                     writeLog("ID LTHIRD CONST_INT RTHIRD") ;
                 }
-#line 1477 "y.tab.c"
+#line 1481 "y.tab.c"
     break;
 
   case 15: /* declaration_list: ID  */
-#line 134 "parser.y"
+#line 137 "parser.y"
                      {
                     writeLog("ID");
                 }
-#line 1485 "y.tab.c"
+#line 1489 "y.tab.c"
     break;
 
   case 16: /* func_declaration: type_specifier ID LPAREN parameter_list RPAREN SEMICOLON  */
-#line 139 "parser.y"
+#line 142 "parser.y"
                                                                            {
                     writeLog("type_specifier ID LPAREN parameter_list RPAREN SEMICOLON");
                 }
-#line 1493 "y.tab.c"
+#line 1497 "y.tab.c"
     break;
 
   case 17: /* func_declaration: type_specifier ID LPAREN RPAREN SEMICOLON  */
-#line 142 "parser.y"
+#line 145 "parser.y"
                                                             {
                    writeLog("type_specifier ID LPAREN RPAREN SEMICOLON");  
                 }
-#line 1501 "y.tab.c"
+#line 1505 "y.tab.c"
     break;
 
   case 18: /* parameter_list: parameter_list COMMA type_specifier ID  */
-#line 146 "parser.y"
+#line 149 "parser.y"
                                                        {
                     writeLog("parameter_list COMMA type_specifier ID");
                 }
-#line 1509 "y.tab.c"
+#line 1513 "y.tab.c"
     break;
 
   case 19: /* parameter_list: parameter_list COMMA type_specifier  */
-#line 149 "parser.y"
+#line 152 "parser.y"
                                                       {
                     writeLog("parameter_list COMMA type_specifier");
                 }
-#line 1517 "y.tab.c"
+#line 1521 "y.tab.c"
     break;
 
   case 20: /* parameter_list: type_specifier ID  */
-#line 152 "parser.y"
+#line 155 "parser.y"
                                     {
                     writeLog("type_specifier ID") ;
                 }
-#line 1525 "y.tab.c"
+#line 1529 "y.tab.c"
     break;
 
   case 21: /* parameter_list: type_specifier  */
-#line 155 "parser.y"
+#line 158 "parser.y"
                                  {
                     writeLog("type_specifier") ;
                 }
-#line 1533 "y.tab.c"
+#line 1537 "y.tab.c"
     break;
 
   case 22: /* func_definition: type_specifier ID LPAREN parameter_list RPAREN compound_statement  */
-#line 160 "parser.y"
+#line 163 "parser.y"
                                                                                     {
                     writeLog("type_specifier ID LPAREN parameter_list RPAREN compound_statement") ;
                 }
-#line 1541 "y.tab.c"
+#line 1545 "y.tab.c"
     break;
 
   case 23: /* func_definition: type_specifier ID LPAREN RPAREN compound_statement  */
-#line 163 "parser.y"
+#line 166 "parser.y"
                                                                      {
                     writeLog("type_specifier ID LPAREN RPAREN compound_statement");
                 }
-#line 1549 "y.tab.c"
+#line 1553 "y.tab.c"
     break;
 
   case 24: /* compound_statement: LCURL statements RCURL  */
-#line 167 "parser.y"
+#line 170 "parser.y"
                                            {
                         writeLog("LCURL statements RCURL"); 
                     }
-#line 1557 "y.tab.c"
+#line 1561 "y.tab.c"
     break;
 
   case 25: /* compound_statement: LCURL RCURL  */
-#line 170 "parser.y"
+#line 173 "parser.y"
                                   {
                         writeLog("LCURL RCURL");
                     }
-#line 1565 "y.tab.c"
+#line 1569 "y.tab.c"
     break;
 
   case 26: /* statements: statements statement  */
-#line 174 "parser.y"
+#line 177 "parser.y"
                                  {
                 writeLog("statements statement");
             }
-#line 1573 "y.tab.c"
+#line 1577 "y.tab.c"
     break;
 
   case 27: /* statements: statement  */
-#line 177 "parser.y"
-                        {
+#line 180 "parser.y"
+                       {
                 writeLog("statement");
             }
-#line 1581 "y.tab.c"
+#line 1585 "y.tab.c"
     break;
 
   case 28: /* statement: var_declaration  */
-#line 181 "parser.y"
+#line 184 "parser.y"
                             {
                 writeLog("var_declaration");
             }
-#line 1589 "y.tab.c"
+#line 1593 "y.tab.c"
     break;
 
   case 29: /* statement: expression_statement  */
-#line 184 "parser.y"
-                                   {
+#line 187 "parser.y"
+                                  {
                 writeLog("expression_statement");
             }
-#line 1597 "y.tab.c"
+#line 1601 "y.tab.c"
     break;
 
   case 30: /* statement: compound_statement  */
-#line 187 "parser.y"
-                                 {
+#line 190 "parser.y"
+                                {
                 writeLog("compound_statement");
             }
-#line 1605 "y.tab.c"
+#line 1609 "y.tab.c"
     break;
 
   case 31: /* statement: FOR LPAREN expression_statement expression_statement expression_statement RPAREN statement  */
-#line 190 "parser.y"
-                                                                                                         {
+#line 193 "parser.y"
+                                                                                                        {
                writeLog("FOR LPAREN expression_statement expression_statement expression_statement RPAREN statement");  
             }
-#line 1613 "y.tab.c"
+#line 1617 "y.tab.c"
     break;
 
   case 32: /* statement: IF LPAREN expression RPAREN statement ELSE statement  */
-#line 193 "parser.y"
-                                                                   {
+#line 196 "parser.y"
+                                                                  {
                 writeLog("IF LPAREN expression RPAREN statement ELSE statement");
             }
-#line 1621 "y.tab.c"
+#line 1625 "y.tab.c"
     break;
 
   case 33: /* statement: IF LPAREN expression RPAREN statement  */
-#line 196 "parser.y"
-                                                    {
+#line 199 "parser.y"
+                                                                         {
                 writeLog("IF LPAREN expression RPAREN statement");
             }
-#line 1629 "y.tab.c"
+#line 1633 "y.tab.c"
     break;
 
   case 34: /* statement: WHILE LPAREN expression RPAREN statement  */
-#line 199 "parser.y"
-                                                       {
+#line 202 "parser.y"
+                                                      {
                 writeLog("WHILE LPAREN expression RPAREN statement");
             }
-#line 1637 "y.tab.c"
+#line 1641 "y.tab.c"
     break;
 
   case 35: /* statement: PRINTLN LPAREN ID RPAREN SEMICOLON  */
-#line 202 "parser.y"
-                                                 {
+#line 205 "parser.y"
+                                                {
                 writeLog("PRINTLN LPAREN ID RPAREN SEMICOLON");  
             }
-#line 1645 "y.tab.c"
+#line 1649 "y.tab.c"
     break;
 
   case 36: /* statement: RETURN expression SEMICOLON  */
-#line 205 "parser.y"
-                                          {
+#line 208 "parser.y"
+                                         {
                 writeLog("RETURN expression SEMICOLON");
             }
-#line 1653 "y.tab.c"
+#line 1657 "y.tab.c"
     break;
 
   case 37: /* expression_statement: SEMICOLON  */
-#line 209 "parser.y"
+#line 213 "parser.y"
                                 {
                         writeLog("SEMICOLON");
                     }
-#line 1661 "y.tab.c"
+#line 1665 "y.tab.c"
     break;
 
   case 38: /* expression_statement: expression SEMICOLON  */
-#line 212 "parser.y"
+#line 216 "parser.y"
                                            {
                         writeLog("expression SEMICOLON");
                     }
-#line 1669 "y.tab.c"
+#line 1673 "y.tab.c"
     break;
 
   case 39: /* expression: logic_expression  */
-#line 216 "parser.y"
+#line 220 "parser.y"
                              {
                 writeLog("logic_expression");
             }
-#line 1677 "y.tab.c"
+#line 1681 "y.tab.c"
     break;
 
   case 40: /* expression: variable ASSIGNOP logic_expression  */
-#line 219 "parser.y"
+#line 223 "parser.y"
                                                  {
                 writeLog("variable ASSIGNOP logic_expression");
             }
-#line 1685 "y.tab.c"
+#line 1689 "y.tab.c"
     break;
 
   case 41: /* variable: ID  */
-#line 223 "parser.y"
+#line 227 "parser.y"
                {
                 writeLog("ID");
             }
-#line 1693 "y.tab.c"
+#line 1697 "y.tab.c"
     break;
 
   case 42: /* variable: ID LTHIRD expression RTHIRD  */
-#line 226 "parser.y"
+#line 230 "parser.y"
                                           {
                 writeLog("ID LTHIRd expression RTHIRD");
             }
-#line 1701 "y.tab.c"
+#line 1705 "y.tab.c"
     break;
 
   case 43: /* logic_expression: rel_expression  */
-#line 230 "parser.y"
+#line 234 "parser.y"
                                    {
                         writeLog("rel_expression");
                     }
-#line 1709 "y.tab.c"
+#line 1713 "y.tab.c"
     break;
 
   case 44: /* logic_expression: rel_expression LOGICOP rel_expression  */
-#line 233 "parser.y"
+#line 237 "parser.y"
                                                                     {
                         writeLog("rel_expression LOGICOP rel_expression");
                     }
-#line 1717 "y.tab.c"
+#line 1721 "y.tab.c"
     break;
 
   case 45: /* rel_expression: simple_expression  */
-#line 237 "parser.y"
+#line 241 "parser.y"
                                       {
                         writeLog("simple_expression");
                     }
-#line 1725 "y.tab.c"
+#line 1729 "y.tab.c"
     break;
 
   case 46: /* rel_expression: simple_expression RELOP simple_expression  */
-#line 240 "parser.y"
+#line 244 "parser.y"
                                                                         {
                         writeLog("simple_expression RELOP simple_expression");
                     }
-#line 1733 "y.tab.c"
+#line 1737 "y.tab.c"
     break;
 
   case 47: /* simple_expression: term  */
-#line 244 "parser.y"
+#line 248 "parser.y"
                          {
                         writeLog("term");
                     }
-#line 1741 "y.tab.c"
+#line 1745 "y.tab.c"
     break;
 
   case 48: /* simple_expression: simple_expression ADDOP term  */
-#line 247 "parser.y"
+#line 251 "parser.y"
                                                            {
                         writeLog("simple_expression ADDOP term");
                     }
-#line 1749 "y.tab.c"
+#line 1753 "y.tab.c"
     break;
 
   case 49: /* term: unary_expression  */
-#line 251 "parser.y"
+#line 255 "parser.y"
                          {
             writeLog("unary_expression");
         }
-#line 1757 "y.tab.c"
+#line 1761 "y.tab.c"
     break;
 
   case 50: /* term: term MULOP unary_expression  */
-#line 254 "parser.y"
+#line 258 "parser.y"
                                      {
            writeLog("term MULOP unary_expression"); 
         }
-#line 1765 "y.tab.c"
+#line 1769 "y.tab.c"
     break;
 
   case 51: /* unary_expression: ADDOP unary_expression  */
-#line 258 "parser.y"
+#line 262 "parser.y"
                                            {
                         writeLog("ADDOP unary_expression");
                     }
-#line 1773 "y.tab.c"
+#line 1777 "y.tab.c"
     break;
 
   case 52: /* unary_expression: NOT unary_expression  */
-#line 261 "parser.y"
+#line 265 "parser.y"
                                                   {
                         writeLog("NOT unary_expression");
                     }
-#line 1781 "y.tab.c"
+#line 1785 "y.tab.c"
     break;
 
   case 53: /* unary_expression: factor  */
-#line 264 "parser.y"
+#line 268 "parser.y"
                                      {
                         writeLog("factor");
                     }
-#line 1789 "y.tab.c"
+#line 1793 "y.tab.c"
     break;
 
   case 54: /* factor: variable  */
-#line 269 "parser.y"
+#line 273 "parser.y"
                  {
             writeLog("variable");
         }
-#line 1797 "y.tab.c"
+#line 1801 "y.tab.c"
     break;
 
   case 55: /* factor: ID LPAREN argument_list RPAREN  */
-#line 272 "parser.y"
+#line 276 "parser.y"
                                              {
             writeLog("ID LPAREN argument_list RPAREN");
         }
-#line 1805 "y.tab.c"
+#line 1809 "y.tab.c"
     break;
 
   case 56: /* factor: LPAREN expression RPAREN  */
-#line 275 "parser.y"
+#line 279 "parser.y"
                                        {
             writeLog("LPAREN expression RPAREN");
         }
-#line 1813 "y.tab.c"
+#line 1817 "y.tab.c"
     break;
 
   case 57: /* factor: CONST_INT  */
-#line 278 "parser.y"
+#line 282 "parser.y"
                         {
             writeLog("CONST_INT");  
         }
-#line 1821 "y.tab.c"
+#line 1825 "y.tab.c"
     break;
 
   case 58: /* factor: CONST_FLOAT  */
-#line 281 "parser.y"
+#line 285 "parser.y"
                           {
             writeLog("CONST_FLOAT");
         }
-#line 1829 "y.tab.c"
+#line 1833 "y.tab.c"
     break;
 
   case 59: /* factor: variable INCOP  */
-#line 284 "parser.y"
+#line 288 "parser.y"
                              {
             writeLog("variable INCOP");
         }
-#line 1837 "y.tab.c"
+#line 1841 "y.tab.c"
     break;
 
   case 60: /* factor: variable DECOP  */
-#line 287 "parser.y"
+#line 291 "parser.y"
                              {
             writeLog("variable DECOP");
         }
-#line 1845 "y.tab.c"
+#line 1849 "y.tab.c"
     break;
 
   case 61: /* argument_list: arguments  */
-#line 292 "parser.y"
+#line 296 "parser.y"
                           {
                     writeLog("arguments");
                 }
-#line 1853 "y.tab.c"
+#line 1857 "y.tab.c"
     break;
 
   case 62: /* arguments: arguments COMMA logic_expression  */
-#line 297 "parser.y"
+#line 301 "parser.y"
                                              {
                 writeLog("arguments COMMA logic_expression");
             }
-#line 1861 "y.tab.c"
+#line 1865 "y.tab.c"
     break;
 
   case 63: /* arguments: logic_expression  */
-#line 300 "parser.y"
+#line 304 "parser.y"
                                    {
                 writeLog("logic_expression");
             }
-#line 1869 "y.tab.c"
+#line 1873 "y.tab.c"
     break;
 
 
-#line 1873 "y.tab.c"
+#line 1877 "y.tab.c"
 
       default: break;
     }
@@ -2062,7 +2066,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 305 "parser.y"
+#line 309 "parser.y"
 
 
 int main(int argc, char **argv){

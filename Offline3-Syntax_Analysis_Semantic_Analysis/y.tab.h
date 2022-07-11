@@ -97,7 +97,8 @@ extern int yydebug;
     CONST_INT = 292,               /* CONST_INT  */
     CONST_FLOAT = 293,             /* CONST_FLOAT  */
     PRINTLN = 294,                 /* PRINTLN  */
-    MAIN = 295                     /* MAIN  */
+    MAIN = 295,                    /* MAIN  */
+    LOWER_THAN_ELSE = 296          /* LOWER_THAN_ELSE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -144,16 +145,17 @@ extern int yydebug;
 #define CONST_FLOAT 293
 #define PRINTLN 294
 #define MAIN 295
+#define LOWER_THAN_ELSE 296
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 81 "parser.y"
+#line 83 "parser.y"
 
     symbol* symbolInfo;
 
-#line 157 "y.tab.h"
+#line 159 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

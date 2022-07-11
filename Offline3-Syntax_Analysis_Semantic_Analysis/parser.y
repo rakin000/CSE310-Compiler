@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "symbol_table.cpp"
-
+// #define PROMPT 1
 using namespace std; 
 
 extern int yylex(void);
@@ -35,23 +35,7 @@ void writeError(string s ){
 }
 %}
 
-%token  IF 
-        ELSE 
-        FOR
-        DO 
-        INT 
-        FLOAT 
-        VOID 
-        SWITCH 
-        DEFAULT 
-        WHILE 
-        BREAK 
-        CHAR 
-        DOUBLE 
-        RETURN 
-        CASE 
-        CONTINUE 
-
+%token  IF ELSE FOR DO INT FLOAT VOID SWITCH DEFAULT WHILE BREAK CHAR DOUBLE RETURN CASE CONTINUE 
         LCURL 
         RCURL 
         LPAREN 
@@ -60,7 +44,7 @@ void writeError(string s ){
         RTHIRD 
         COMMA 
         SEMICOLON 
-
+        
         ADDOP 
         MULOP 
         INCOP 
@@ -78,14 +62,16 @@ void writeError(string s ){
         PRINTLN
         MAIN
 
+        LOWER_THAN_ELSE
+
 %union {
     symbol* symbolInfo;
 }
 
-%nonassoc statement
-%nonassoc ELSE
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE 
 
-%% 
+%%
 start:  program {
             writeLog("program");
         }
@@ -175,38 +161,39 @@ compound_statement: LCURL statements RCURL {
 statements: statements statement {
                 writeLog("statements statement");
             }
-            | statement {
+            |statement {
                 writeLog("statement");
             }
             ;
 statement:  var_declaration {
                 writeLog("var_declaration");
             }
-            | expression_statement {
+            |expression_statement {
                 writeLog("expression_statement");
             }
-            | compound_statement {
+            |compound_statement {
                 writeLog("compound_statement");
             }
-            | FOR LPAREN expression_statement expression_statement expression_statement RPAREN statement {
+            |FOR LPAREN expression_statement expression_statement expression_statement RPAREN statement {
                writeLog("FOR LPAREN expression_statement expression_statement expression_statement RPAREN statement");  
             }
-            | IF LPAREN expression RPAREN statement ELSE statement {
+            |IF LPAREN expression RPAREN statement ELSE statement {
                 writeLog("IF LPAREN expression RPAREN statement ELSE statement");
             }
-            | IF LPAREN expression RPAREN statement {
+            |IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE {
                 writeLog("IF LPAREN expression RPAREN statement");
             }
-            | WHILE LPAREN expression RPAREN statement {
+            |WHILE LPAREN expression RPAREN statement {
                 writeLog("WHILE LPAREN expression RPAREN statement");
             }
-            | PRINTLN LPAREN ID RPAREN SEMICOLON {
+            |PRINTLN LPAREN ID RPAREN SEMICOLON {
                 writeLog("PRINTLN LPAREN ID RPAREN SEMICOLON");  
             }
-            | RETURN expression SEMICOLON {
+            |RETURN expression SEMICOLON {
                 writeLog("RETURN expression SEMICOLON");
             }
             ;
+
 expression_statement: SEMICOLON {
                         writeLog("SEMICOLON");
                     } 

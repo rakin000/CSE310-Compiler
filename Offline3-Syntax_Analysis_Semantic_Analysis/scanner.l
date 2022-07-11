@@ -12,7 +12,7 @@
 #include <fstream>
 #include <string.h>
 #include <stdlib.h>
-// #define PROMPT 1 
+#define PROMPT 1 
 #define SYMBOL_TABLE_BUCKET_SIZE 7
 #include "symbol_table.cpp"
 #include "y.tab.h"
@@ -205,7 +205,7 @@ EMPT_CHAR_CONST             "\'\'"
 }
 {LOGICOP} {
 #ifdef PROMPT 
-  writeToken("LOGICOP");
+  writeLog("LOGICOP");
 #endif
   symbol *s = new symbol(yytext,"LOGICOP");
   yylval.symbolInfo = s;
@@ -221,8 +221,15 @@ EMPT_CHAR_CONST             "\'\'"
   return NOT; 
 }  
 
-"if" {return IF;}
-"else" {return ELSE;}
+{IF} {
+#ifdef PROMPT
+  writeLog("IF");
+#endif
+  symbol *s = new symbol(yytext,"IF");
+  yylval.symbolInfo = s;
+  return IF;
+}
+"else" { yylval.symbolInfo = new symbol(yytext,"ELSE"); return ELSE;}
 "for" {return FOR;}
 "while" {return WHILE;}
 "int" {return INT;}

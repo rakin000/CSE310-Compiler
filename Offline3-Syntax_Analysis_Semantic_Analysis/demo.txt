@@ -1,6 +1,20 @@
-int txt;
-float df;
-if( i )
-    if( j == 3 )
-        k = 4;
-    else k = 2;
+void main(){
+    if( x == 4 )
+        y = 5;
+
+    if( 5 == 4 )
+        y = 4;
+    else y = 5;
+
+   if( x == 5 )
+        if( y == 5)
+            z = 5;
+        else z = 3;
+
+    if( x == 5 )
+        if( y == 5)
+            z = 5;
+        else z = 3;
+    else z = 5;
+
+}
