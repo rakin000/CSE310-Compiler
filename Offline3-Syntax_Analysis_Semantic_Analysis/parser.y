@@ -190,9 +190,9 @@ statement:  var_declaration {
                 $$ = new grammer_info($1->text);
                 writeLog("statement: compound_statement",$$->text);
             }
-            |FOR LPAREN expression_statement expression_statement expression_statement RPAREN statement {
+            |FOR LPAREN expression_statement expression_statement expression RPAREN statement {
                 $$ = new grammer_info("for("+$3->text+$4->text+$5->text+")\n"+$7->text);
-                writeLog("statement: FOR LPAREN expression_statement expression_statement expression_statement RPAREN statement",$$->text);  
+                writeLog("statement: FOR LPAREN expression_statement expression_statement expression RPAREN statement",$$->text);  
             }
             |IF LPAREN expression RPAREN statement ELSE statement {
                 $$ = new grammer_info("if("+$3->text+")\n"+$5->text+"\nelse\n"+$7->text);

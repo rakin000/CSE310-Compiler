@@ -230,15 +230,15 @@ EMPT_CHAR_CONST             "\'\'"
   yylval.symbolInfo = s;
   return IF;
 }
-"else" { yylval.symbolInfo = new symbol(yytext,"ELSE"); return ELSE;}
-"for" {return FOR;}
-"while" {return WHILE;}
-"int" {return INT;}
-"float" {return FLOAT;}
-"double" {return DOUBLE;}
-"char" {return CHAR;}
-"return" {return RETURN;}
-"void" {return VOID;}
+{ELSE} { yylval.symbolInfo = new symbol(yytext,"ELSE"); return ELSE;}
+{FOR} {return FOR;}
+{WHILE} {return WHILE;}
+{INT} {return INT;}
+{FLOAT} {return FLOAT;}
+{DOUBLE} {return DOUBLE;}
+{CHAR} {return CHAR;}
+{RETURN} {return RETURN;}
+{VOID} {return VOID;}
 
 {IDENTIFIER} {
   symbolTable->insert(yytext,"ID");
