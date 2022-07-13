@@ -1,4 +1,8 @@
 int a,b,c;
+
+void foo();
+void foobar(int a, int b);
+
 int main(){
     a[4] = 0;
     for(i=0;i<3;i++)

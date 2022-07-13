@@ -1,16 +1,14 @@
 #include <bits/stdc++.h>
+#include "symbol_table.cpp"
+
 using namespace std ;
 
 class grammer_info {
-    struct identifier {
-        string name ;
-        string type ;
-    };
     public :
     string text;
     string name; 
     int type;
-    vector<identifier> ids;
+    vector<symbol> ids;
 
     grammer_info(string text){
         this->text = text;
@@ -21,7 +19,7 @@ class grammer_info {
     }
 
     ~grammer_info(){
-        cout<<name<<" , deleted\n";
+        // cout<<name<<" , deleted\n";
     }
 };
 

@@ -14,7 +14,6 @@
 #include <stdlib.h>
 // #define PROMPT 1 
 #define SYMBOL_TABLE_BUCKET_SIZE 7
-#include "symbol_table.cpp"
 #include "grammer_info.cpp"
 #include "y.tab.h"
 
@@ -99,7 +98,7 @@ EMPT_CHAR_CONST             "\'\'"
 #endif
   symbol *s = new symbol(yytext,"LCURL");
   yylval.symbolInfo = s;
-  symbolTable->enter_scope();
+  // symbolTable->enter_scope();
   return LCURL;
 }
 {RCURL} {
@@ -108,7 +107,7 @@ EMPT_CHAR_CONST             "\'\'"
 #endif
   symbol *s = new symbol(yytext,"RCURL");
   yylval.symbolInfo = s;
-  symbolTable->exit_scope();
+  // symbolTable->exit_scope();
   return RCURL;
 }
 
@@ -230,7 +229,7 @@ EMPT_CHAR_CONST             "\'\'"
   yylval.symbolInfo = s;
   return IF;
 }
-{ELSE} { yylval.symbolInfo = new symbol(yytext,"ELSE"); return ELSE;}
+{ELSE} { return ELSE;}
 {FOR} {return FOR;}
 {WHILE} {return WHILE;}
 {INT} {return INT;}
@@ -241,7 +240,7 @@ EMPT_CHAR_CONST             "\'\'"
 {VOID} {return VOID;}
 
 {IDENTIFIER} {
-  symbolTable->insert(yytext,"ID");
+  // symbolTable->insert(yytext,"ID");
 #ifdef PROMPT 
   writeLog("ID");
   symbolTable->print_all_scope_table();

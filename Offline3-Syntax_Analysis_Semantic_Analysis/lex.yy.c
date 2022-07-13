@@ -568,7 +568,6 @@ char *yytext;
 #include <stdlib.h>
 // #define PROMPT 1 
 #define SYMBOL_TABLE_BUCKET_SIZE 7
-#include "symbol_table.cpp"
 #include "grammer_info.cpp"
 #include "y.tab.h"
 
@@ -591,8 +590,8 @@ char * toUpper(char *s){
 	}
 	return s;
 }
+#line 593 "lex.yy.c"
 #line 594 "lex.yy.c"
-#line 595 "lex.yy.c"
 
 #define INITIAL 0
 #define CONST_NUMBER_STATE 1
@@ -814,9 +813,9 @@ YY_DECL
 		}
 
 	{
-#line 95 "scanner.l"
+#line 94 "scanner.l"
 
-#line 819 "lex.yy.c"
+#line 818 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -881,33 +880,33 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 96 "scanner.l"
+#line 95 "scanner.l"
 {
 #ifdef PROMPT
   writeLog("LCURL");
 #endif
   symbol *s = new symbol(yytext,"LCURL");
   yylval.symbolInfo = s;
-  symbolTable->enter_scope();
+  // symbolTable->enter_scope();
   return LCURL;
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 105 "scanner.l"
+#line 104 "scanner.l"
 {
 #ifdef PROMPT
   writeLog("RCURL");
 #endif
   symbol *s = new symbol(yytext,"RCURL");
   yylval.symbolInfo = s;
-  symbolTable->exit_scope();
+  // symbolTable->exit_scope();
   return RCURL;
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 115 "scanner.l"
+#line 114 "scanner.l"
 {
 #ifdef PROMPT 
   writeLog("LTHIRD");
@@ -919,7 +918,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 124 "scanner.l"
+#line 123 "scanner.l"
 {
 #ifdef PROMPT 
   writeLog("RTHIRD");
@@ -931,7 +930,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 132 "scanner.l"
+#line 131 "scanner.l"
 {
 #ifdef PROMPT 
   writeLog("LPAREN");
@@ -943,7 +942,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 141 "scanner.l"
+#line 140 "scanner.l"
 {
 #ifdef PROMPT 
 	writeLog("RPAREN");
@@ -955,7 +954,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 149 "scanner.l"
+#line 148 "scanner.l"
 {
 #ifdef PROMPT 
 	writeLog("COMMA");
@@ -967,7 +966,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 157 "scanner.l"
+#line 156 "scanner.l"
 {
 #ifdef PROMPT 
 	writeLog("SEMICOLON");
@@ -979,7 +978,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 166 "scanner.l"
+#line 165 "scanner.l"
 {
 #ifdef PROMPT 
 	writeLog("ADDOP");
@@ -991,7 +990,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 174 "scanner.l"
+#line 173 "scanner.l"
 {
 #ifdef PROMPT 
 	writeLog("MULOP");
@@ -1003,7 +1002,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 183 "scanner.l"
+#line 182 "scanner.l"
 {
 #ifdef PROMPT 
   writeLog("INCOP");
@@ -1015,7 +1014,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 191 "scanner.l"
+#line 190 "scanner.l"
 {
 #ifdef PROMPT 
 	writeLog("RELOP");
@@ -1027,7 +1026,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 199 "scanner.l"
+#line 198 "scanner.l"
 {
 #ifdef PROMPT 
   	writeLog("ASSIGNOP");
@@ -1039,7 +1038,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 207 "scanner.l"
+#line 206 "scanner.l"
 {
 #ifdef PROMPT 
   writeLog("LOGICOP");
@@ -1051,7 +1050,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 216 "scanner.l"
+#line 215 "scanner.l"
 {
 #ifdef PROMPT 
   writeLog("NOT");
@@ -1063,7 +1062,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 225 "scanner.l"
+#line 224 "scanner.l"
 {
 #ifdef PROMPT
   writeLog("IF");
@@ -1075,54 +1074,54 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 233 "scanner.l"
-{ yylval.symbolInfo = new symbol(yytext,"ELSE"); return ELSE;}
+#line 232 "scanner.l"
+{ return ELSE;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 234 "scanner.l"
+#line 233 "scanner.l"
 {return FOR;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 235 "scanner.l"
+#line 234 "scanner.l"
 {return WHILE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 236 "scanner.l"
+#line 235 "scanner.l"
 {return INT;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 237 "scanner.l"
+#line 236 "scanner.l"
 {return FLOAT;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 238 "scanner.l"
+#line 237 "scanner.l"
 {return DOUBLE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 239 "scanner.l"
+#line 238 "scanner.l"
 {return CHAR;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 240 "scanner.l"
+#line 239 "scanner.l"
 {return RETURN;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 241 "scanner.l"
+#line 240 "scanner.l"
 {return VOID;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 243 "scanner.l"
+#line 242 "scanner.l"
 {
-  symbolTable->insert(yytext,"ID");
+  // symbolTable->insert(yytext,"ID");
 #ifdef PROMPT 
   writeLog("ID");
   symbolTable->print_all_scope_table();
@@ -1134,7 +1133,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 253 "scanner.l"
+#line 252 "scanner.l"
 {
 #ifdef PROMPT 
   writeLog("CONST_INT"); 
@@ -1146,7 +1145,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 261 "scanner.l"
+#line 260 "scanner.l"
 {
 #ifdef PROMPT 
   writeLog("CONST_FLOAT"); 
@@ -1158,7 +1157,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 270 "scanner.l"
+#line 269 "scanner.l"
 {
   str = "";
   yymore();
@@ -1167,7 +1166,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 275 "scanner.l"
+#line 274 "scanner.l"
 {
   str = "";
   yymore();
@@ -1176,7 +1175,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 280 "scanner.l"
+#line 279 "scanner.l"
 {
   str = "";
   BEGIN SINGLE_COMMENT_STATE ;
@@ -1184,7 +1183,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 284 "scanner.l"
+#line 283 "scanner.l"
 {
   str = "" ;
   BEGIN MULTI_COMMENT_STATE ;
@@ -1192,7 +1191,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 289 "scanner.l"
+#line 288 "scanner.l"
 {
   str = yytext ;
   str = str.substr(1,str.length()-2);
@@ -1220,14 +1219,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 313 "scanner.l"
+#line 312 "scanner.l"
 {
   yymore();
 }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 316 "scanner.l"
+#line 315 "scanner.l"
 {
   yymore();
 }
@@ -1235,7 +1234,7 @@ YY_RULE_SETUP
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 319 "scanner.l"
+#line 318 "scanner.l"
 {
   ++error_count;
   ++line_count;
@@ -1244,7 +1243,7 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(CONST_CHAR_STATE):
-#line 325 "scanner.l"
+#line 324 "scanner.l"
 {
   ++error_count;
   cout<<"Line No. "<<line_count<<": unfinished character constant, "<<yytext<<endl; 
@@ -1253,7 +1252,7 @@ case YY_STATE_EOF(CONST_CHAR_STATE):
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 332 "scanner.l"
+#line 331 "scanner.l"
 {
   cout<<"Line No. "<<line_count<<": Token <STRING> Lexeme "<<yytext<<" found"<<" --> <STRING, "<<"\""<<str<<"\">"<<endl; 
   BEGIN(INITIAL);
@@ -1261,7 +1260,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 336 "scanner.l"
+#line 335 "scanner.l"
 {
   yymore();
 }
@@ -1269,7 +1268,7 @@ YY_RULE_SETUP
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 339 "scanner.l"
+#line 338 "scanner.l"
 {
   yymore();
   line_count++;
@@ -1277,7 +1276,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 343 "scanner.l"
+#line 342 "scanner.l"
 {
   yymore();
   str = str+char('\n') ;
@@ -1285,7 +1284,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 347 "scanner.l"
+#line 346 "scanner.l"
 {
   yymore();
   str = str+char('\t') ;
@@ -1293,7 +1292,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 351 "scanner.l"
+#line 350 "scanner.l"
 {
   yymore();
   str = str+char('\a');
@@ -1301,7 +1300,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 355 "scanner.l"
+#line 354 "scanner.l"
 {
   yymore();
   str = str+char('\f');
@@ -1309,7 +1308,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 359 "scanner.l"
+#line 358 "scanner.l"
 {
   yymore();
   str = str+char('\r');
@@ -1317,7 +1316,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 363 "scanner.l"
+#line 362 "scanner.l"
 {
   yymore();
   str = str+char('\b');
@@ -1325,7 +1324,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 367 "scanner.l"
+#line 366 "scanner.l"
 {
   yymore();
   str = str + char('\v');
@@ -1333,7 +1332,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 371 "scanner.l"
+#line 370 "scanner.l"
 {
   yymore(); 
   str = str+char('\\');
@@ -1341,7 +1340,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 375 "scanner.l"
+#line 374 "scanner.l"
 {
   yymore();
   str = str +char('\'');
@@ -1349,7 +1348,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 379 "scanner.l"
+#line 378 "scanner.l"
 {
   yymore();
   str = str + char('\"');
@@ -1358,7 +1357,7 @@ YY_RULE_SETUP
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 383 "scanner.l"
+#line 382 "scanner.l"
 {
   cout<<"Line No. "<<line_count<<": unfinished string, missing \""<<endl;
   line_count++;
@@ -1368,14 +1367,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 389 "scanner.l"
+#line 388 "scanner.l"
 {
   yymore();
   str = str+char(yytext[yyleng-1]);
 }
 	YY_BREAK
 case YY_STATE_EOF(STRING_STATE):
-#line 393 "scanner.l"
+#line 392 "scanner.l"
 {
   cout<<"Line No. "<<line_count<<": unfinished string."<<endl;
   BEGIN(INITIAL);
@@ -1384,7 +1383,7 @@ case YY_STATE_EOF(STRING_STATE):
 case 52:
 /* rule 52 can match eol */
 YY_RULE_SETUP
-#line 399 "scanner.l"
+#line 398 "scanner.l"
 {
   cout<<"Line No. "<<line_count<<": single line comment "<<str<<endl;
   line_count++;
@@ -1394,27 +1393,27 @@ YY_RULE_SETUP
 case 53:
 /* rule 53 can match eol */
 YY_RULE_SETUP
-#line 404 "scanner.l"
+#line 403 "scanner.l"
 {
   line_count++;
 }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 407 "scanner.l"
+#line 406 "scanner.l"
 {
   str += string(yytext);
 }
 	YY_BREAK
 case YY_STATE_EOF(SINGLE_COMMENT_STATE):
-#line 410 "scanner.l"
+#line 409 "scanner.l"
 {
   BEGIN(INITIAL);
 }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 414 "scanner.l"
+#line 413 "scanner.l"
 {
   // ++error_count;
   cout<<"Line No. "<<line_count<<": multiline comment "<<str<<endl;
@@ -1423,7 +1422,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 419 "scanner.l"
+#line 418 "scanner.l"
 {
   str += string(yytext) ;
 }
@@ -1431,14 +1430,14 @@ YY_RULE_SETUP
 case 57:
 /* rule 57 can match eol */
 YY_RULE_SETUP
-#line 422 "scanner.l"
+#line 421 "scanner.l"
 {
   line_count++;
   str += string(yytext);
 }
 	YY_BREAK
 case YY_STATE_EOF(MULTI_COMMENT_STATE):
-#line 426 "scanner.l"
+#line 425 "scanner.l"
 {
   ++error_count;
   cout<<"Line No. "<<line_count<<": error, unfinished comment";
@@ -1447,7 +1446,7 @@ case YY_STATE_EOF(MULTI_COMMENT_STATE):
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 433 "scanner.l"
+#line 432 "scanner.l"
 {
   ++error_count;
   cout<<"Line No. "<<line_count<<": ill formed number, "<<yytext<<endl;
@@ -1455,7 +1454,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 438 "scanner.l"
+#line 437 "scanner.l"
 {
   ++error_count;
   cout<<"Line No. "<<line_count<<": invalid suffix on a numeric constand of invalid prefix on an identifier, "<<yytext<<endl;
@@ -1463,14 +1462,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 443 "scanner.l"
+#line 442 "scanner.l"
 {  
   
 }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 447 "scanner.l"
+#line 446 "scanner.l"
 {
   printf("unrecognized character\n");
   ++error_count;
@@ -1479,14 +1478,14 @@ YY_RULE_SETUP
 case 62:
 /* rule 62 can match eol */
 YY_RULE_SETUP
-#line 452 "scanner.l"
+#line 451 "scanner.l"
 {
   line_count++;
 }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(CONST_NUMBER_STATE):
-#line 455 "scanner.l"
+#line 454 "scanner.l"
 {
   cout<<"\nTotal lines = "<<line_count<<endl;
   cout<<"Total errors = "<<error_count<<endl;
@@ -1496,10 +1495,10 @@ case YY_STATE_EOF(CONST_NUMBER_STATE):
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 461 "scanner.l"
+#line 460 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1502 "lex.yy.c"
+#line 1501 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2502,7 +2501,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 461 "scanner.l"
+#line 460 "scanner.l"
 
 
 

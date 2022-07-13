@@ -9,9 +9,10 @@ struct param{
 
 class symbol{
     string name;
-    string type; // for functions return type
+    string type; // for functions: return type
     bool func;
     vector<param> params;
+    int array_size;
     public:
     symbol *next;
     symbol(){
@@ -22,19 +23,48 @@ class symbol{
         this->type=type;
         next = nullptr;
         this->func = func; 
+        array_size = -1;
+    }
+    symbol(const symbol &rhs){
+        this->name = rhs.name;
+        this->type = rhs.type ;
+        this->func = rhs.func;
+        this->params = rhs.params;
+        this->array_size = rhs.array_size;
+        this->next = rhs.next;
     }
     ~symbol(){
         delete next;
     }
-
+    symbol &operator=(const symbol& rhs){
+        this->name = rhs.name;
+        this->type = rhs.type ;
+        this->func = rhs.func;
+        this->params = rhs.params;
+        this->array_size = rhs.array_size;
+        this->next = rhs.next;
+        return *this;
+    }
     string& getName(){
         return name;
     }
     string& getType(){
         return type;
-    }   
+    } 
+    void setType(string t){
+        type = t;
+    }  
     bool isFunction(){
         return func;
+    }
+    void markAsFunction(){
+        func = true;
+    }
+    void setArraySize(int n){
+        this->array_size = n;
+    }
+    bool isArray(){
+        return array_size>0;
     }
     vector<param>& getParams(){ return params; }
 
@@ -126,6 +156,45 @@ class scope_table{
         }
     } 
 
+    void insert(symbol *sym){
+        uint64_t id = hashfunc(sym->getName());
+
+        symbol *head=table[id];
+        
+        int i=0;
+        if( head == nullptr ){
+            head = sym; 
+            sym->next = nullptr;
+            table[id] = head;
+#ifdef PROMPT
+            cout<<"Inserted in ScopeTable# "<<this->id<<" at position "<<id<<", "<<i<<endl;
+#endif
+            return ;
+        }
+        else if( head->getName() == sym->getName() && head->getType() == sym->getType() ){
+#ifdef PROMPT
+            cout<<"<"<<head->getName()<<","<<head->getType()<<">"<<" already exists in current ScopeTable"<<endl;
+#endif
+            return ;
+        }
+        else {
+            while( head->next != nullptr ){
+                if( head->next->getName() == sym->getName() && head->next->getType() == sym->getType() ){
+#ifdef PROMPT
+                    cout<<"<"<<head->getName()<<","<<head->getType()<<">"<<" already exists in current ScopeTable"<<endl;
+#endif
+                    return;
+                }
+                head = head->next;
+                i++;
+            }
+            head->next = sym;
+            sym->next = nullptr ;
+#ifdef PROMPT
+            cout<<"Inserted in ScopeTable# "<<this->id<<" at position "<<id<<", "<<i+1<<endl;
+#endif
+        }
+    }  
     symbol* lookup(string name,string type){
         uint64_t id = hashfunc(name);
 
@@ -297,6 +366,14 @@ class symbol_table{
         if( scopes.empty() )
             enter_scope();
         scopes.back()->insert(name,type);
+    }
+    void insert(symbol *sym){
+        if( scopes.empty() )
+            enter_scope();
+        scopes.back()->insert(sym);
+    }
+    void insert(symbol &symbol){
+        insert(&symbol);
     }
 
     void remove(string name){
