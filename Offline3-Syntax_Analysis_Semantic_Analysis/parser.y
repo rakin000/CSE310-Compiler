@@ -6,7 +6,7 @@
 #include <bits/stdc++.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define PROMPT 1
+// #define PROMPT 1
 #include "grammer_info.cpp"
 using namespace std; 
 
@@ -229,6 +229,7 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                         $2->setType($1->text);
                         for(int i=0;i<$4->ids.size();i++){
                             $2->getParams().push_back({$4->ids[i].getName(),$4->ids[i].getType()});
+                            cout<<$4->ids[i].to_string()<<endl;
                         }
                         $2->markAsFunction();
                         symbolTable->insert($2);
@@ -345,6 +346,7 @@ expression: logic_expression {
                 $$ = new grammer_info($1->text+"="+$3->text);
                 if( $1->type != $3->type){
                     writeError("assignment operator, operand types do not match");
+                    cout<<$1->type<<" "<<$3->type<<endl;
                 }
                 $$->type = $1->type;    // type conversion 
                 delete $1; delete $2; delete $3;
@@ -354,14 +356,14 @@ expression: logic_expression {
             ;
 variable:   ID {
                 $$ = new grammer_info($1->getName());
-                $$->type = getTypeValue($1->getType());
                 symbol* foundSymbol = symbolTable->lookup($1->getName());
                 if( foundSymbol == nullptr ){
                     writeError("symbol "+$1->to_string()+" not declared");
                 }
-                else if( foundSymbol->getType() != $1->getType() ){
-                    writeError("symbol "+$1->to_string()+" doesn't match with declared symbol "+foundSymbol->to_string());
-                }
+                $$->type = getTypeValue(foundSymbol->getType());
+                // else if( foundSymbol->getType() != $1->getType() ){
+                //     writeError("symbol "+$1->to_string()+" doesn't match with declared symbol "+foundSymbol->to_string());
+                // }
                 delete $1;
 
                 writeLog("variable: ID",$$->text);
@@ -371,11 +373,13 @@ variable:   ID {
                 symbol* foundSymbol = symbolTable->lookup($1->getName());
                 if( foundSymbol == nullptr )
                     writeError("symbol "+$1->to_string()+" not declared");
-                else if( foundSymbol->getType() != $1->getType() )
-                    writeError("symbol "+$1->to_string()+" doesn't match with declared symbol "+foundSymbol->to_string());
+                // else if( foundSymbol->getType() != $1->getType() )
+                //     writeError("symbol "+$1->to_string()+" doesn't match with declared symbol "+foundSymbol->to_string());
+                $$->type = getTypeValue(foundSymbol->getType());
                 if( $3->type != INT ){
                     writeError(" array index must be an integer");
                 }
+                
                 delete $1; delete $3;
 
                 writeLog("variable: ID LTHIRD expression RTHIRD",$$->text);

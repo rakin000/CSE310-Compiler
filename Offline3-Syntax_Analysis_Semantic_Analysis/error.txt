@@ -1,7 +1,0 @@
-Error at Line 7: symbol a, ID doesn't match with declared symbol a, int
-Error at Line 8: symbol i, ID not declared
-Error at Line 8: assignment operator, operand types do not match
-Error at Line 8: symbol i, ID not declared
-Error at Line 8: symbol i, ID not declared
-Error at Line 9: symbol y, ID not declared
-Error at Line 9: assignment operator, operand types do not match

@@ -52,7 +52,7 @@ class symbol{
         return type;
     } 
     void setType(string t){
-        type = t;
+        this->type = t;
     }  
     bool isFunction(){
         return func;
@@ -73,7 +73,7 @@ class symbol{
     //     return out;
     // }
     string to_string(){
-        return name+", "+type;
+        return "<"+name+" : "+type+">";
     }
 };
 
