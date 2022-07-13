@@ -98,7 +98,10 @@ extern int yydebug;
     CONST_FLOAT = 293,             /* CONST_FLOAT  */
     PRINTLN = 294,                 /* PRINTLN  */
     MAIN = 295,                    /* MAIN  */
-    LOWER_THAN_ELSE = 296          /* LOWER_THAN_ELSE  */
+    LOWER_THAN_ELSE = 296,         /* LOWER_THAN_ELSE  */
+    INT_ARRAY = 297,               /* INT_ARRAY  */
+    FLOAT_ARRAY = 298,             /* FLOAT_ARRAY  */
+    UNKNOWN = 299                  /* UNKNOWN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -146,6 +149,9 @@ extern int yydebug;
 #define PRINTLN 294
 #define MAIN 295
 #define LOWER_THAN_ELSE 296
+#define INT_ARRAY 297
+#define FLOAT_ARRAY 298
+#define UNKNOWN 299
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -156,7 +162,7 @@ union YYSTYPE
     symbol* symbolInfo;
     grammer_info* grammerInfo;
 
-#line 160 "y.tab.h"
+#line 166 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

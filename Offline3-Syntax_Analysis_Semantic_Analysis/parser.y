@@ -24,16 +24,16 @@ fstream errorfile;
 symbol_table *symbolTable = new symbol_table(30);
 
 void yyerror(char *s){
-    printf("%s",s);
+    printf("Error at Line %d: %s",line_count, s);
     return ;
 }
 
 #define writeLog(grammer,text) logfile<<"Line "<<line_count<<": "<<grammer<<"\n\n"<<text<<"\n"<<endl;
 
-void writeError(string s ){
-    errorfile<<"Line "<<line_count<<": "<<s<<endl;
+void writeError(string s){
+    errorfile<<"Error at Line "<<line_count<<": "<<s<<endl;
+    logfile<<"Error at Line "<<line_count<<": "<<s<<endl;
 }
-
 
 %}
 
@@ -42,13 +42,14 @@ void writeError(string s ){
     symbol* symbolInfo;
     grammer_info* grammerInfo;
 }
+%destructor { free($$); } <symbolInfo>    
+%destructor { free($$); } <grammerInfo>
 
 %token <symbolInfo> IF ELSE FOR DO INT FLOAT VOID SWITCH DEFAULT WHILE BREAK CHAR DOUBLE RETURN CASE CONTINUE 
 %token <symbolInfo> LCURL RCURL LPAREN RPAREN LTHIRD RTHIRD COMMA SEMICOLON 
 %token <symbolInfo> ADDOP MULOP INCOP DECOP RELOP ASSIGNOP LOGICOP NOT  
 %token <symbolInfo> ID CONST_CHAR CONST_INT CONST_FLOAT PRINTLN MAIN 
-%token LOWER_THAN_ELSE
-
+%token LOWER_THAN_ELSE INT_ARRAY FLOAT_ARRAY UNKNOWN 
 
 %type<grammerInfo> declaration_list type_specifier start program unit var_declaration func_declaration func_definition
 %type<grammerInfo> parameter_list compound_statement statements statement expression expression_statement 
@@ -59,6 +60,17 @@ void writeError(string s ){
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE 
 
+%{
+int getTypeValue(string &s){
+    if( s == "int" )    return INT;
+    else if( s == "float")  return FLOAT;
+    else if( s == "void")   return VOID;
+    else if( s == "int_array")  return INT_ARRAY;
+    else if( s == "float_array")    return FLOAT_ARRAY;
+
+    return UNKNOWN;
+}
+%}
 
 %%
 start:  program {
@@ -77,10 +89,10 @@ program: program unit {
         }
         ;
 	
-unit: var_declaration { 
+unit:   var_declaration { 
             writeLog("unit: var_declaration",$$->text); 
         }
-        | func_declaration {
+        |func_declaration {
             writeLog("unit: func_declaration",$$->text);
         }
         |func_definition {
@@ -95,6 +107,8 @@ var_declaration: type_specifier declaration_list SEMICOLON {
                   
 type_specifier: INT {
                     $$ = new grammer_info(string("int"));
+                    $$->text = "int";
+                    $$->type = INT;
                     writeLog("type_specifier: INT",$$->text);
                 }
                 |FLOAT {
@@ -106,8 +120,8 @@ type_specifier: INT {
                     writeLog("type_specifier: VOID",$$->text);
                 } 
                 ;
-declaration_list: declaration_list COMMA ID LTHIRD CONST_INT RTHIRD {
-                    $$ = new grammer_info(string($1->text + "," + $3->getName() + "[" + $5->getName() + "]"));
+declaration_list: declaration_list COMMA ID LTHIRD error CONST_INT RTHIRD {
+                    $$ = new grammer_info(string($1->text + "," + $3->getName() + "[" + $6->getName() + "]"));
                     writeLog("declaration_list: declaration_list COMMA ID LTHIRD CONST_INT RTHIRD",$$->text);                
                 }
                 |declaration_list COMMA ID {
@@ -227,74 +241,145 @@ expression_statement: SEMICOLON {
                     ;
 expression: logic_expression {
                 $$ = new grammer_info($1->text);
+                $$->type = $1->type;
+
+                delete $1;
                 writeLog("expression: logic_expression",$$->text);
             }
             | variable ASSIGNOP logic_expression {
                 $$ = new grammer_info($1->text+"="+$3->text);
+                if( $1->type != $3->type){
+                    writeError("assignment operator, operand types do not match");
+                }
+                $$->type = $1->type;    // type conversion 
+                delete $1; delete $2; delete $3;
+
                 writeLog("expression: variable ASSIGNOP logic_expression",$$->text);
             }
             ;
 variable:   ID {
                 $$ = new grammer_info($1->getName());
+                $$->type = getTypeValue($1->getType());
+                symbol* foundSymbol = symbolTable->lookup($1->getName());
+                if( foundSymbol == nullptr ){
+                    writeError("symbol "+$1->to_string()+" not declared");
+                }
+                else if( foundSymbol->getType() != $1->getType() ){
+                    writeError("symbol "+$1->to_string()+" doesn't match with declared symbol "+foundSymbol->to_string());
+                }
+                delete $1;
+
                 writeLog("variable: ID",$$->text);
             }
             | ID LTHIRD expression RTHIRD {
                 $$ = new grammer_info($1->getName()+"["+$3->text+"]");
+                symbol* foundSymbol = symbolTable->lookup($1->getName());
+                if( foundSymbol == nullptr )
+                    writeError("symbol "+$1->to_string()+" not declared");
+                else if( foundSymbol->getType() != $1->getType() )
+                    writeError("symbol "+$1->to_string()+" doesn't match with declared symbol "+foundSymbol->to_string());
+                if( $3->type != INT ){
+                    writeError(" array index must be an integer");
+                }
+                delete $1; delete $3;
+
                 writeLog("variable: ID LTHIRD expression RTHIRD",$$->text);
             }
             ;
 logic_expression:   rel_expression {
                         $$ = new grammer_info($1->text);
+                        $$->type = $1->type;    
+                        delete $1;
+
                         writeLog("logic_expression: rel_expression",$$->text);
                     } 	
 		            | rel_expression LOGICOP rel_expression {
                         $$ = new grammer_info($1->text+" "+$2->getName()+" "+$3->text);
+                        if( $1->type != INT || $3->type != INT )
+                            writeError("operands of LOGICOP must be integers");    
+                        $$->type = INT;
+                        delete $1; delete $3;
+
                         writeLog("logic_expression: rel_expression LOGICOP rel_expression",$$->text);
                     }	
 		            ;
 rel_expression:     simple_expression {
                         $$ = new grammer_info($1->text);
+                        $$->type = $1->type ;
+                        delete $1;
+
                         writeLog("rel_expression: simple_expression",$$->text);
                     }                
 		            | simple_expression RELOP simple_expression {
                         $$ = new grammer_info($1->text+$2->getName()+$3->text);
+                        $$->type = INT;
+                        delete $1; delete $3;
+
                         writeLog("rel_expression: simple_expression RELOP simple_expression",$$->text);
                     }	
 		            ;
 simple_expression:  term {
                         $$ = new grammer_info($1->text);
+                        $$->type = $1->type ;
+                        delete $1;
+
                         writeLog("simple_expression: term",$$->text);
                     } 
 		            | simple_expression ADDOP term {
                         $$ = new grammer_info($1->text+$2->getName()+$3->text);
+                        if( $1->type == FLOAT || $3->type == FLOAT )
+                            $$->type = FLOAT ;
+                        else $$->type = $1->type ;
+                        delete $1; delete $3;
+
                         writeLog("simple_expression: simple_expression ADDOP term",$$->text);
                     } 
 		            ;
 term:   unary_expression {
             $$ = new grammer_info($1->text);
+            $$->type = $1->type ;
+            delete $1;
+            
             writeLog("term: unary_expression",$$->text);
         }
         |term MULOP unary_expression {
             $$ = new grammer_info($1->text+$2->getName()+$3->text);
-           writeLog("term: term MULOP unary_expression",$$->text); 
+            if( $1->type == FLOAT || $3->type == FLOAT )
+                $$->type = FLOAT ;
+            else $$->type = $1->type ;
+            delete $1; delete $3;
+
+            writeLog("term: term MULOP unary_expression",$$->text); 
         }
         ;
 unary_expression:   ADDOP unary_expression {
                         $$ = new grammer_info($1->getName()+$2->text);
+                        $$->type = $2->type;
+                        delete $1;
+
                         writeLog("unary_expression: ADDOP unary_expression",$$->text);
                     }  
 		            |NOT unary_expression {
                         $$ = new grammer_info($1->getName()+$2->text);
+                        $$->type = INT;
+                        delete $1; delete $2;
+
                         writeLog("unary_expression: NOT unary_expression",$$->text);
                     }
 		            | factor {
                         $$ = new grammer_info($1->text);
+                        $$->type = $1->type ;
+                        delete $1;
+
                         writeLog("unary_expression: factor",$$->text);
                     } 
 		            ;
 	
 factor: variable {
             $$ = new grammer_info($1->text);
+            $$->type = $1->type;
+            delete $1;
+
             writeLog("factor: variable",$$->text);
         } 
 	    | ID LPAREN argument_list RPAREN {
@@ -360,6 +445,7 @@ int main(int argc, char **argv){
     yyparse();
 
     fclose(fp);
+    delete symbolTable;
     logfile.close();
     errorfile.close();
     return 0;

@@ -2,18 +2,26 @@
 using namespace std ;
 // #define PROMPT 1
 
-class symbol{
+struct param{
     string name;
     string type;
+};
+
+class symbol{
+    string name;
+    string type; // for functions return type
+    bool func;
+    vector<param> params;
     public:
     symbol *next;
     symbol(){
         next = nullptr;
     }
-    symbol(string name,string type){
+    symbol(string name,string type,bool func=false){
         this->name=name;
         this->type=type;
         next = nullptr;
+        this->func = func; 
     }
     ~symbol(){
         delete next;
@@ -24,6 +32,18 @@ class symbol{
     }
     string& getType(){
         return type;
+    }   
+    bool isFunction(){
+        return func;
+    }
+    vector<param>& getParams(){ return params; }
+
+    // friend ofstream& operator<<(oftream& out,symbol& sym){
+    //     out<<sym.name<<", "<<sym.type;
+    //     return out;
+    // }
+    string to_string(){
+        return name+", "+type;
     }
 };
 

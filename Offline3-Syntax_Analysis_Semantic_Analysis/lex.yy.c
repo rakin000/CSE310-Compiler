@@ -1488,7 +1488,6 @@ case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(CONST_NUMBER_STATE):
 #line 455 "scanner.l"
 {
-
   cout<<"\nTotal lines = "<<line_count<<endl;
   cout<<"Total errors = "<<error_count<<endl;
   cout<<"End of File encountered\n";
@@ -1497,10 +1496,10 @@ case YY_STATE_EOF(CONST_NUMBER_STATE):
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 462 "scanner.l"
+#line 461 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1503 "lex.yy.c"
+#line 1502 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2503,7 +2502,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 462 "scanner.l"
+#line 461 "scanner.l"
 
 
 

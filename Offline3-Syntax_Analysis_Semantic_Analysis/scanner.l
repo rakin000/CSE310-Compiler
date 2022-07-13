@@ -453,7 +453,6 @@ EMPT_CHAR_CONST             "\'\'"
   line_count++;
 }
 <<EOF>> {
-
   cout<<"\nTotal lines = "<<line_count<<endl;
   cout<<"Total errors = "<<error_count<<endl;
   cout<<"End of File encountered\n";
