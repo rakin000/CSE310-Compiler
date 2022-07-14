@@ -1600,11 +1600,11 @@ yyreduce:
                                                                            {
                     (yyval.grammerInfo) = new grammer_info((yyvsp[-5].grammerInfo)->text+" "+(yyvsp[-4].symbolInfo)->getName()+"("+(yyvsp[-2].grammerInfo)->text+");");
                     (yyvsp[-4].symbolInfo)->setType((yyvsp[-5].grammerInfo)->text);
-                    for(int i=0;i<(yyvsp[-2].grammerInfo)->ids.size();i++){
-                        (yyvsp[-4].symbolInfo)->getParams().push_back({(yyvsp[-2].grammerInfo)->ids[i].name,(yyvsp[-2].grammerInfo)->ids[i].type,(yyvsp[-2].grammerInfo)->ids[i].array_size});
-                    }
-                    (yyvsp[-4].symbolInfo)->markAsFunction();
-                    symbolTable->insert((yyvsp[-4].symbolInfo));
+                    // for(int i=0;i<$4->ids.size();i++){
+                    //     $2->getParams().push_back({$4->ids[i].name,$4->ids[i].type,$4->ids[i].array_size});
+                    // }
+                    // $2->markAsFunction();
+                    // symbolTable->insert($2);
 
                     delete (yyvsp[-5].grammerInfo); delete (yyvsp[-2].grammerInfo); delete (yyvsp[-4].symbolInfo);
                     
@@ -1618,8 +1618,8 @@ yyreduce:
                                                             {
                     (yyval.grammerInfo) = new grammer_info((yyvsp[-4].grammerInfo)->text+" "+(yyvsp[-3].symbolInfo)->getName()+"();");
                     (yyvsp[-3].symbolInfo)->setType((yyvsp[-4].grammerInfo)->text);
-                    (yyvsp[-3].symbolInfo)->markAsFunction();
-                    symbolTable->insert((yyvsp[-3].symbolInfo));
+                    // $2->markAsFunction();
+                    // symbolTable->insert($2);
                     
                     delete (yyvsp[-4].grammerInfo); delete (yyvsp[-3].symbolInfo);
 
@@ -1689,9 +1689,9 @@ yyreduce:
                         }
                         (yyvsp[-3].symbolInfo)->markAsFunction();
                         symbol* foundSymbol = symbolTable->lookup((yyvsp[-3].symbolInfo)->getName());
-                        // if( foundSymbol != nullptr ){
-                        //     writeError("multiple definition of function "+$2->to_string());
-                        // }
+                        if( foundSymbol != nullptr ){
+                            writeError("multiple definition of function "+(yyvsp[-3].symbolInfo)->to_string());
+                        }
                         
                         symbolTable->insert((yyvsp[-3].symbolInfo));
                         symbolTable->enter_scope();
@@ -1726,9 +1726,9 @@ yyreduce:
                         (yyvsp[-2].symbolInfo)->setType((yyvsp[-3].grammerInfo)->text);
                         (yyvsp[-2].symbolInfo)->markAsFunction();
                         symbol* foundSymbol = symbolTable->lookup((yyvsp[-2].symbolInfo)->getName());
-                        // if( foundSymbol != nullptr ){
-                        //     writeError("multiple definition of function "+$2->to_string());
-                        // }
+                        if( foundSymbol != nullptr ){
+                            writeError("multiple definition of function "+(yyvsp[-2].symbolInfo)->to_string());
+                        }
                         symbolTable->insert((yyvsp[-2].symbolInfo));
                         symbolTable->enter_scope();
                         zid_i_see_a_function_zaddy = 1;

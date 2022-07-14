@@ -206,11 +206,11 @@ declaration_list: declaration_list COMMA ID LTHIRD CONST_INT RTHIRD {
 func_declaration: type_specifier ID LPAREN parameter_list RPAREN SEMICOLON {
                     $$ = new grammer_info($1->text+" "+$2->getName()+"("+$4->text+");");
                     $2->setType($1->text);
-                    for(int i=0;i<$4->ids.size();i++){
-                        $2->getParams().push_back({$4->ids[i].name,$4->ids[i].type,$4->ids[i].array_size});
-                    }
-                    $2->markAsFunction();
-                    symbolTable->insert($2);
+                    // for(int i=0;i<$4->ids.size();i++){
+                    //     $2->getParams().push_back({$4->ids[i].name,$4->ids[i].type,$4->ids[i].array_size});
+                    // }
+                    // $2->markAsFunction();
+                    // symbolTable->insert($2);
 
                     delete $1; delete $4; delete $2;
                     
@@ -219,8 +219,8 @@ func_declaration: type_specifier ID LPAREN parameter_list RPAREN SEMICOLON {
                 | type_specifier ID LPAREN RPAREN SEMICOLON {
                     $$ = new grammer_info($1->text+" "+$2->getName()+"();");
                     $2->setType($1->text);
-                    $2->markAsFunction();
-                    symbolTable->insert($2);
+                    // $2->markAsFunction();
+                    // symbolTable->insert($2);
                     
                     delete $1; delete $2;
 
@@ -268,9 +268,9 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                         }
                         $2->markAsFunction();
                         symbol* foundSymbol = symbolTable->lookup($2->getName());
-                        // if( foundSymbol != nullptr ){
-                        //     writeError("multiple definition of function "+$2->to_string());
-                        // }
+                        if( foundSymbol != nullptr ){
+                            writeError("multiple definition of function "+$2->to_string());
+                        }
                         
                         symbolTable->insert($2);
                         symbolTable->enter_scope();
@@ -294,9 +294,9 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                         $2->setType($1->text);
                         $2->markAsFunction();
                         symbol* foundSymbol = symbolTable->lookup($2->getName());
-                        // if( foundSymbol != nullptr ){
-                        //     writeError("multiple definition of function "+$2->to_string());
-                        // }
+                        if( foundSymbol != nullptr ){
+                            writeError("multiple definition of function "+$2->to_string());
+                        }
                         symbolTable->insert($2);
                         symbolTable->enter_scope();
                         zid_i_see_a_function_zaddy = 1;
