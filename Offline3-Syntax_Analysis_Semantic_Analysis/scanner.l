@@ -238,6 +238,7 @@ EMPT_CHAR_CONST             "\'\'"
 {CHAR} {return CHAR;}
 {RETURN} {return RETURN;}
 {VOID} {return VOID;}
+"println" {return PRINTLN; }
 
 {IDENTIFIER} {
   // symbolTable->insert(yytext,"ID");

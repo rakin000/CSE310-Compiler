@@ -31,6 +31,7 @@ void yyerror(char *s){
 #define writeLog(grammer,text) logfile<<"Line "<<line_count<<": "<<grammer<<"\n\n"<<text<<"\n"<<endl;
 
 void writeError(string s){
+    error_count++;
     errorfile<<"Error at Line "<<line_count<<": "<<s<<endl;
     logfile<<"Error at Line "<<line_count<<": "<<s<<endl;
 }
@@ -58,6 +59,9 @@ void writeError(string s){
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE 
 
+// %destructor { delete $<symbolInfo>$; } <symbolInfo>
+// %destructor { delete $<grammerInfo>$; } <grammerInfo>
+
 %{
 int getTypeValue(string &s){
     if( s == "int" )    return INT;
@@ -68,41 +72,73 @@ int getTypeValue(string &s){
 
     return UNKNOWN;
 }
+string getTypeString(int type){
+    switch(type){
+        case INT: return "int";
+        case FLOAT: return "float";
+        case VOID: return "void";
+        case INT_ARRAY: return "int";
+        case FLOAT_ARRAY: return "float";
+        default : return "unknown";
+    }
+}
 %}
 
 %%
 start:  program {
             writeLog("start: program","");
-
             symbolTable->print_all_scope_table() ;
+
+            delete $1;
         }
 	    ;
 program: program unit {
             $$ = new grammer_info( string($1->text+"\n"+$2->text) );
             writeLog("program: program unit",$$->text);
+
+            delete $1; delete $2;
         }
 	    | unit {
             $$ = new grammer_info(string($1->text));
             writeLog("program: unit",$$->text);
+
+            delete $1;
         }
         ;
 	
 unit:   var_declaration { 
+            $$ = new grammer_info(string($1->text));
+            delete $1;
+
             writeLog("unit: var_declaration",$$->text); 
         }
         |func_declaration {
+            $$ = new grammer_info(string($1->text));
+            delete $1;
             writeLog("unit: func_declaration",$$->text);
         }
         |func_definition {
+            $$ = new grammer_info(string($1->text));
+            delete $1;
             writeLog("unit: func_definition",$$->text);
         }
         ;
 var_declaration: type_specifier declaration_list SEMICOLON {
                     $$ = new grammer_info(string($1->text + " " + $2->text + ";"));
                     for(int i=0;i<$2->ids.size();i++){
-                        $2->ids[i].setType($1->text);
-                        symbolTable->insert($2->ids[i]) ;
+                        $2->ids[i].type = $1->text;
+                        symbol* foundSymbol = symbolTable->lookup_current($2->ids[i].name ) ; 
+                        if( foundSymbol == nullptr ){
+                            foundSymbol = new symbol( $2->ids[i].name,$2->ids[i].type,$2->ids[i].array_size) ;
+                            symbolTable->insert(foundSymbol);
+                            delete foundSymbol;
+                        }
+                        else {
+                            writeError("multiple declaration of "+$2->ids[i].name);
+                        }
                     }
+                    delete $1; delete $2; 
+
                     writeLog("var_declaration: type_specifier declaration_list SEMICOLON",$$->text);
                 }
                 ;
@@ -135,16 +171,16 @@ declaration_list: declaration_list COMMA ID LTHIRD CONST_INT RTHIRD {
                     if( stoi($5->getName()) < 0 )
                         writeError("array size must be positive");    
                     $3->setArraySize(stoi($5->getName()));
-                    $$->ids.push_back(*$3);
-                    delete $1; delete $5;
+                    $$->ids.push_back({$3->getName(),$3->getType(),$3->getArraySize()});
+                    delete $1; delete $3; delete $5;
 
                     writeLog("declaration_list: declaration_list COMMA ID LTHIRD CONST_INT RTHIRD",$$->text);                
                 }
                 |declaration_list COMMA ID {
                     $$ = new grammer_info(string($1->text + "," + $3->getName()));
                     $$->ids = $1->ids;
-                    $$->ids.push_back(*$3);
-                    delete $1; 
+                    $$->ids.push_back({$3->getName(),$3->getType(),$3->getArraySize()});
+                    delete $1; delete $3; 
 
                     writeLog("declaration_list: declaration_list COMMA ID",$$->text);
                 } 
@@ -153,15 +189,15 @@ declaration_list: declaration_list COMMA ID LTHIRD CONST_INT RTHIRD {
                     if( stoi($3->getName()) < 0 )
                         writeError("array size must be positive");
                     $1->setArraySize(stoi($3->getName()));
-                    $$->ids.push_back(*$1);
-                    delete $1;
+                    $$->ids.push_back({$1->getName(),$1->getType(),$1->getArraySize()});
+                    delete $1; delete $3;
 
                     writeLog("declaration_list: ID LTHIRD CONST_INT RTHIRD",$$->text) ;
                 }
                 | ID {
                     $$ = new grammer_info(string($1->getName()));
-                    $$->ids.push_back(*$1);
-                    // delete $1; don't, because directly pushing to symbol table; 
+                    $$->ids.push_back({$1->getName(),$1->getType(),$1->getArraySize()});
+                    delete $1;  
 
                     writeLog("declaration_list: ID",$$->text);
                 }
@@ -171,12 +207,12 @@ func_declaration: type_specifier ID LPAREN parameter_list RPAREN SEMICOLON {
                     $$ = new grammer_info($1->text+" "+$2->getName()+"("+$4->text+");");
                     $2->setType($1->text);
                     for(int i=0;i<$4->ids.size();i++){
-                        $2->getParams().push_back({$4->ids[i].getName(),$4->ids[i].getType()});
+                        $2->getParams().push_back({$4->ids[i].name,$4->ids[i].type,$4->ids[i].array_size});
                     }
                     $2->markAsFunction();
                     symbolTable->insert($2);
 
-                    delete $1; delete $4; 
+                    delete $1; delete $4; delete $2;
                     
                     writeLog("func_declaration: type_specifier ID LPAREN parameter_list RPAREN SEMICOLON",$$->text);
                 } 
@@ -186,7 +222,7 @@ func_declaration: type_specifier ID LPAREN parameter_list RPAREN SEMICOLON {
                     $2->markAsFunction();
                     symbolTable->insert($2);
                     
-                    delete $1; 
+                    delete $1; delete $2;
 
                     writeLog("func_declaration: type_specifier ID LPAREN RPAREN SEMICOLON",$$->text);  
                 }
@@ -195,30 +231,30 @@ parameter_list: parameter_list COMMA type_specifier ID {
                     $$ = new grammer_info($1->text +"," + $3->text + " " + $4->getName());
                     $$->ids = $1->ids;
                     $4->setType($3->text);
-                    $$->ids.push_back(*$4);
-                    delete $1; delete $3; // delete $4;
+                    $$->ids.push_back({$4->getName(),$4->getType(),$4->getArraySize()});
+                    delete $1; delete $3; delete $4;
 
                     writeLog("parameter_list: parameter_list COMMA type_specifier ID",$$->text);
                 }
                 | parameter_list COMMA type_specifier {
                     $$ = new grammer_info($1->text +"," + $3->text);
                     $$->ids = $1->ids;
-                    $1->ids.push_back(symbol("_",$3->text));
-                    delete $1; delete $3;
+                    $1->ids.push_back({"_",$3->text,-1}); 
+                    delete $1; delete $3; 
 
                     writeLog("parameter_list: parameter_list COMMA type_specifier",$$->text);
                 }
                 | type_specifier ID {
                     $$ = new grammer_info($1->text +" " + $2->getName());
                     $2->setType($1->text);
-                    $$->ids.push_back(*$2);
-                    delete $1; // delete $2;
+                    $$->ids.push_back({$2->getName(),$2->getType(),$2->getArraySize()});
+                    delete $1; delete $2;
                     
                     writeLog("parameter_list: type_specifier ID",$$->text) ;
                 }
                 | type_specifier {
                     $$ = new grammer_info($1->text);
-                    $$->ids.push_back(symbol("_",$1->text));
+                    $$->ids.push_back({"_",$1->text,-1});
                     delete $1;
 
                     writeLog("parameter_list: type_specifier",$$->text) ;
@@ -228,16 +264,27 @@ parameter_list: parameter_list COMMA type_specifier ID {
 func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                         $2->setType($1->text);
                         for(int i=0;i<$4->ids.size();i++){
-                            $2->getParams().push_back({$4->ids[i].getName(),$4->ids[i].getType()});
-                            cout<<$4->ids[i].to_string()<<endl;
+                            $2->getParams().push_back({$4->ids[i].name,$4->ids[i].type,$4->ids[i].array_size});
                         }
                         $2->markAsFunction();
+                        symbol* foundSymbol = symbolTable->lookup($2->getName());
+                        // if( foundSymbol != nullptr ){
+                        //     writeError("multiple definition of function "+$2->to_string());
+                        // }
+                        
                         symbolTable->insert($2);
                         symbolTable->enter_scope();
-                        for(int i=0;i<$4->ids.size();i++){
-                            symbolTable->insert($4->ids[i].getName(),$4->ids[i].getType());
-                        }
                         zid_i_see_a_function_zaddy = 1;
+                        for(int i=0;i<$4->ids.size();i++){
+                            foundSymbol = symbolTable->lookup_current($4->ids[i].name);
+                            if( foundSymbol == nullptr){
+                                foundSymbol = new symbol($4->ids[i].name,$4->ids[i].type,$4->ids[i].array_size);
+                                symbolTable->insert(foundSymbol);
+                                delete foundSymbol;
+                            }
+                            else 
+                                writeError("multiple parameters of same name");
+                        }
                     } compound_statement {
                     $$ = new grammer_info($1->text+" "+$2->getName()+"("+$4->text+")"+$7->text); 
                     delete $1; delete $4; 
@@ -246,12 +293,17 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                 | type_specifier ID LPAREN RPAREN {
                         $2->setType($1->text);
                         $2->markAsFunction();
+                        symbol* foundSymbol = symbolTable->lookup($2->getName());
+                        // if( foundSymbol != nullptr ){
+                        //     writeError("multiple definition of function "+$2->to_string());
+                        // }
                         symbolTable->insert($2);
                         symbolTable->enter_scope();
                         zid_i_see_a_function_zaddy = 1;
                     } compound_statement {
                     $$ = new grammer_info($1->text+" "+$2->getName()+"()"+$6->text); 
-                    delete $1; 
+                    delete $1; delete $2;
+
                     writeLog("func_definition: type_specifier ID LPAREN RPAREN compound_statement",$$->text);
                 }
                 ;
@@ -262,9 +314,11 @@ compound_statement: LCURL {
                         } statements RCURL {
                         $$ = new grammer_info("{\n"+$3->text+"\n}");
 
+                        delete $3;
+
+                        writeLog("compound_statement: LCURL statements RCURL",$$->text); 
                         symbolTable->print_all_scope_table();
                         symbolTable->exit_scope();
-                        writeLog("compound_statement: LCURL statements RCURL",$$->text); 
                     }
                     | LCURL {
                             if( !zid_i_see_a_function_zaddy )
@@ -274,54 +328,76 @@ compound_statement: LCURL {
                         RCURL {
                         $$ = new grammer_info("{\n}");
 
+                        writeLog("compound_statement: LCURL RCURL",$$->text);
                         symbolTable->print_all_scope_table();
                         symbolTable->exit_scope();
-                        writeLog("compound_statement: LCURL RCURL",$$->text);
                     }
                     ;
 statements: statements statement {
                 $$ = new grammer_info($1->text+"\n"+$2->text);
+                delete $1; delete $2;
+
                 writeLog("statements: statements statement",$$->text);
             }
             |statement {
                 $$ = new grammer_info($1->text);
+                delete $1;
+
                 writeLog("statements: statement",$$->text);
             }
             ;
 statement:  var_declaration {
                 $$ = new grammer_info($1->text);
+                delete $1;
+
                 writeLog("statement: var_declaration",$$->text);
             }
             |expression_statement {
                 $$ = new grammer_info($1->text);
+                delete $1;
+
                 writeLog("statement: expression_statement",$$->text);
             }
             |compound_statement {
                 $$ = new grammer_info($1->text);
+                delete $1;
+
                 writeLog("statement: compound_statement",$$->text);
             }
             |FOR LPAREN expression_statement expression_statement expression RPAREN statement {
                 $$ = new grammer_info("for("+$3->text+$4->text+$5->text+")\n"+$7->text);
+                delete $3; delete $4; delete $5; delete $7;
+                
                 writeLog("statement: FOR LPAREN expression_statement expression_statement expression RPAREN statement",$$->text);  
             }
             |IF LPAREN expression RPAREN statement ELSE statement {
                 $$ = new grammer_info("if("+$3->text+")\n"+$5->text+"\nelse\n"+$7->text);
+                delete $3; delete $5; delete $7;   
+                
                 writeLog("statement: IF LPAREN expression RPAREN statement ELSE statement",$$->text);
             }
             |IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE {
                 $$ = new grammer_info("if("+$3->text+")\n"+$5->text);
+                delete $3; delete $5;
+
                 writeLog("statement: IF LPAREN expression RPAREN statement",$$->text);
             }
             |WHILE LPAREN expression RPAREN statement {
                 $$ = new grammer_info("while("+$3->text+")\n"+$5->text);
+                delete $3; delete $5;
+
                 writeLog("statement: WHILE LPAREN expression RPAREN statement",$$->text);
             }
-            |PRINTLN LPAREN ID RPAREN SEMICOLON {
-                $$ = new grammer_info("println("+$3->getName()+");");
+            |PRINTLN LPAREN variable RPAREN SEMICOLON {
+                $$ = new grammer_info("println("+$3->text+");");
+                delete $3;
+
                 writeLog("statement: PRINTLN LPAREN ID RPAREN SEMICOLON",$$->text);  
             }
             |RETURN expression SEMICOLON {
                 $$ = new grammer_info("return "+$2->text+";");
+                delete $2;
+
                 writeLog("statement: RETURN expression SEMICOLON",$$->text);
             }
             ;
@@ -332,6 +408,8 @@ expression_statement: SEMICOLON {
                     } 
                     | expression SEMICOLON {
                         $$ = new grammer_info($1->text+";");
+                        delete $1;
+
                         writeLog("expression_statement: expression SEMICOLON",$$->text);
                     } 
                     ;
@@ -358,12 +436,10 @@ variable:   ID {
                 $$ = new grammer_info($1->getName());
                 symbol* foundSymbol = symbolTable->lookup($1->getName());
                 if( foundSymbol == nullptr ){
-                    writeError("symbol "+$1->to_string()+" not declared");
+                    writeError("variable "+$1->to_string()+" not declared");
                 }
-                $$->type = getTypeValue(foundSymbol->getType());
-                // else if( foundSymbol->getType() != $1->getType() ){
-                //     writeError("symbol "+$1->to_string()+" doesn't match with declared symbol "+foundSymbol->to_string());
-                // }
+                $$->type = (foundSymbol!=nullptr)?getTypeValue(foundSymbol->getType()):UNKNOWN;
+                $$->array = (foundSymbol!=nullptr)?foundSymbol->isArray():0;
                 delete $1;
 
                 writeLog("variable: ID",$$->text);
@@ -371,13 +447,21 @@ variable:   ID {
             | ID LTHIRD expression RTHIRD {
                 $$ = new grammer_info($1->getName()+"["+$3->text+"]");
                 symbol* foundSymbol = symbolTable->lookup($1->getName());
-                if( foundSymbol == nullptr )
-                    writeError("symbol "+$1->to_string()+" not declared");
-                // else if( foundSymbol->getType() != $1->getType() )
-                //     writeError("symbol "+$1->to_string()+" doesn't match with declared symbol "+foundSymbol->to_string());
-                $$->type = getTypeValue(foundSymbol->getType());
+                if( foundSymbol == nullptr ){
+                    writeError("variable "+$1->to_string()+" not declared");
+                    $$->type = UNKNOWN;
+                }
+                else if( !foundSymbol->isArray() ) {
+                    writeError("variable "+$1->to_string()+" not an array");
+                    $$->type = UNKNOWN;
+                }
+                else  {
+                    $$->type = getTypeValue(foundSymbol->getType());
+                    $$->array = true; 
+                }
+
                 if( $3->type != INT ){
-                    writeError(" array index must be an integer");
+                    writeError("expression inside third brackets not an integer");
                 }
                 
                 delete $1; delete $3;
@@ -386,8 +470,7 @@ variable:   ID {
             }
             ;
 logic_expression:   rel_expression {
-                        $$ = new grammer_info($1->text);
-                        $$->type = $1->type;    
+                        $$ = new grammer_info(*$1);
                         delete $1;
 
                         writeLog("logic_expression: rel_expression",$$->text);
@@ -403,8 +486,7 @@ logic_expression:   rel_expression {
                     }	
 		            ;
 rel_expression:     simple_expression {
-                        $$ = new grammer_info($1->text);
-                        $$->type = $1->type ;
+                        $$ = new grammer_info(*$1);
                         delete $1;
 
                         writeLog("rel_expression: simple_expression",$$->text);
@@ -418,8 +500,7 @@ rel_expression:     simple_expression {
                     }	
 		            ;
 simple_expression:  term {
-                        $$ = new grammer_info($1->text);
-                        $$->type = $1->type ;
+                        $$ = new grammer_info(*$1);
                         delete $1;
 
                         writeLog("simple_expression: term",$$->text);
@@ -435,14 +516,16 @@ simple_expression:  term {
                     } 
 		            ;
 term:   unary_expression {
-            $$ = new grammer_info($1->text);
-            $$->type = $1->type ;
+            $$ = new grammer_info(*$1);
             delete $1;
             
             writeLog("term: unary_expression",$$->text);
         }
         |term MULOP unary_expression {
             $$ = new grammer_info($1->text+$2->getName()+$3->text);
+            if( $2->getName() == "%" && ($1->type != INT || $3->type != INT) ){
+                writeError("operands of modulo not integer");
+            }
             if( $1->type == FLOAT || $3->type == FLOAT )
                 $$->type = FLOAT ;
             else $$->type = $1->type ;
@@ -452,8 +535,8 @@ term:   unary_expression {
         }
         ;
 unary_expression:   ADDOP unary_expression {
-                        $$ = new grammer_info($1->getName()+$2->text);
-                        $$->type = $2->type;
+                        $$ = new grammer_info(*$2);
+                        $$->text = string($1->getName()+$2->text);
                         delete $1;
 
                         writeLog("unary_expression: ADDOP unary_expression",$$->text);
@@ -466,8 +549,7 @@ unary_expression:   ADDOP unary_expression {
                         writeLog("unary_expression: NOT unary_expression",$$->text);
                     }
 		            | factor {
-                        $$ = new grammer_info($1->text);
-                        $$->type = $1->type ;
+                        $$ = new grammer_info(*$1);
                         delete $1;
 
                         writeLog("unary_expression: factor",$$->text);
@@ -475,8 +557,7 @@ unary_expression:   ADDOP unary_expression {
 		            ;
 	
 factor: variable {
-            $$ = new grammer_info($1->text);
-            $$->type = $1->type;
+            $$ = new grammer_info(*$1);
             delete $1;
 
             writeLog("factor: variable",$$->text);
@@ -493,11 +574,12 @@ factor: variable {
                 writeError("identifier "+$1->to_string()+" is not a function.");
             else if( foundSymbol->getParams().size() != $3->ids.size() ){
                 writeError("identifier "+$1->to_string()+" doesn't match with the definition, number of args.");
-            }    
+            }  
+
             else {
                 int i ;
                 for(i=0;i<foundSymbol->getParams().size();i++)
-                    if( foundSymbol->getParams()[i].type != $3->ids[i].getType() ){
+                    if( foundSymbol->getParams()[i].type != $3->ids[i].type || (foundSymbol->getParams()[i].array_size>0) != ($3->ids[i].array_size>0) ){
                         writeError("argument type doesn't match with definition");
                     }    
                 if( i == foundSymbol->getParams().size() )
@@ -547,6 +629,9 @@ factor: variable {
 	
 argument_list:  arguments {
                     $$ = new grammer_info($1->text);
+                    $$->ids = $1->ids;
+                    delete $1;
+
                     writeLog("argument_list: arguments",$$->text);
                 }
 			    ;
@@ -554,16 +639,16 @@ argument_list:  arguments {
 arguments:  arguments COMMA logic_expression {
                 $$ = new grammer_info($1->text+","+$3->text);
                 $$->ids = $1->ids;
-                $$->ids.push_back($3->ids[0]);
+                $$->ids.push_back({"arg",getTypeString($3->type),$3->array?1:-1});
                 delete $1; delete $3;
 
                 writeLog("arguments: arguments COMMA logic_expression",$$->text);
             }
-	        | logic_expression {
+	        |logic_expression {
                 $$ = new grammer_info($1->text);
-                $$->ids.push_back(symbol("argument","int"));
+                $$->ids.push_back({"argument",getTypeString($1->type),$1->array?1:-1});
                 delete $1;
-
+                
                 writeLog("arguments: logic_expression",$$->text);
             }
 	        ;

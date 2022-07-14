@@ -8,7 +8,8 @@ class grammer_info {
     string text;
     string name; 
     int type;
-    vector<symbol> ids;
+    bool array = 0;
+    vector<param> ids;
 
     grammer_info(string text){
         this->text = text;
@@ -17,7 +18,13 @@ class grammer_info {
         this->text = text;
         this->name = name ;
     }
-
+    grammer_info(const grammer_info& rhs){
+        this->text = rhs.text;
+        this->name = rhs.name;
+        this->type = rhs.type;
+        this->array = rhs.array;
+        this->ids = rhs.ids;
+    }
     ~grammer_info(){
         // cout<<name<<" , deleted\n";
     }

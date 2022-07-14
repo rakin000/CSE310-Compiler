@@ -1,0 +1,23 @@
+Error at Line 20: multiple parameters of same name
+Error at Line 43: multiple declaration of a
+Error at Line 43: multiple declaration of c
+Error at Line 45: argument type doesn't match with definition
+Error at Line 45: argument type doesn't match with definition
+Error at Line 48: argument type doesn't match with definition
+Error at Line 49: identifier <correct_foo : ID> doesn't match with the definition, number of args.
+Error at Line 49: assignment operator, operand types do not match
+Error at Line 51: variable <k : ID> not declared
+Error at Line 51: assignment operator, operand types do not match
+Error at Line 52: variable <b : ID> not an array
+Error at Line 52: assignment operator, operand types do not match
+Error at Line 53: expression inside third brackets not an integer
+Error at Line 56: argument type doesn't match with definition
+Error at Line 57: argument type doesn't match with definition
+Error at Line 57: assignment operator, operand types do not match
+Error at Line 58: assignment operator, operand types do not match
+Error at Line 60: operands of modulo not integer
+Error at Line 60: assignment operator, operand types do not match
+Error at Line 62: identifier <foo5 : ID> not declared.
+Error at Line 62: assignment operator, operand types do not match
+Error at Line 67: variable <h : ID> not declared
+Error at Line 67: identifier <printf : ID> not declared.

@@ -49,7 +49,7 @@ int main(){
 		c = c - 2;
 	}
 	
-	printf(c);
+	println(c);
 	
 	
 	
