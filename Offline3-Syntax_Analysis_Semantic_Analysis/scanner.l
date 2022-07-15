@@ -1,5 +1,4 @@
 %option noyywrap
-%option c++
 
 %x CONST_NUMBER_STATE 
 %x STRING_STATE 
@@ -8,29 +7,35 @@
 %x CONST_CHAR_STATE 
 
 %{
-    #include <stdio.h>
-    #include <fstream>
-    // #define PROMPT 1 
-    #define SYMBOL_TABLE_BUCKET_SIZE 7
-    #include "symbol_table.cpp"
+#include <bits/stdc++.h>
+#include <stdio.h>
+#include <fstream>
+#include <string.h>
+#include <stdlib.h>
+// #define PROMPT 1 
+#define SYMBOL_TABLE_BUCKET_SIZE 7
+#include "grammer_info.cpp"
+#include "y.tab.h"
 
-    #define writeLog(s) cout<<"Line No. "<<line_count<<": Token "<<s<<" Lexeme "<<yytext<<" found\n"
-    #define writeToken(s) tokenfile<<"<"<<s<<","<<yytext<<"> ";
+#define writeLog(s) cout<<"Line No. "<<line_count<<": Token "<<s<<" Lexeme "<<yytext<<" found\n"
 
-    int line_count = 1;
-    int error_count = 0;
-    int id_count = 0;
-    fstream tokenfile("1805012_token.txt",ios_base::out);
-    symbol_table symbolTable(7);
-    string str; 
+using namespace std ;
 
-    char * toUpper(char *s){
-      while( *s ){
-        *s = toupper(*s);
-        ++s;
-      }
-      return s;
-    }
+extern symbol_table* symbolTable;
+extern YYSTYPE yylval;
+extern int line_count;
+extern int error_count;
+
+int id_count = 0;
+string str; 
+
+char * toUpper(char *s){
+	while( *s ){
+	*s = toupper(*s);
+	++s;
+	}
+	return s;
+}
 %}
 
 WS              [ \t\v\f\r]
@@ -88,92 +93,178 @@ EMPT_CHAR_CONST             "\'\'"
 
 %%
 {LCURL} {
+#ifdef PROMPT
   writeLog("LCURL");
-  writeToken("LCURL");
-  symbolTable.enter_scope();
+#endif
+  symbol *s = new symbol(yytext,"LCURL");
+  yylval.symbolInfo = s;
+  // symbolTable->enter_scope();
+  return LCURL;
 }
 {RCURL} {
+#ifdef PROMPT
   writeLog("RCURL");
-  writeToken("RCURL");
-  symbolTable.exit_scope();
+#endif
+  symbol *s = new symbol(yytext,"RCURL");
+  yylval.symbolInfo = s;
+  // symbolTable->exit_scope();
+  return RCURL;
 }
+
 {LTHIRD} {
+#ifdef PROMPT 
   writeLog("LTHIRD");
-  writeToken("LTHIRD");
+#endif 
+  symbol *s = new symbol(yytext,"LTHIRD");
+  yylval.symbolInfo = s;
+  return LTHIRD;
 }
 
 {RTHIRD} {
+#ifdef PROMPT 
   writeLog("RTHIRD");
-  writeToken("RTHIRD");
+#endif 
+  symbol *s = new symbol(yytext,"RTHIRD");
+  yylval.symbolInfo = s;
+  return RTHIRD;
 }
-
 {LPAREN} {
+#ifdef PROMPT 
   writeLog("LPAREN");
-  writeToken("LPAREN");
+#endif 
+  symbol *s = new symbol(yytext,"LPAREN");
+  yylval.symbolInfo = s;
+  return LPAREN;
 }
 
 {RPAREN} {
-  writeLog("RPAREN");
-  writeToken("RPAREN");
+#ifdef PROMPT 
+	writeLog("RPAREN");
+#endif
+	symbol *s = new symbol(yytext,"RPAREN");
+	yylval.symbolInfo = s;
+	return RPAREN ;
 }
 {COMMA} {
-  writeLog("COMMA");
-  writeToken("COMMA");
+#ifdef PROMPT 
+	writeLog("COMMA");
+#endif
+	symbol *s = new symbol(yytext,"COMMA");
+	yylval.symbolInfo = s;
+	return COMMA;
 }
 {SEMICOLON} {
-  writeLog("SEMICOLON");
-  writeToken("SEMICOLON");
+#ifdef PROMPT 
+	writeLog("SEMICOLON");
+#endif
+	symbol *s = new symbol(yytext,"SEMICOLON");
+	yylval.symbolInfo = s;
+  	return SEMICOLON;
 } 
 
 {ADDOP} {
-  writeLog("ADDOP");
-  writeToken("ADDOP");
+#ifdef PROMPT 
+	writeLog("ADDOP");
+#endif
+	symbol *s = new symbol(yytext,"ADDOP");
+	yylval.symbolInfo = s;
+	return ADDOP;
 } 
 {MULOP} {
-  writeLog("MULOP");
-  writeToken("MULOP");
-}
+#ifdef PROMPT 
+	writeLog("MULOP");
+#endif
+	symbol *s = new symbol(yytext,"MULOP");
+	yylval.symbolInfo = s;
+	return MULOP;
+} 
+
 {INCOP} {
+#ifdef PROMPT 
   writeLog("INCOP");
-  writeToken("INCOP");
+#endif
+	symbol *s = new symbol(yytext,"INCOP");
+	yylval.symbolInfo = s;
+	return INCOP;
 }
 {RELOP} {
-  writeLog("RELOP");
-  writeToken("RELOP");
+#ifdef PROMPT 
+	writeLog("RELOP");
+#endif
+	symbol *s = new symbol(yytext,"RELOP");
+	yylval.symbolInfo = s;
+	return RELOP;
 }
 {ASSIGNOP} {
-  writeLog("ASSIGNOP");
-  writeToken("ASSIGNOP");
+#ifdef PROMPT 
+  	writeLog("ASSIGNOP");
+#endif
+	symbol *s = new symbol(yytext,"ASSIGNOP");
+	yylval.symbolInfo = s;
+	return ASSIGNOP ;
 }
 {LOGICOP} {
+#ifdef PROMPT 
   writeLog("LOGICOP");
-  writeToken("LOGICOP");
+#endif
+  symbol *s = new symbol(yytext,"LOGICOP");
+  yylval.symbolInfo = s;
+  return LOGICOP;
 }
+
 {NOT}  {
+#ifdef PROMPT 
   writeLog("NOT");
-  writeToken("NOT");
+#endif
+  symbol *s = new symbol(yytext,"NOT");
+  yylval.symbolInfo = s;
+  return NOT; 
 }  
 
-{IF}|{ELSE}|{FOR}|{DO}|{INT}|{FLOAT}|{VOID}|{SWITCH}|{DEFAULT}|{WHILE}|{BREAK}|{CHAR}|{DOUBLE}|{RETURN}|{CASE}|{CONTINUE} {
-  toUpper(yytext);
-  writeLog(yytext);
-  tokenfile<<"<"<<yytext<<"> ";
+{IF} {
+#ifdef PROMPT
+  writeLog("IF");
+#endif
+  symbol *s = new symbol(yytext,"IF");
+  yylval.symbolInfo = s;
+  return IF;
 }
+{ELSE} { return ELSE;}
+{FOR} {return FOR;}
+{WHILE} {return WHILE;}
+{INT} {return INT;}
+{FLOAT} {return FLOAT;}
+{DOUBLE} {return DOUBLE;}
+{CHAR} {return CHAR;}
+{RETURN} {return RETURN;}
+{VOID} {return VOID;}
+"println" {return PRINTLN; }
 
 {IDENTIFIER} {
+  // symbolTable->insert(yytext,"ID");
+#ifdef PROMPT 
   writeLog("ID");
-  writeToken("ID");
-  symbolTable.insert(yytext,"ID");
-  symbolTable.print_all_scope_table();
-  id_count++;
+  symbolTable->print_all_scope_table();
+#endif
+  symbol *s = new symbol(yytext,"ID");
+  yylval.symbolInfo = s;
+  return ID; 
 }
 {CONST_INT} {
+#ifdef PROMPT 
   writeLog("CONST_INT"); 
-  writeToken("CONST_INT");
+#endif 
+  symbol *s = new symbol(yytext,"CONST_INT");
+  yylval.symbolInfo = s;
+  return CONST_INT ;
 }
 {CONST_FLOAT} {
-  writeLog("CONST_FLOAT");
-  writeToken("CONST_FLOAT");
+#ifdef PROMPT 
+  writeLog("CONST_FLOAT"); 
+#endif 
+  symbol *s = new symbol(yytext,"CONST_FLOAT");
+  yylval.symbolInfo = s;
+  return CONST_FLOAT ;
 }
 
 \' {
@@ -216,7 +307,6 @@ EMPT_CHAR_CONST             "\'\'"
   }
   else {
     cout<<"Line No. "<<line_count<<": Token "<<"CONST_CHAR"<<" Lexeme "<<str<<" found\n";
-    tokenfile<<"<"<<"CONST_CHAR"<<","<<str<<"> ";
   }
   BEGIN(INITIAL);
 }
@@ -241,7 +331,6 @@ EMPT_CHAR_CONST             "\'\'"
 
 <STRING_STATE>"\"" {
   cout<<"Line No. "<<line_count<<": Token <STRING> Lexeme "<<yytext<<" found"<<" --> <STRING, "<<"\""<<str<<"\">"<<endl; 
-  tokenfile<<"<CONST_STRING,"<<str<<"> ";
   BEGIN(INITIAL);
 }
 <STRING_STATE>"\\" {
@@ -364,7 +453,6 @@ EMPT_CHAR_CONST             "\'\'"
   line_count++;
 }
 <<EOF>> {
-
   cout<<"\nTotal lines = "<<line_count<<endl;
   cout<<"Total errors = "<<error_count<<endl;
   cout<<"End of File encountered\n";
@@ -374,15 +462,6 @@ EMPT_CHAR_CONST             "\'\'"
 
 
 
-int main(int argc,char** argv){
-  if( argc != 2 ){
-    cout<<"Invalid format."<<endl;
-    return -1;
-  }
-  // infile = fstream(argv[1],ios_base::in) ;
-  freopen(argv[1],"r",stdin);
-  freopen("1805012_log.txt","w",stdout);
-  // symbolTable = symbol_table(SYMBOL_TABLE_BUCKET_SIZE);
-  yyFlexLexer lexer;
-  lexer.yylex();
-}
+
+
+
