@@ -33,7 +33,7 @@ int var(int a){
 	return a;
 }
 
-void foo4(int a){
+void foo4(float a){
 	return a+3;
 }
 

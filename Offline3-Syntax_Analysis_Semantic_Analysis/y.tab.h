@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.8.2.  */
+/* A Bison parser, made by GNU Bison 3.7.5.  */
 
 /* Bison interface for Yacc-like parsers in C
 
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -96,7 +96,7 @@ extern int yydebug;
     CONST_CHAR = 291,              /* CONST_CHAR  */
     CONST_INT = 292,               /* CONST_INT  */
     CONST_FLOAT = 293,             /* CONST_FLOAT  */
-    PRINTLN = 294,                 /* PRINTLN  */
+    PRINTF = 294,                  /* PRINTF  */
     MAIN = 295,                    /* MAIN  */
     LOWER_THAN_ELSE = 296,         /* LOWER_THAN_ELSE  */
     INT_ARRAY = 297,               /* INT_ARRAY  */
@@ -146,7 +146,7 @@ extern int yydebug;
 #define CONST_CHAR 291
 #define CONST_INT 292
 #define CONST_FLOAT 293
-#define PRINTLN 294
+#define PRINTF 294
 #define MAIN 295
 #define LOWER_THAN_ELSE 296
 #define INT_ARRAY 297
@@ -157,7 +157,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 42 "parser.y"
+#line 52 "parser.y"
 
     symbol* symbolInfo;
     grammer_info* grammerInfo;
@@ -173,8 +173,6 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
-
 int yyparse (void);
-
 
 #endif /* !YY_YY_Y_TAB_H_INCLUDED  */

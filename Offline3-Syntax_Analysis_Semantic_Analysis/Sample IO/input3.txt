@@ -1,5 +1,5 @@
 int x,y,z; 
-float ab;
+float a,b;
 
 void foo();
 int var(int a, int b);
@@ -49,7 +49,7 @@ int main(){
 		c = c - 2;
 	}
 	
-	println(c);
+	printf(c);
 	
 	
 	

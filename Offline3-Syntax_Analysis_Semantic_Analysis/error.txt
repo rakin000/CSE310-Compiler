@@ -1,0 +1,7 @@
+Error at Line 6: multiple declaration of c
+Error at Line 7: expression inside third brackets not an integer
+Error at Line 9: operands of modulo not integer
+Error at Line 10: = operator ,type mismatch unknown=int
+Error at Line 11: 1th argument type doesn't match with definition, defined int, called by unknown
+Error at Line 12: variable <b : ID> not declared
+Error at Line 12: = operator ,type mismatch unknown=int

@@ -385,6 +385,11 @@ class symbol_table{
             delete current; 
         }
     }
+    scope_table* current_scope(){
+        if( scopes.empty())
+            throw underflow_error("empty symboltable");
+        return scopes.back();
+    }
     void insert(string name,string type){
         if( scopes.empty() )
             enter_scope();

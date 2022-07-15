@@ -7,7 +7,7 @@ class grammer_info {
     public :
     string text;
     string name; 
-    int type;
+    string type;
     bool array = 0;
     vector<param> ids;
 
