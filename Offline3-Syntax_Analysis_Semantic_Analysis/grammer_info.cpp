@@ -10,7 +10,6 @@ class grammer_info {
     string type;
     bool array = 0;
     vector<param> ids;
-
     grammer_info(string text){
         this->text = text;
     }

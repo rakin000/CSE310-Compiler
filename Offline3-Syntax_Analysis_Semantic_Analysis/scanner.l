@@ -445,8 +445,8 @@ EMPT_CHAR_CONST             "\'\'"
 }
 
 . {
-  printf("unrecognized character\n");
-  ++error_count;
+  // printf("unrecognized character\n");
+  return UNKNOWN;
 }
 
 \n  {

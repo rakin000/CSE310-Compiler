@@ -1480,8 +1480,8 @@ case 62:
 YY_RULE_SETUP
 #line 447 "scanner.l"
 {
-  printf("unrecognized character\n");
-  ++error_count;
+  // printf("unrecognized character\n");
+  return UNKNOWN;
 }
 	YY_BREAK
 case 63:
