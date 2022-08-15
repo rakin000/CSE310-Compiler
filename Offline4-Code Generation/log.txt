@@ -1,0 +1,381 @@
+Line 1: type_specifier: INT
+
+int
+
+Line 1: declaration_list: ID
+
+x
+
+Line 1: declaration_list: declaration_list COMMA ID
+
+x,y
+
+Line 1: declaration_list: declaration_list COMMA ID
+
+x,y,z
+
+Line 1: var_declaration: type_specifier declaration_list SEMICOLON
+
+int x,y,z;
+
+Line 1: unit: var_declaration
+
+int x,y,z;
+
+Line 1: program: unit
+
+int x,y,z;
+
+Line 1: type_specifier: FLOAT
+
+float
+
+Line 1: declaration_list: ID
+
+a
+
+Line 1: var_declaration: type_specifier declaration_list SEMICOLON
+
+float a;
+
+Line 1: unit: var_declaration
+
+float a;
+
+Line 1: program: program unit
+
+int x,y,z;
+float a;
+
+Line 3: type_specifier: INT
+
+int
+
+Line 3: type_specifier: INT
+
+int
+
+Line 3: parameter_list: type_specifier
+
+int
+
+Error at Line 3: syntax error, unexpected ADDOP, expecting RPAREN or COMMA
+Line 4: compound_statement: LCURL RCURL
+
+{
+}
+
+ScopeTable # 1.1
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->
+7 -->
+8 -->
+9 -->
+10 -->
+11 -->
+12 -->
+13 -->
+14 -->
+15 -->
+16 -->
+17 -->
+18 -->
+19 -->
+20 -->
+21 -->
+22 -->
+23 -->
+24 -->
+25 -->
+26 -->
+27 -->
+28 -->
+29 -->
+
+ScopeTable # 1
+0 -->  < x : int >
+1 -->  < y : int >
+2 -->  < z : int >
+3 -->
+4 -->
+5 -->
+6 -->
+7 -->  < a : float >
+8 -->
+9 -->
+10 -->
+11 -->
+12 -->
+13 -->
+14 -->
+15 -->
+16 -->
+17 -->
+18 -->
+19 -->
+20 -->
+21 -->
+22 -->
+23 -->
+24 -->
+25 -->
+26 -->
+27 -->
+28 -->
+29 -->
+
+Line 4: func_definition: type_specifier ID LPAREN RPAREN compound_statement
+
+int var(){
+}
+
+Line 4: unit: func_definition
+
+int var(){
+}
+
+Line 4: program: program unit
+
+int x,y,z;
+float a;
+int var(){
+}
+
+Line 7: type_specifier: INT
+
+int
+
+Line 8: type_specifier: INT
+
+int
+
+Line 8: declaration_list: ID
+
+x
+
+Error at Line 8: syntax error, unexpected ADDOP, expecting COMMA or SEMICOLON
+Line 8: var_declaration: type_specifier declaration_list SEMICOLON
+
+int ;
+
+Line 8: statement: var_declaration
+
+int ;
+
+Line 8: statements: statement
+
+int ;
+
+Line 9: variable: ID
+
+a
+
+Line 9: factor: CONST_INT
+
+2
+
+Line 9: unary_expression: factor
+
+2
+
+Line 9: term: unary_expression
+
+2
+
+Line 9: simple_expression: term
+
+2
+
+Error at Line 9: syntax error, unexpected ASSIGNOP
+Line 11: 
+
+statement: error
+
+Line 11: statements: statements statement
+
+int ;
+statement: error
+
+Line 14: factor: CONST_INT
+
+0
+
+Line 14: unary_expression: factor
+
+0
+
+Line 14: term: unary_expression
+
+0
+
+Line 14: simple_expression: term
+
+0
+
+Line 14: rel_expression: simple_expression
+
+0
+
+Line 14: logic_expression: rel_expression
+
+0
+
+Line 14: expression: logic_expression
+
+0
+
+Line 14: statement: RETURN expression SEMICOLON
+
+return 0;
+
+Line 14: statements: statements statement
+
+int ;
+statement: error
+return 0;
+
+Line 15: compound_statement: LCURL statements RCURL
+
+{
+int ;
+statement: error
+return 0;
+}
+
+ScopeTable # 1.2
+0 -->
+1 -->
+2 -->
+3 -->
+4 -->
+5 -->
+6 -->
+7 -->
+8 -->
+9 -->
+10 -->
+11 -->
+12 -->
+13 -->
+14 -->
+15 -->
+16 -->
+17 -->
+18 -->
+19 -->
+20 -->
+21 -->
+22 -->
+23 -->
+24 -->
+25 -->
+26 -->
+27 -->
+28 -->
+29 -->
+
+ScopeTable # 1
+0 -->  < x : int >
+1 -->  < y : int >
+2 -->  < z : int >
+3 -->
+4 -->
+5 -->
+6 -->
+7 -->  < a : float >  < main : int >
+8 -->
+9 -->
+10 -->
+11 -->
+12 -->
+13 -->
+14 -->
+15 -->
+16 -->
+17 -->
+18 -->
+19 -->
+20 -->
+21 -->
+22 -->
+23 -->
+24 -->
+25 -->
+26 -->
+27 -->
+28 -->
+29 -->
+
+Line 15: func_definition: type_specifier ID LPAREN RPAREN compound_statement
+
+int main(){
+int ;
+statement: error
+return 0;
+}
+
+Line 15: unit: func_definition
+
+int main(){
+int ;
+statement: error
+return 0;
+}
+
+Line 15: program: program unit
+
+int x,y,z;
+float a;
+int var(){
+}
+int main(){
+int ;
+statement: error
+return 0;
+}
+
+
+Total lines = 16
+Total errors = 3
+End of File encountered
+Line 16: start: program
+
+
+
+ScopeTable # 1
+0 -->  < x : int >
+1 -->  < y : int >
+2 -->  < z : int >
+3 -->
+4 -->
+5 -->
+6 -->
+7 -->  < a : float >  < main : int >
+8 -->
+9 -->
+10 -->
+11 -->
+12 -->
+13 -->
+14 -->
+15 -->
+16 -->
+17 -->
+18 -->
+19 -->
+20 -->
+21 -->
+22 -->
+23 -->
+24 -->
+25 -->
+26 -->
+27 -->
+28 -->
+29 -->
+
