@@ -1,3 +1,0 @@
-Error at Line 3: syntax error, unexpected ADDOP, expecting RPAREN or COMMA
-Error at Line 8: syntax error, unexpected ADDOP, expecting COMMA or SEMICOLON
-Error at Line 9: syntax error, unexpected ASSIGNOP

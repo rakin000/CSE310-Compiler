@@ -9,6 +9,5 @@ echo 'Generated the scanner C file'
 g++ -w -c -o l.o lex.yy.c
 # if the above command doesn't work try g++ -fpermissive -w -c -o l.o lex.yy.c
 echo 'Generated the scanner object file'
-g++ y.o l.o -o mysyntaxanalyzer
+g++ y.o l.o -o compiler 
 echo 'All ready, running'
-./mysyntaxanalyzer

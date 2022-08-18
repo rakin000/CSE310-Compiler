@@ -11,9 +11,10 @@ struct param{
 class symbol{
     string name;
     string type; // for functions: return type
+    string value ; 
     bool func;
     vector<param> params;
-    int array_size;
+    int array_size; // -1 for not an array
     public:
     symbol *next;
     symbol(){
@@ -26,6 +27,14 @@ class symbol{
         this->func = func; 
         array_size = arr_sz;
     }
+    symbol(string name,string type,string value,int arr_sz=-1,bool func=false){
+        this->name = name;
+        this->type = type ;
+        this->value = value ;
+        this->func = func ;
+        this->array_size = arr_sz; 
+        next = nullptr;
+    }
     symbol(const symbol &rhs){
         this->name = rhs.name;
         this->type = rhs.type ;
@@ -33,6 +42,7 @@ class symbol{
         this->params = rhs.params;
         this->array_size = rhs.array_size;
         this->next = rhs.next;
+        this->value = rhs.value ;
     }
     ~symbol(){
         delete next;
@@ -67,6 +77,9 @@ class symbol{
     int getArraySize(){ return array_size; }
     bool isArray(){
         return array_size>0;
+    }
+    string& getValue(){
+        return value ;
     }
     vector<param>& getParams(){ return params; }
 
@@ -111,6 +124,9 @@ class scope_table{
     }
     int size(){
         return table.size();
+    }
+    string get_id(){
+        return id; 
     }
     uint32_t hashfunc(string s){
         uint32_t hash = 0;

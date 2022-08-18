@@ -238,7 +238,7 @@ EMPT_CHAR_CONST             "\'\'"
 {CHAR} {return CHAR;}
 {RETURN} {return RETURN;}
 {VOID} {return VOID;}
-"printf" {return PRINTF; }
+"println" {return PRINTLN; }
 
 {IDENTIFIER} {
   // symbolTable->insert(yytext,"ID");
@@ -453,9 +453,9 @@ EMPT_CHAR_CONST             "\'\'"
   line_count++;
 }
 <<EOF>> {
-  cout<<"\nTotal lines = "<<line_count<<endl;
-  cout<<"Total errors = "<<error_count<<endl;
-  cout<<"End of File encountered\n";
+  // cout<<"\nTotal lines = "<<line_count<<endl;
+  // cout<<"Total errors = "<<error_count<<endl;
+  // cout<<"End of File encountered\n";
   return 0;
 }
 %%

@@ -3,11 +3,12 @@
 
 using namespace std ;
 
-class grammer_info {
-    public :
+struct grammer_info {
+    // public :
     string text;
     string name; 
     string type;
+    string value ;
     bool array = 0;
     vector<param> ids;
     grammer_info(string text){

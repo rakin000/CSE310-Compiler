@@ -90,7 +90,7 @@ extern int yydebug;
     CONST_CHAR = 291,              /* CONST_CHAR  */
     CONST_INT = 292,               /* CONST_INT  */
     CONST_FLOAT = 293,             /* CONST_FLOAT  */
-    PRINTF = 294,                  /* PRINTF  */
+    PRINTLN = 294,                 /* PRINTLN  */
     MAIN = 295,                    /* MAIN  */
     LOWER_THAN_ELSE = 296,         /* LOWER_THAN_ELSE  */
     INT_ARRAY = 297,               /* INT_ARRAY  */
@@ -140,7 +140,7 @@ extern int yydebug;
 #define CONST_CHAR 291
 #define CONST_INT 292
 #define CONST_FLOAT 293
-#define PRINTF 294
+#define PRINTLN 294
 #define MAIN 295
 #define LOWER_THAN_ELSE 296
 #define INT_ARRAY 297
@@ -151,7 +151,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 51 "parser.y"
+#line 67 "parser.y"
 
     symbol* symbolInfo;
     grammer_info* grammerInfo;
