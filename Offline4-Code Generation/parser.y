@@ -39,6 +39,20 @@ string newLabel(){
 string Lif,Lelse,Lendif;
 string pendingCode = "" ;
 
+vector<string> temp ; 
+int temp_count = 0;
+string newTemp() {
+    string t = "tmp"+to_string(temp_count);
+    if( temp_count == temp.size() ) {
+        temp.push_back(t) ;
+        temp_count++;
+    }
+    return temp[temp_count];
+}
+void removeTemp() {
+    temp_count--;
+    temp_count = max(0,temp_count) ;
+}
 
 void yyerror(const char *s){
     error_count++;
