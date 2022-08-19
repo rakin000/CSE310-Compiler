@@ -36,7 +36,7 @@ int label_count = 0 ;
 string newLabel(){
     return "L"+to_string(label_count++);
 }
-string Lif,Lelse,Lend,Lbegin;
+stack<string> Lif,Lelse,Lend,Lbegin,Lloop,Lpostoperation;
 queue<string> pendingCode;
 
 vector<string> temp ; 
@@ -47,6 +47,7 @@ string newTemp() {
         temp.push_back(t) ;
         temp_count++;
     }
+    else temp_count++ ;
     return temp[temp_count-1];
 }
 void removeTemp() {
@@ -526,13 +527,12 @@ statements: statements statement {
             }
             ;
 ifprefix : IF LPAREN expression RPAREN { 
-                    // Lif = newLabel();
-                    Lelse = newLabel();
-                    Lend = newLabel();
+                    Lelse.push(newLabel());
+                    Lend.push(newLabel());
                     //code
                     writeCode("POP AX");
                     writeCode("CMP AX,0");
-                    writeCode("JE "+Lelse) ;
+                    writeCode("JE "+Lelse.top()) ;
                     // write
                     //end
                 } statement {
@@ -560,26 +560,58 @@ statement:  var_declaration {
                 writeLog($$->name,$$->text);
             }
             |FOR LPAREN expression_statement {
-                    Lbegin = newLabel() ;
-                    Lend = newLabel() ;
+                    Lbegin.push(newLabel()) ;
+                    Lpostoperation.push(newLabel()) ;
+                    Lloop.push(newLabel()) ;
+                    Lend.push(newLabel()) ;
 
-                    writeCode(Lbegin+":", "begin for loop");
-                } expression_statement expression RPAREN statement {
-                $$ = new grammer_info("statement: FOR LPAREN expression_statement expression_statement expression RPAREN statement","for("+$3->text+$4->text+$5->text+")\n"+$7->text);
-                free($3); free($4); free($5); free($7);
+                    writeCode(Lbegin.top()+":", "begin FOR loop");
+                } expression_statement {
+                    writeCode("CMP AX, 0");
+                    writeCode("JE "+Lend.top());
+                    writeCode("JMP "+Lloop.top()) ;
+                    writeCode(Lpostoperation.top()+":", "FOR loop post operation") ;
+                } expression {
+                    writeCode("POP AX");
+                    writeCode("PUSHF");
+                    while( !pendingCode.empty() ){
+                        writeCode(pendingCode.front()) ;
+                        pendingCode.pop();
+                    }
+                    while( removeTempCount ){
+                        removeTemp();
+                        removeTempCount-- ;
+                    }
+                    writeCode("POPF");
+                    writeCode("JMP "+Lbegin.top());
+                    writeCode(Lloop.top()+":");
+                } RPAREN statement {
+                $$ = new grammer_info ("statement: FOR LPAREN expression_statement expression_statement expression RPAREN statement","for("+$3->text+$5->text+$7->text+")\n"+$10->text);
                 
+
+                writeCode("JMP "+Lpostoperation.top()) ;
+                writeCode(Lend.top()+":", "FOR loop end") ;
+                Lbegin.pop();
+                Lend.pop();
+                Lloop.pop();
+                Lpostoperation.pop();
+
+
+                free($3); free($5); free($7); free($10);
                 writeLog($$->name,$$->text);  
             }
             |ifprefix ELSE {
                     //code 
-                    writeCode("JMP "+Lend) ;
-                    writeCode(Lelse+":");
+                    writeCode("JMP "+Lend.top()) ;
+                    writeCode(Lelse.top()+":");
                     //end 
                 } statement {
                 $$ = new grammer_info("statement: IF LPAREN expression RPAREN statement ELSE statement",$1->text+"else\n"+$4->text);
                 
                 //code 
-                writeCode(Lend+":");
+                writeCode(Lend.top()+":");
+                Lend.pop();
+                Lelse.pop();
                 //
 
                 free($1); free($4); // free($9);   
@@ -589,18 +621,19 @@ statement:  var_declaration {
                 $$ = new grammer_info("statement: IF LPAREN expression RPAREN statement",$1->text);
                 
                 //code
-                writeCode(Lelse+":"); 
+                writeCode(Lelse.top()+":"); 
+                Lend.pop();
+                Lelse.pop();
                 //end 
 
                 free($1); //free($6);
                 writeLog($$->name,$$->text);
             }
             |WHILE LPAREN {
-                    Lbegin = newLabel() ;
-                    // Lif = newLabel(); 
-                    Lend = newLabel() ;
+                    Lbegin.push(newLabel()) ;
+                    Lend.push(newLabel()) ;
 
-                    writeCode(Lbegin+":", "begin while loop");
+                    writeCode(Lbegin.top()+":", "begin while loop");
                 } expression {
                     writeCode("POP AX");
                     writeCode("CMP AX, 0");
@@ -614,14 +647,16 @@ statement:  var_declaration {
                         removeTempCount-- ;
                     }
                     writeCode("POPF");
-                    writeCode("JE "+Lend) ;
+                    writeCode("JE "+Lend.top()) ;
                 } RPAREN statement {
-                $$ = new grammer_info("statement: WHILE LPAREN expression RPAREN statement","while("+$3->text+")\n"+$5->text);
+                $$ = new grammer_info("statement: WHILE LPAREN expression RPAREN statement","while("+$4->text+")\n"+$7->text);
                 
-                writeCode("JMP "+Lbegin);
-                writeCode(Lend+":","end while loop");
-                
-                free($3); free($5);
+                writeCode("JMP "+Lbegin.top());
+                writeCode(Lend.top()+":","end while loop");
+                Lbegin.pop();
+                Lend.pop();
+
+                free($4); free($7);
                 writeLog($$->name,$$->text);
             }
             |PRINTLN LPAREN variable RPAREN SEMICOLON {
@@ -672,6 +707,7 @@ expression_statement: SEMICOLON {
                         
                         //code 
                         writeCode("POP AX");
+                        writeCode("PUSHF");
                         while( !pendingCode.empty() ){
                             writeCode(pendingCode.front()) ;
                             pendingCode.pop();
@@ -680,6 +716,7 @@ expression_statement: SEMICOLON {
                             removeTemp();
                             removeTempCount-- ;
                         }
+                        writeCode("POPF");
                         //end 
                         free($1);
 
@@ -1094,7 +1131,7 @@ factor: variable {
             string t1 = newTemp() ;
             writeCode("MOV "+t1+", "+$1->value);
             pendingCode.push(string("MOV SI, "+t1));
-            pendingCode.push(string("INC [BP+SI]"));
+            pendingCode.push(string("INC WORD [BP+SI]"));
             removeTempCount++;
             //end 
             
@@ -1110,7 +1147,7 @@ factor: variable {
             string t1 = newTemp() ;
             writeCode("MOV "+t1+", "+$1->value);
             pendingCode.push(string("MOV SI, "+t1));
-            pendingCode.push(string("DEC [BP+SI]"));
+            pendingCode.push(string("DEC WORD [BP+SI]"));
             removeTempCount++;
             //end 
             

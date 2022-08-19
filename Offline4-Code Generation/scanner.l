@@ -51,7 +51,8 @@ IDENTIFIER      [a-zA-Z_][a-zA-Z0-9_]*
 
 ADDOP           [+]|[-] 
 MULOP           [*]|[/]|[%]
-INCOP           "++"|"--"
+INCOP           "++"
+DECOP           "--"
 RELOP           "<"|"<="|">"|">="|"=="|"!="
 ASSIGNOP        [=]
 LOGICOP         "&&"|"||"
@@ -186,6 +187,14 @@ EMPT_CHAR_CONST             "\'\'"
 	symbol *s = new symbol(yytext,"INCOP");
 	yylval.symbolInfo = s;
 	return INCOP;
+}
+{DECOP} {
+#ifdef PROMPT 
+  writeLog("DECOP");
+#endif
+	symbol *s = new symbol(yytext,"DECOP");
+	yylval.symbolInfo = s;
+	return DECOP;
 }
 {RELOP} {
 #ifdef PROMPT 
