@@ -106,7 +106,7 @@ int label_count = 0 ;
 string newLabel(){
     return "L"+to_string(label_count++);
 }
-
+string Lif,Lelse,Lendif;
 
 void yyerror(const char *s){
     error_count++;
@@ -117,12 +117,14 @@ void yyerror(const char *s){
 }
 
 #define writeLog(grammer,text) logfile<<"Line "<<line_count<<": "<<grammer<<"\n\n"<<text<<"\n"<<endl;
-#define comment(text) codefile<<"; Line "<<line_count<<": "<<text<<endl; 
+#define comment(text) codefile<<"; Line "<<line_count<<": "<<text; 
 
-void writeCode(string s){
+void writeCode(string s,string c=""){
     for(int i=0;i<tab_count;i++)
         codefile <<"\t" ;
     codefile<<s;
+    if( c!="" ) comment(c) ;
+    codefile<<"\n" ;
 }
 void writeError(string s){
     error_count++;
@@ -132,7 +134,7 @@ void writeError(string s){
 
 
 
-#line 136 "y.tab.c"
+#line 138 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -273,12 +275,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 67 "parser.y"
+#line 69 "parser.y"
 
     symbol* symbolInfo;
     grammer_info* grammerInfo;
 
-#line 282 "y.tab.c"
+#line 284 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -357,18 +359,22 @@ enum yysymbol_kind_t
   YYSYMBOL_58_3 = 58,                      /* $@3  */
   YYSYMBOL_59_4 = 59,                      /* $@4  */
   YYSYMBOL_statements = 60,                /* statements  */
-  YYSYMBOL_statement = 61,                 /* statement  */
-  YYSYMBOL_expression_statement = 62,      /* expression_statement  */
-  YYSYMBOL_expression = 63,                /* expression  */
-  YYSYMBOL_variable = 64,                  /* variable  */
-  YYSYMBOL_logic_expression = 65,          /* logic_expression  */
-  YYSYMBOL_rel_expression = 66,            /* rel_expression  */
-  YYSYMBOL_simple_expression = 67,         /* simple_expression  */
-  YYSYMBOL_term = 68,                      /* term  */
-  YYSYMBOL_unary_expression = 69,          /* unary_expression  */
-  YYSYMBOL_factor = 70,                    /* factor  */
-  YYSYMBOL_argument_list = 71,             /* argument_list  */
-  YYSYMBOL_arguments = 72                  /* arguments  */
+  YYSYMBOL_ifprefix = 61,                  /* ifprefix  */
+  YYSYMBOL_62_5 = 62,                      /* $@5  */
+  YYSYMBOL_statement = 63,                 /* statement  */
+  YYSYMBOL_64_6 = 64,                      /* $@6  */
+  YYSYMBOL_expression_statement = 65,      /* expression_statement  */
+  YYSYMBOL_expression = 66,                /* expression  */
+  YYSYMBOL_67_7 = 67,                      /* $@7  */
+  YYSYMBOL_variable = 68,                  /* variable  */
+  YYSYMBOL_logic_expression = 69,          /* logic_expression  */
+  YYSYMBOL_rel_expression = 70,            /* rel_expression  */
+  YYSYMBOL_simple_expression = 71,         /* simple_expression  */
+  YYSYMBOL_term = 72,                      /* term  */
+  YYSYMBOL_unary_expression = 73,          /* unary_expression  */
+  YYSYMBOL_factor = 74,                    /* factor  */
+  YYSYMBOL_argument_list = 75,             /* argument_list  */
+  YYSYMBOL_arguments = 76                  /* arguments  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -690,16 +696,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  11
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   157
+#define YYLAST   158
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  45
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  28
+#define YYNNTS  32
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  71
+#define YYNRULES  75
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  131
+#define YYNSTATES  135
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   299
@@ -752,14 +758,14 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    94,    94,   102,   108,   116,   122,   127,   133,   181,
-     194,   201,   208,   216,   227,   235,   245,   254,   267,   277,
-     290,   299,   307,   315,   324,   324,   398,   398,   453,   463,
-     463,   482,   482,   500,   506,   513,   519,   525,   531,   537,
-     543,   549,   555,   561,   577,   586,   591,   602,   612,   634,
-     655,   694,   704,   742,   752,   791,   801,   829,   839,   878,
-     892,   903,   913,   925,   959,   971,   982,   989,   996,  1005,
-    1014,  1022
+       0,    96,    96,   104,   110,   118,   124,   129,   135,   183,
+     196,   203,   210,   218,   229,   237,   247,   256,   269,   279,
+     292,   301,   309,   317,   326,   326,   398,   398,   451,   461,
+     461,   480,   480,   498,   504,   511,   511,   527,   533,   539,
+     545,   551,   551,   566,   576,   582,   595,   611,   620,   625,
+     636,   646,   646,   676,   698,   737,   747,   785,   795,   834,
+     844,   872,   882,   921,   935,   947,   957,   969,  1003,  1015,
+    1026,  1033,  1040,  1049,  1058,  1066
 };
 #endif
 
@@ -785,9 +791,10 @@ static const char *const yytname[] =
   "start", "program", "unit", "var_declaration", "type_specifier",
   "declaration_list", "func_declaration", "parameter_list",
   "func_definition", "$@1", "$@2", "compound_statement", "$@3", "$@4",
-  "statements", "statement", "expression_statement", "expression",
-  "variable", "logic_expression", "rel_expression", "simple_expression",
-  "term", "unary_expression", "factor", "argument_list", "arguments", YY_NULLPTR
+  "statements", "ifprefix", "$@5", "statement", "$@6",
+  "expression_statement", "expression", "$@7", "variable",
+  "logic_expression", "rel_expression", "simple_expression", "term",
+  "unary_expression", "factor", "argument_list", "arguments", YY_NULLPTR
 };
 
 static const char *
@@ -810,12 +817,12 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-76)
+#define YYPACT_NINF (-70)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-32)
+#define YYTABLE_NINF (-52)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -824,20 +831,20 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      69,   -76,   -76,   -76,    25,    69,   -76,   -76,    10,   -76,
-     -76,   -76,   -76,   -12,    -1,    45,   -76,    74,    -9,    12,
-     -76,    30,    33,    28,   -17,    62,    66,    -2,   -76,    75,
-     -76,    72,    69,   -76,    65,    83,   -76,   -76,   -76,   -76,
-      75,    70,    82,    92,    87,   -76,   -76,   -76,    84,    88,
-      91,    93,   116,   116,   -76,   116,   116,    14,   -76,   -76,
-      94,   -76,    11,   -76,    53,   -76,   -76,    90,    21,   -76,
-      89,     7,    95,   -76,   -76,   -76,   -76,   116,   107,   116,
-      98,    99,    55,   -76,   -76,   116,   116,    85,   102,   -76,
-     -76,   -76,   -76,   -76,   116,   116,   116,   116,   116,   110,
-     107,   113,   -76,   -76,   -76,   114,   115,   122,   124,   117,
-     -76,   -76,    95,   111,   -76,    92,   116,    92,   -76,   116,
-     -76,   123,   144,   130,   -76,   -76,   -76,    92,    92,   -76,
-     -76
+     101,   -70,   -70,   -70,    35,   101,   -70,   -70,     6,   -70,
+     -70,   -70,   -70,   -12,    55,     2,   -70,     8,     0,     5,
+     -70,    38,    31,    29,    14,    47,    56,    -7,   -70,    76,
+     -70,    70,   101,   -70,    61,    80,   -70,   -70,   -70,   -70,
+      76,    67,    79,    85,    87,   -70,   -70,   -70,    89,    84,
+      92,    95,   109,   109,   -70,   109,   109,    68,   -70,   -70,
+      96,   -70,     7,   -70,    46,   114,   -70,   -70,    99,    45,
+     -70,    98,    -5,   104,   -70,   -70,   -70,   -70,   109,   100,
+     109,   102,   107,    -9,   -70,   -70,   109,   109,   105,   110,
+     -70,   -70,   -70,   -70,   -70,   -70,   113,   109,   109,   109,
+     109,   117,   100,   119,   -70,   -70,   -70,   120,   123,   125,
+     127,   129,    85,   109,   -70,   104,   126,   -70,   -70,   109,
+      85,   -70,   109,   -70,   128,   -70,   -70,    85,   130,   -70,
+     -70,   -70,   -70,    85,   -70
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -850,31 +857,33 @@ static const yytype_int8 yydefact[] =
        8,     0,    26,    23,     0,     0,    14,     0,    18,     0,
       22,    24,     0,    15,     0,    29,    19,    28,    27,    17,
        0,    21,     0,     0,     0,    25,    20,    13,     0,     0,
-       0,     0,     0,     0,    45,     0,     0,    49,    65,    66,
-       0,    35,     0,    37,     0,    34,    36,     0,    62,    47,
-      51,    53,    55,    57,    61,    32,    44,     0,     0,     0,
-       0,     0,    62,    59,    60,     0,     0,     0,    16,    30,
-      33,    46,    67,    68,     0,     0,     0,     0,     0,     0,
-       0,     0,    43,    64,    71,     0,    69,     0,    49,     0,
-      48,    52,    56,    54,    58,     0,     0,     0,    63,     0,
-      50,     0,    40,     0,    41,    70,    42,     0,     0,    39,
-      38
+       0,     0,     0,     0,    48,     0,     0,    53,    69,    70,
+       0,    37,     0,    39,     0,    43,    34,    38,     0,    66,
+      50,    55,    57,    59,    61,    65,    32,    47,     0,     0,
+       0,     0,     0,    66,    63,    64,     0,     0,     0,    16,
+      30,    33,    41,    49,    71,    72,     0,     0,     0,     0,
+       0,     0,     0,     0,    46,    68,    75,     0,    73,     0,
+      53,     0,     0,     0,    56,    60,    58,    62,    35,     0,
+       0,    67,     0,    54,     0,    42,    52,     0,     0,    44,
+      74,    45,    36,     0,    40
 };
 
   /* YYPGOTO[NTERM-NUM].  */
-static const yytype_int8 yypgoto[] =
+static const yytype_int16 yypgoto[] =
 {
-     -76,   -76,   -76,   112,    18,    16,   -76,   -76,   -76,   -76,
-     -76,   -76,   -14,   -76,   -76,   -76,   -60,   -69,   -50,   -55,
-     -75,    60,    59,    61,   -49,   -76,   -76,   -76
+     -70,   -70,   -70,   150,    18,    82,   -70,   -70,   -70,   -70,
+     -70,   -70,   -16,   -70,   -70,   -70,   -70,   -70,   -64,   -70,
+     -69,   -49,   -70,   -54,   -61,    59,    58,    60,   -50,   -70,
+     -70,   -70
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
        0,     4,     5,     6,    61,    62,    15,     9,    24,    10,
-      40,    29,    63,    43,    44,    64,    65,    66,    67,    68,
-      69,    70,    71,    72,    73,    74,   105,   106
+      40,    29,    63,    43,    44,    64,    65,   127,    66,   112,
+      67,    68,    96,    69,    70,    71,    72,    73,    74,    75,
+     107,   108
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -882,42 +891,42 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int16 yytable[] =
 {
-      82,    82,    80,    81,    90,    31,    83,    84,    32,   100,
-     104,    13,    13,    37,    16,    38,     8,    35,     7,   110,
-      17,     8,    18,     7,    36,    11,    45,    99,    25,   101,
-      82,   116,   109,    23,    96,    85,   107,    86,    97,    82,
-      82,    82,    82,    82,   125,    14,    88,    26,    41,   114,
-      92,    93,    27,    94,    48,   122,    49,   124,    50,    28,
-       1,     2,     3,    30,    82,    51,   123,   129,   130,    52,
-      19,    20,    35,    89,    53,    21,     1,     2,     3,    54,
-      55,     1,     2,     3,    92,    93,    33,    56,    57,    34,
-      58,    59,    60,    48,    35,    49,    22,    50,    39,     1,
-       2,     3,    42,   -31,    51,    46,    47,    75,    52,    77,
-      76,    35,    78,    53,    79,    87,    91,    12,    54,    55,
-     108,   103,    95,    98,   102,    18,    56,    57,    53,    58,
-      59,    60,   115,    54,    55,   117,   118,    53,    96,   121,
-     119,    56,    57,    55,    58,    59,   120,    86,   127,   126,
-      56,    57,   128,    58,    59,   111,   113,   112
+      91,    83,    83,    81,    82,    84,    85,    13,    13,    21,
+     102,    37,    35,    38,    16,     1,     2,     3,     7,    36,
+      94,    95,    98,     7,    45,   106,    99,    19,    20,   101,
+      22,   103,    83,   119,   111,    11,    31,    25,   109,    32,
+      26,    14,    89,    83,    83,    83,    83,    48,   125,    49,
+     117,    50,   126,     1,     2,     3,   129,    28,    51,    83,
+      27,   130,    52,   132,    30,    35,    90,    53,    83,   134,
+     128,    33,    54,    55,    94,    95,    17,   -51,    18,    34,
+      56,    57,     8,    58,    59,    60,    48,     8,    49,    86,
+      50,    87,     1,     2,     3,    35,    39,    51,    42,    23,
+     -31,    52,    46,    47,    35,    78,    53,    76,     1,     2,
+       3,    54,    55,    79,    41,    77,    80,    88,    92,    56,
+      57,    53,    58,    59,    60,    93,    54,    55,   104,   105,
+      53,    97,   100,    18,    56,    57,    55,    58,    59,   118,
+     110,   120,   121,    56,    57,   113,    58,    59,   122,   123,
+      87,   124,   133,    98,   131,    12,   114,   116,   115
 };
 
 static const yytype_uint8 yycheck[] =
 {
-      55,    56,    52,    53,    64,    22,    55,    56,    25,    78,
-      85,     1,     1,    27,    26,    29,     0,    19,     0,    94,
-      21,     5,    23,     5,    26,     0,    40,    77,    37,    79,
-      85,   100,    87,    17,    27,    21,    86,    23,    31,    94,
-      95,    96,    97,    98,   119,    35,    35,    35,    32,    98,
-      29,    30,    22,    32,     1,   115,     3,   117,     5,    26,
-       7,     8,     9,    35,   119,    12,   116,   127,   128,    16,
-      25,    26,    19,    20,    21,     1,     7,     8,     9,    26,
-      27,     7,     8,     9,    29,    30,    24,    34,    35,    23,
-      37,    38,    39,     1,    19,     3,    22,     5,    26,     7,
-       8,     9,    37,    20,    12,    35,    24,    20,    16,    21,
-      26,    19,    21,    21,    21,    21,    26,     5,    26,    27,
-      35,    22,    33,    28,    26,    23,    34,    35,    21,    37,
-      38,    39,    22,    26,    27,    22,    22,    21,    27,    22,
-      25,    34,    35,    27,    37,    38,    24,    23,     4,    26,
-      34,    35,    22,    37,    38,    95,    97,    96
+      64,    55,    56,    52,    53,    55,    56,     1,     1,     1,
+      79,    27,    19,    29,    26,     7,     8,     9,     0,    26,
+      29,    30,    27,     5,    40,    86,    31,    25,    26,    78,
+      22,    80,    86,   102,    88,     0,    22,    37,    87,    25,
+      35,    35,    35,    97,    98,    99,   100,     1,   112,     3,
+     100,     5,   113,     7,     8,     9,   120,    26,    12,   113,
+      22,   122,    16,   127,    35,    19,    20,    21,   122,   133,
+     119,    24,    26,    27,    29,    30,    21,    32,    23,    23,
+      34,    35,     0,    37,    38,    39,     1,     5,     3,    21,
+       5,    23,     7,     8,     9,    19,    26,    12,    37,    17,
+      20,    16,    35,    24,    19,    21,    21,    20,     7,     8,
+       9,    26,    27,    21,    32,    26,    21,    21,     4,    34,
+      35,    21,    37,    38,    39,    26,    26,    27,    26,    22,
+      21,    33,    28,    23,    34,    35,    27,    37,    38,    22,
+      35,    22,    22,    34,    35,    32,    37,    38,    25,    24,
+      23,    22,    22,    27,    26,     5,    97,    99,    98
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -930,14 +939,14 @@ static const yytype_int8 yystos[] =
       35,    22,    25,    24,    23,    19,    26,    57,    57,    26,
       55,    50,    37,    58,    59,    57,    35,    24,     1,     3,
        5,    12,    16,    21,    26,    27,    34,    35,    37,    38,
-      39,    49,    50,    57,    60,    61,    62,    63,    64,    65,
-      66,    67,    68,    69,    70,    20,    26,    21,    21,    21,
-      63,    63,    64,    69,    69,    21,    23,    21,    35,    20,
-      61,    26,    29,    30,    32,    33,    27,    31,    28,    63,
-      62,    63,    26,    22,    65,    71,    72,    63,    35,    64,
-      65,    66,    68,    67,    69,    22,    62,    22,    22,    25,
-      24,    22,    61,    63,    61,    65,    26,     4,    22,    61,
-      61
+      39,    49,    50,    57,    60,    61,    63,    65,    66,    68,
+      69,    70,    71,    72,    73,    74,    20,    26,    21,    21,
+      21,    66,    66,    68,    73,    73,    21,    23,    21,    35,
+      20,    63,     4,    26,    29,    30,    67,    33,    27,    31,
+      28,    66,    65,    66,    26,    22,    69,    75,    76,    66,
+      35,    68,    64,    32,    70,    72,    71,    73,    22,    65,
+      22,    22,    25,    24,    22,    63,    69,    62,    66,    63,
+      69,    26,    63,    22,    63
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -946,11 +955,11 @@ static const yytype_int8 yyr1[] =
        0,    45,    46,    47,    47,    48,    48,    48,    49,    49,
       50,    50,    50,    51,    51,    51,    51,    52,    52,    52,
       53,    53,    53,    53,    55,    54,    56,    54,    54,    58,
-      57,    59,    57,    60,    60,    61,    61,    61,    61,    61,
-      61,    61,    61,    61,    61,    62,    62,    63,    63,    64,
-      64,    65,    65,    66,    66,    67,    67,    68,    68,    69,
-      69,    69,    70,    70,    70,    70,    70,    70,    70,    71,
-      72,    72
+      57,    59,    57,    60,    60,    62,    61,    63,    63,    63,
+      63,    64,    63,    63,    63,    63,    63,    63,    65,    65,
+      66,    67,    66,    68,    68,    69,    69,    70,    70,    71,
+      71,    72,    72,    73,    73,    73,    74,    74,    74,    74,
+      74,    74,    74,    75,    76,    76
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -959,11 +968,11 @@ static const yytype_int8 yyr2[] =
        0,     2,     1,     2,     1,     1,     1,     1,     3,     3,
        1,     1,     1,     6,     3,     4,     1,     6,     5,     6,
        4,     3,     2,     1,     0,     7,     0,     6,     6,     0,
-       4,     0,     3,     2,     1,     1,     1,     1,     7,     7,
-       5,     5,     5,     3,     2,     1,     2,     1,     3,     1,
-       4,     1,     3,     1,     3,     1,     3,     1,     3,     2,
-       2,     1,     1,     4,     3,     1,     1,     2,     2,     1,
-       3,     1
+       4,     0,     3,     2,     1,     0,     6,     1,     1,     1,
+       7,     0,     4,     1,     5,     5,     3,     2,     1,     2,
+       1,     0,     4,     1,     4,     1,     3,     1,     3,     1,
+       3,     1,     3,     2,     2,     1,     1,     4,     3,     1,
+       1,     2,     2,     1,     3,     1
 };
 
 
@@ -1437,377 +1446,7 @@ yydestruct (const char *yymsg,
   YY_SYMBOL_PRINT (yymsg, yykind, yyvaluep, yylocationp);
 
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  switch (yykind)
-    {
-    case YYSYMBOL_IF: /* IF  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1446 "y.tab.c"
-        break;
-
-    case YYSYMBOL_ELSE: /* ELSE  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1452 "y.tab.c"
-        break;
-
-    case YYSYMBOL_FOR: /* FOR  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1458 "y.tab.c"
-        break;
-
-    case YYSYMBOL_DO: /* DO  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1464 "y.tab.c"
-        break;
-
-    case YYSYMBOL_INT: /* INT  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1470 "y.tab.c"
-        break;
-
-    case YYSYMBOL_FLOAT: /* FLOAT  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1476 "y.tab.c"
-        break;
-
-    case YYSYMBOL_VOID: /* VOID  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1482 "y.tab.c"
-        break;
-
-    case YYSYMBOL_SWITCH: /* SWITCH  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1488 "y.tab.c"
-        break;
-
-    case YYSYMBOL_DEFAULT: /* DEFAULT  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1494 "y.tab.c"
-        break;
-
-    case YYSYMBOL_WHILE: /* WHILE  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1500 "y.tab.c"
-        break;
-
-    case YYSYMBOL_BREAK: /* BREAK  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1506 "y.tab.c"
-        break;
-
-    case YYSYMBOL_CHAR: /* CHAR  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1512 "y.tab.c"
-        break;
-
-    case YYSYMBOL_DOUBLE: /* DOUBLE  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1518 "y.tab.c"
-        break;
-
-    case YYSYMBOL_RETURN: /* RETURN  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1524 "y.tab.c"
-        break;
-
-    case YYSYMBOL_CASE: /* CASE  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1530 "y.tab.c"
-        break;
-
-    case YYSYMBOL_CONTINUE: /* CONTINUE  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1536 "y.tab.c"
-        break;
-
-    case YYSYMBOL_LCURL: /* LCURL  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1542 "y.tab.c"
-        break;
-
-    case YYSYMBOL_RCURL: /* RCURL  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1548 "y.tab.c"
-        break;
-
-    case YYSYMBOL_LPAREN: /* LPAREN  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1554 "y.tab.c"
-        break;
-
-    case YYSYMBOL_RPAREN: /* RPAREN  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1560 "y.tab.c"
-        break;
-
-    case YYSYMBOL_LTHIRD: /* LTHIRD  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1566 "y.tab.c"
-        break;
-
-    case YYSYMBOL_RTHIRD: /* RTHIRD  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1572 "y.tab.c"
-        break;
-
-    case YYSYMBOL_COMMA: /* COMMA  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1578 "y.tab.c"
-        break;
-
-    case YYSYMBOL_SEMICOLON: /* SEMICOLON  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1584 "y.tab.c"
-        break;
-
-    case YYSYMBOL_ADDOP: /* ADDOP  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1590 "y.tab.c"
-        break;
-
-    case YYSYMBOL_MULOP: /* MULOP  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1596 "y.tab.c"
-        break;
-
-    case YYSYMBOL_INCOP: /* INCOP  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1602 "y.tab.c"
-        break;
-
-    case YYSYMBOL_DECOP: /* DECOP  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1608 "y.tab.c"
-        break;
-
-    case YYSYMBOL_RELOP: /* RELOP  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1614 "y.tab.c"
-        break;
-
-    case YYSYMBOL_ASSIGNOP: /* ASSIGNOP  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1620 "y.tab.c"
-        break;
-
-    case YYSYMBOL_LOGICOP: /* LOGICOP  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1626 "y.tab.c"
-        break;
-
-    case YYSYMBOL_NOT: /* NOT  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1632 "y.tab.c"
-        break;
-
-    case YYSYMBOL_ID: /* ID  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1638 "y.tab.c"
-        break;
-
-    case YYSYMBOL_CONST_CHAR: /* CONST_CHAR  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1644 "y.tab.c"
-        break;
-
-    case YYSYMBOL_CONST_INT: /* CONST_INT  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1650 "y.tab.c"
-        break;
-
-    case YYSYMBOL_CONST_FLOAT: /* CONST_FLOAT  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1656 "y.tab.c"
-        break;
-
-    case YYSYMBOL_PRINTLN: /* PRINTLN  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1662 "y.tab.c"
-        break;
-
-    case YYSYMBOL_MAIN: /* MAIN  */
-#line 90 "parser.y"
-            { free(((*yyvaluep).symbolInfo)); }
-#line 1668 "y.tab.c"
-        break;
-
-    case YYSYMBOL_start: /* start  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1674 "y.tab.c"
-        break;
-
-    case YYSYMBOL_program: /* program  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1680 "y.tab.c"
-        break;
-
-    case YYSYMBOL_unit: /* unit  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1686 "y.tab.c"
-        break;
-
-    case YYSYMBOL_var_declaration: /* var_declaration  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1692 "y.tab.c"
-        break;
-
-    case YYSYMBOL_type_specifier: /* type_specifier  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1698 "y.tab.c"
-        break;
-
-    case YYSYMBOL_declaration_list: /* declaration_list  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1704 "y.tab.c"
-        break;
-
-    case YYSYMBOL_func_declaration: /* func_declaration  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1710 "y.tab.c"
-        break;
-
-    case YYSYMBOL_parameter_list: /* parameter_list  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1716 "y.tab.c"
-        break;
-
-    case YYSYMBOL_func_definition: /* func_definition  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1722 "y.tab.c"
-        break;
-
-    case YYSYMBOL_compound_statement: /* compound_statement  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1728 "y.tab.c"
-        break;
-
-    case YYSYMBOL_statements: /* statements  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1734 "y.tab.c"
-        break;
-
-    case YYSYMBOL_statement: /* statement  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1740 "y.tab.c"
-        break;
-
-    case YYSYMBOL_expression_statement: /* expression_statement  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1746 "y.tab.c"
-        break;
-
-    case YYSYMBOL_expression: /* expression  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1752 "y.tab.c"
-        break;
-
-    case YYSYMBOL_variable: /* variable  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1758 "y.tab.c"
-        break;
-
-    case YYSYMBOL_logic_expression: /* logic_expression  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1764 "y.tab.c"
-        break;
-
-    case YYSYMBOL_rel_expression: /* rel_expression  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1770 "y.tab.c"
-        break;
-
-    case YYSYMBOL_simple_expression: /* simple_expression  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1776 "y.tab.c"
-        break;
-
-    case YYSYMBOL_term: /* term  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1782 "y.tab.c"
-        break;
-
-    case YYSYMBOL_unary_expression: /* unary_expression  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1788 "y.tab.c"
-        break;
-
-    case YYSYMBOL_factor: /* factor  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1794 "y.tab.c"
-        break;
-
-    case YYSYMBOL_argument_list: /* argument_list  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1800 "y.tab.c"
-        break;
-
-    case YYSYMBOL_arguments: /* arguments  */
-#line 91 "parser.y"
-            { free(((*yyvaluep).grammerInfo)); }
-#line 1806 "y.tab.c"
-        break;
-
-      default:
-        break;
-    }
+  YY_USE (yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
@@ -2071,7 +1710,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* start: program  */
-#line 94 "parser.y"
+#line 96 "parser.y"
                 {
             writeLog("start: program","");
             symbolTable->print_all_scope_table() ;
@@ -2079,64 +1718,64 @@ yyreduce:
             free((yyvsp[0].grammerInfo));
             YYACCEPT;
         }
-#line 2083 "y.tab.c"
+#line 1722 "y.tab.c"
     break;
 
   case 3: /* program: program unit  */
-#line 102 "parser.y"
+#line 104 "parser.y"
                       {
             (yyval.grammerInfo) = new grammer_info("program: program unit",string((yyvsp[-1].grammerInfo)->text+"\n"+(yyvsp[0].grammerInfo)->text) );
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
 
             free((yyvsp[-1].grammerInfo)); free((yyvsp[0].grammerInfo));
         }
-#line 2094 "y.tab.c"
+#line 1733 "y.tab.c"
     break;
 
   case 4: /* program: unit  */
-#line 108 "parser.y"
+#line 110 "parser.y"
                    {
             (yyval.grammerInfo) = new grammer_info(string((yyvsp[0].grammerInfo)->text));
             writeLog("program: unit",(yyval.grammerInfo)->text);
 
             free((yyvsp[0].grammerInfo));
         }
-#line 2105 "y.tab.c"
+#line 1744 "y.tab.c"
     break;
 
   case 5: /* unit: var_declaration  */
-#line 116 "parser.y"
+#line 118 "parser.y"
                         { 
             (yyval.grammerInfo) = new grammer_info(string((yyvsp[0].grammerInfo)->text));
             free((yyvsp[0].grammerInfo));
 
             writeLog("unit: var_declaration",(yyval.grammerInfo)->text); 
         }
-#line 2116 "y.tab.c"
+#line 1755 "y.tab.c"
     break;
 
   case 6: /* unit: func_declaration  */
-#line 122 "parser.y"
+#line 124 "parser.y"
                           {
             (yyval.grammerInfo) = new grammer_info(string((yyvsp[0].grammerInfo)->text));
             free((yyvsp[0].grammerInfo));
             writeLog("unit: func_declaration",(yyval.grammerInfo)->text);
         }
-#line 2126 "y.tab.c"
+#line 1765 "y.tab.c"
     break;
 
   case 7: /* unit: func_definition  */
-#line 127 "parser.y"
+#line 129 "parser.y"
                          {
             (yyval.grammerInfo) = new grammer_info(string((yyvsp[0].grammerInfo)->text));
             free((yyvsp[0].grammerInfo));
             writeLog("unit: func_definition",(yyval.grammerInfo)->text);
         }
-#line 2136 "y.tab.c"
+#line 1775 "y.tab.c"
     break;
 
   case 8: /* var_declaration: type_specifier declaration_list SEMICOLON  */
-#line 133 "parser.y"
+#line 135 "parser.y"
                                                            {
                     (yyval.grammerInfo) = new grammer_info(string((yyvsp[-2].grammerInfo)->text + " " + (yyvsp[-1].grammerInfo)->text + ";"));
                     if( (yyvsp[-2].grammerInfo)->type == _void_ )
@@ -2146,7 +1785,6 @@ yyreduce:
                     for(int i=0;i<(yyvsp[-1].grammerInfo)->ids.size();i++){
                         (yyvsp[-1].grammerInfo)->ids[i].type = (yyvsp[-2].grammerInfo)->text;
                         symbol* foundSymbol = symbolTable->lookup_current((yyvsp[-1].grammerInfo)->ids[i].name ) ; 
-
                         if( foundSymbol == nullptr ){
                             offset_bp -= 2;
                             dec_cnt++;
@@ -2158,12 +1796,13 @@ yyreduce:
                             symbolTable->insert(foundSymbol);
                             if( (yyvsp[-1].grammerInfo)->ids[i].array_size != -1 ){
                                 offset_bp -= 2*((yyvsp[-1].grammerInfo)->ids[i].array_size-1) ;
+                                dec_cnt += (yyvsp[-1].grammerInfo)->ids[i].array_size-1;
                             }
 
                             // code 
                             if( symbolTable->current_scope()->get_id() == "1" ){
                                 // codefile << $2->ids[i].name << " DW " << "?\n";
-                                writeCode((yyvsp[-1].grammerInfo)->ids[i].name+" DW "+"?\n");
+                                writeCode((yyvsp[-1].grammerInfo)->ids[i].name+" DW "+"?");
                             } 
                             else {
                                 // writeCode("PUSH 0\n");
@@ -2178,18 +1817,18 @@ yyreduce:
                     }
                     //code 
                     if( symbolTable->current_scope()->get_id() != "1" ) 
-                        writeCode("ADD SP, "+to_string(dec_cnt*-2)+"\n");
+                        writeCode("ADD SP, "+to_string(dec_cnt*-2));
                     //end 
 
 
                     free((yyvsp[-2].grammerInfo)); free((yyvsp[-1].grammerInfo)); 
                     writeLog("var_declaration: type_specifier declaration_list SEMICOLON",(yyval.grammerInfo)->text);
                 }
-#line 2189 "y.tab.c"
+#line 1828 "y.tab.c"
     break;
 
   case 9: /* var_declaration: type_specifier error SEMICOLON  */
-#line 181 "parser.y"
+#line 183 "parser.y"
                                                  {
                     // yyerror("syntax error");
                     yyerrok;
@@ -2201,11 +1840,11 @@ yyreduce:
 
                     writeLog("var_declaration: type_specifier declaration_list SEMICOLON",(yyval.grammerInfo)->text);
                 }
-#line 2205 "y.tab.c"
+#line 1844 "y.tab.c"
     break;
 
   case 10: /* type_specifier: INT  */
-#line 194 "parser.y"
+#line 196 "parser.y"
                     {
                     (yyval.grammerInfo) = new grammer_info(string("int"));
                     (yyval.grammerInfo)->text = "int";
@@ -2213,11 +1852,11 @@ yyreduce:
 
                     writeLog("type_specifier: INT",(yyval.grammerInfo)->text);
                 }
-#line 2217 "y.tab.c"
+#line 1856 "y.tab.c"
     break;
 
   case 11: /* type_specifier: FLOAT  */
-#line 201 "parser.y"
+#line 203 "parser.y"
                        {
                     (yyval.grammerInfo) = new grammer_info(string("float"));
                     (yyval.grammerInfo)->text = "float";
@@ -2225,11 +1864,11 @@ yyreduce:
 
                     writeLog("type_specifier: FLOAT",(yyval.grammerInfo)->text);
                 }
-#line 2229 "y.tab.c"
+#line 1868 "y.tab.c"
     break;
 
   case 12: /* type_specifier: VOID  */
-#line 208 "parser.y"
+#line 210 "parser.y"
                       {
                     (yyval.grammerInfo) = new grammer_info(string("void"));
                     (yyval.grammerInfo)->text = "void";
@@ -2237,11 +1876,11 @@ yyreduce:
 
                     writeLog("type_specifier: VOID",(yyval.grammerInfo)->text);
                 }
-#line 2241 "y.tab.c"
+#line 1880 "y.tab.c"
     break;
 
   case 13: /* declaration_list: declaration_list COMMA ID LTHIRD CONST_INT RTHIRD  */
-#line 216 "parser.y"
+#line 218 "parser.y"
                                                                     {
                     (yyval.grammerInfo) = new grammer_info("declaration_list: declaration_list COMMA ID LTHIRD CONST_INT RTHIRD",string((yyvsp[-5].grammerInfo)->text + "," + (yyvsp[-3].symbolInfo)->getName() + "[" + (yyvsp[-1].symbolInfo)->getName() + "]"));
                     (yyval.grammerInfo)->ids = (yyvsp[-5].grammerInfo)->ids;
@@ -2253,11 +1892,11 @@ yyreduce:
 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);                
                 }
-#line 2257 "y.tab.c"
+#line 1896 "y.tab.c"
     break;
 
   case 14: /* declaration_list: declaration_list COMMA ID  */
-#line 227 "parser.y"
+#line 229 "parser.y"
                                            {
                     (yyval.grammerInfo) = new grammer_info("declaration_list: declaration_list COMMA ID",string((yyvsp[-2].grammerInfo)->text + "," + (yyvsp[0].symbolInfo)->getName()));
                     (yyval.grammerInfo)->ids = (yyvsp[-2].grammerInfo)->ids;
@@ -2266,11 +1905,11 @@ yyreduce:
 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                 }
-#line 2270 "y.tab.c"
+#line 1909 "y.tab.c"
     break;
 
   case 15: /* declaration_list: ID LTHIRD CONST_INT RTHIRD  */
-#line 235 "parser.y"
+#line 237 "parser.y"
                                              {
                     (yyval.grammerInfo) = new grammer_info("declaration_list: ID LTHIRD CONST_INT RTHIRD",string((yyvsp[-3].symbolInfo)->getName() + "[" + (yyvsp[-1].symbolInfo)->getName() + "]"));
                     if( stoi((yyvsp[-1].symbolInfo)->getName()) < 0 )
@@ -2281,11 +1920,11 @@ yyreduce:
 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text) ;
                 }
-#line 2285 "y.tab.c"
+#line 1924 "y.tab.c"
     break;
 
   case 16: /* declaration_list: ID  */
-#line 245 "parser.y"
+#line 247 "parser.y"
                      {
                     (yyval.grammerInfo) = new grammer_info("declaration_list: ID",string((yyvsp[0].symbolInfo)->getName()));
                     (yyval.grammerInfo)->ids.push_back({(yyvsp[0].symbolInfo)->getName(),(yyvsp[0].symbolInfo)->getType(),(yyvsp[0].symbolInfo)->getArraySize()}); // default array_size = -1;
@@ -2293,11 +1932,11 @@ yyreduce:
 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                 }
-#line 2297 "y.tab.c"
+#line 1936 "y.tab.c"
     break;
 
   case 17: /* func_declaration: type_specifier ID LPAREN parameter_list RPAREN SEMICOLON  */
-#line 254 "parser.y"
+#line 256 "parser.y"
                                                                            {
                     (yyval.grammerInfo) = new grammer_info("func_declaration: type_specifier ID LPAREN parameter_list RPAREN SEMICOLON",(yyvsp[-5].grammerInfo)->text+" "+(yyvsp[-4].symbolInfo)->getName()+"("+(yyvsp[-2].grammerInfo)->text+");");
                     (yyvsp[-4].symbolInfo)->setType((yyvsp[-5].grammerInfo)->text);
@@ -2311,11 +1950,11 @@ yyreduce:
                     
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                 }
-#line 2315 "y.tab.c"
+#line 1954 "y.tab.c"
     break;
 
   case 18: /* func_declaration: type_specifier ID LPAREN RPAREN SEMICOLON  */
-#line 267 "parser.y"
+#line 269 "parser.y"
                                                             {
                     (yyval.grammerInfo) = new grammer_info("func_declaration: type_specifier ID LPAREN RPAREN SEMICOLON",(yyvsp[-4].grammerInfo)->text+" "+(yyvsp[-3].symbolInfo)->getName()+"();");
                     (yyvsp[-3].symbolInfo)->setType((yyvsp[-4].grammerInfo)->text);
@@ -2326,11 +1965,11 @@ yyreduce:
 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);  
                 }
-#line 2330 "y.tab.c"
+#line 1969 "y.tab.c"
     break;
 
   case 19: /* func_declaration: type_specifier ID LPAREN error RPAREN SEMICOLON  */
-#line 277 "parser.y"
+#line 279 "parser.y"
                                                                   {
                     // yyerror("syntax error, function declaration");
                     yyerrok;
@@ -2343,11 +1982,11 @@ yyreduce:
 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);  
                 }
-#line 2347 "y.tab.c"
+#line 1986 "y.tab.c"
     break;
 
   case 20: /* parameter_list: parameter_list COMMA type_specifier ID  */
-#line 290 "parser.y"
+#line 292 "parser.y"
                                                        {
                     (yyval.grammerInfo) = new grammer_info("parameter_list: parameter_list COMMA type_specifier ID",(yyvsp[-3].grammerInfo)->text +"," + (yyvsp[-1].grammerInfo)->text + " " + (yyvsp[0].symbolInfo)->getName());
                     (yyval.grammerInfo)->ids = (yyvsp[-3].grammerInfo)->ids;
@@ -2357,11 +1996,11 @@ yyreduce:
 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                 }
-#line 2361 "y.tab.c"
+#line 2000 "y.tab.c"
     break;
 
   case 21: /* parameter_list: parameter_list COMMA type_specifier  */
-#line 299 "parser.y"
+#line 301 "parser.y"
                                                       {
                     (yyval.grammerInfo) = new grammer_info("parameter_list: parameter_list COMMA type_specifier",(yyvsp[-2].grammerInfo)->text +"," + (yyvsp[0].grammerInfo)->text);
                     (yyval.grammerInfo)->ids = (yyvsp[-2].grammerInfo)->ids;
@@ -2370,11 +2009,11 @@ yyreduce:
 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                 }
-#line 2374 "y.tab.c"
+#line 2013 "y.tab.c"
     break;
 
   case 22: /* parameter_list: type_specifier ID  */
-#line 307 "parser.y"
+#line 309 "parser.y"
                                     {
                     (yyval.grammerInfo) = new grammer_info("parameter_list: type_specifier ID",(yyvsp[-1].grammerInfo)->text +" " + (yyvsp[0].symbolInfo)->getName());
                     (yyvsp[0].symbolInfo)->setType((yyvsp[-1].grammerInfo)->text);
@@ -2383,11 +2022,11 @@ yyreduce:
                     
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text) ;
                 }
-#line 2387 "y.tab.c"
+#line 2026 "y.tab.c"
     break;
 
   case 23: /* parameter_list: type_specifier  */
-#line 315 "parser.y"
+#line 317 "parser.y"
                                  {
                     (yyval.grammerInfo) = new grammer_info((yyvsp[0].grammerInfo)->text);
                     (yyval.grammerInfo)->ids.push_back({"_",(yyvsp[0].grammerInfo)->text,-1});
@@ -2395,11 +2034,11 @@ yyreduce:
 
                     writeLog("parameter_list: type_specifier",(yyval.grammerInfo)->text) ;
                 }
-#line 2399 "y.tab.c"
+#line 2038 "y.tab.c"
     break;
 
   case 24: /* $@1: %empty  */
-#line 324 "parser.y"
+#line 326 "parser.y"
                                                                  {
                         (yyvsp[-3].symbolInfo)->setType((yyvsp[-4].grammerInfo)->text);
                         for(int i=0;i<(yyvsp[-1].grammerInfo)->ids.size();i++){
@@ -2431,15 +2070,13 @@ yyreduce:
 
                         //code 
                         // codefile << $2->getName() << " PROC: \n" ;
-                        writeCode((yyvsp[-3].symbolInfo)->getName() +" PROC\n");
+                        writeCode((yyvsp[-3].symbolInfo)->getName() +" PROC");
                         tab_count++;
                         if( (yyvsp[-3].symbolInfo)->getName() == "main" ){
-                            writeCode("MOV AX, @DATA\n");
-                            writeCode("MOV DS, AX");
-                            comment("load data to DS");
+                            writeCode("MOV AX, @DATA");
+                            writeCode("MOV DS, AX","load data to DS");
                         }
-                        writeCode("MOV BP, SP\n") ;
-                        comment("save SP") ;
+                        writeCode("MOV BP, SP","save SP") ;
                         // end code 
                         offset_bp = 0;
                         
@@ -2459,7 +2096,7 @@ yyreduce:
                         offset_bp = 0 ;
 
                     }
-#line 2463 "y.tab.c"
+#line 2100 "y.tab.c"
     break;
 
   case 25: /* func_definition: type_specifier ID LPAREN parameter_list RPAREN $@1 compound_statement  */
@@ -2469,18 +2106,18 @@ yyreduce:
 
                     // code 
                     if( (yyvsp[-5].symbolInfo)->getName() == "main"){
-                        writeCode("MOV AH, 4CH\n") ;
-                        writeCode("INT 21H\n") ;
+                        writeCode("MOV AH, 4CH") ;
+                        writeCode("INT 21H") ;
                     }
                     --tab_count;
-                    writeCode((yyvsp[-5].symbolInfo)->getName()+" ENDP\n") ;               
+                    writeCode((yyvsp[-5].symbolInfo)->getName()+" ENDP") ;               
                     //end code 
 
                     offset_bp = 0;
                     free((yyvsp[-6].grammerInfo)); free((yyvsp[-3].grammerInfo)); 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text) ;
                 }
-#line 2484 "y.tab.c"
+#line 2121 "y.tab.c"
     break;
 
   case 26: /* $@2: %empty  */
@@ -2512,45 +2149,43 @@ yyreduce:
                         inFunction = 1;
 
                         //code 
-                        writeCode((yyvsp[-2].symbolInfo)->getName()+" PROC\n");
+                        writeCode((yyvsp[-2].symbolInfo)->getName()+" PROC");
                         tab_count++;
                         if( (yyvsp[-2].symbolInfo)->getName() == "main" ){
-                            writeCode("MOV AX, @DATA\n");
-                            writeCode("MOV DS, AX");
-                            comment("load data to DS");
+                            writeCode("MOV AX, @DATA");
+                            writeCode("MOV DS, AX","load data to DS");
                         }
-                        writeCode("MOV BP, SP\n") ;
-                        comment("save SP") ;
+                        writeCode("MOV BP, SP","save SP") ;
                         // end code 
 
                         offset_bp = 0;
                     }
-#line 2529 "y.tab.c"
+#line 2164 "y.tab.c"
     break;
 
   case 27: /* func_definition: type_specifier ID LPAREN RPAREN $@2 compound_statement  */
-#line 437 "parser.y"
+#line 435 "parser.y"
                                          {
                     (yyval.grammerInfo) = new grammer_info("func_definition: type_specifier ID LPAREN RPAREN compound_statement",(yyvsp[-5].grammerInfo)->text+" "+(yyvsp[-4].symbolInfo)->getName()+"()"+(yyvsp[0].grammerInfo)->text); 
                     
                     // code 
                     if( (yyvsp[-4].symbolInfo)->getName() == "main"){
-                        writeCode("MOV AH, 4CH\n") ;
-                        writeCode("INT 21H\n") ;
+                        writeCode("MOV AH, 4CH") ;
+                        writeCode("INT 21H") ;
                     }
                     --tab_count;
-                    writeCode((yyvsp[-4].symbolInfo)->getName()+" ENDP\n") ;               
+                    writeCode((yyvsp[-4].symbolInfo)->getName()+" ENDP") ;               
                     //end code 
                     
                     offset_bp = 0; 
                     free((yyvsp[-5].grammerInfo)); free((yyvsp[-4].symbolInfo));
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                 }
-#line 2550 "y.tab.c"
+#line 2185 "y.tab.c"
     break;
 
   case 28: /* func_definition: type_specifier ID LPAREN error RPAREN compound_statement  */
-#line 453 "parser.y"
+#line 451 "parser.y"
                                                                            {
                     // yyerror("syntax error, function definition");
                     yyerrok;
@@ -2560,11 +2195,11 @@ yyreduce:
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
 
                 }
-#line 2564 "y.tab.c"
+#line 2199 "y.tab.c"
     break;
 
   case 29: /* $@3: %empty  */
-#line 463 "parser.y"
+#line 461 "parser.y"
                           {
                             if( !inFunction ){
                                 symbolTable->enter_scope();
@@ -2574,11 +2209,11 @@ yyreduce:
                             inFunction = 0;
                             offset_bp = 0 ;
                         }
-#line 2578 "y.tab.c"
+#line 2213 "y.tab.c"
     break;
 
   case 30: /* compound_statement: LCURL $@3 statements RCURL  */
-#line 471 "parser.y"
+#line 469 "parser.y"
                                            {
                         (yyval.grammerInfo) = new grammer_info("compound_statement: LCURL statements RCURL","{\n"+(yyvsp[-1].grammerInfo)->text+"\n}");
 
@@ -2590,11 +2225,11 @@ yyreduce:
                         activeFunctions.pop();
                         currentFunction = activeFunctions.top();
                     }
-#line 2594 "y.tab.c"
+#line 2229 "y.tab.c"
     break;
 
   case 31: /* $@4: %empty  */
-#line 482 "parser.y"
+#line 480 "parser.y"
                             {
                             if( !inFunction ){
                                 symbolTable->enter_scope();
@@ -2603,11 +2238,11 @@ yyreduce:
                             }
                             inFunction = 0;
                         }
-#line 2607 "y.tab.c"
+#line 2242 "y.tab.c"
     break;
 
   case 32: /* compound_statement: LCURL $@4 RCURL  */
-#line 490 "parser.y"
+#line 488 "parser.y"
                               {
                         (yyval.grammerInfo) = new grammer_info("compound_statement: LCURL RCURL","{\n}");
 
@@ -2617,121 +2252,173 @@ yyreduce:
                         activeFunctions.pop();
                         currentFunction = activeFunctions.top();
                     }
-#line 2621 "y.tab.c"
+#line 2256 "y.tab.c"
     break;
 
   case 33: /* statements: statements statement  */
-#line 500 "parser.y"
+#line 498 "parser.y"
                                  {
                 (yyval.grammerInfo) = new grammer_info("statements: statements statement",(yyvsp[-1].grammerInfo)->text+"\n"+(yyvsp[0].grammerInfo)->text);
                 free((yyvsp[-1].grammerInfo)); free((yyvsp[0].grammerInfo));
 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2632 "y.tab.c"
+#line 2267 "y.tab.c"
     break;
 
   case 34: /* statements: statement  */
-#line 506 "parser.y"
+#line 504 "parser.y"
                        {
                 (yyval.grammerInfo) = new grammer_info("statements: statement",(yyvsp[0].grammerInfo)->text);
                 free((yyvsp[0].grammerInfo));
 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2643 "y.tab.c"
+#line 2278 "y.tab.c"
     break;
 
-  case 35: /* statement: var_declaration  */
-#line 513 "parser.y"
+  case 35: /* $@5: %empty  */
+#line 511 "parser.y"
+                                       { 
+                    // Lif = newLabel();
+                    Lelse = newLabel();
+                    Lendif = newLabel();
+                    //code
+                    writeCode("POP AX");
+                    writeCode("CMP AX,0");
+                    writeCode("JE "+Lelse) ;
+                    // write
+                    //end
+                }
+#line 2294 "y.tab.c"
+    break;
+
+  case 36: /* ifprefix: IF LPAREN expression RPAREN $@5 statement  */
+#line 521 "parser.y"
+                            {
+                    (yyval.grammerInfo) = new grammer_info("statement: IF LPAREN expression RPAREN statement ELSE statement","if("+(yyvsp[-3].grammerInfo)->text+")\n"+(yyvsp[0].grammerInfo)->text+"\n");
+                
+                    delete (yyvsp[-3].grammerInfo);
+                }
+#line 2304 "y.tab.c"
+    break;
+
+  case 37: /* statement: var_declaration  */
+#line 527 "parser.y"
                             {
                 (yyval.grammerInfo) = new grammer_info("statement: var_declaration",(yyvsp[0].grammerInfo)->text);
                 free((yyvsp[0].grammerInfo));
 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2654 "y.tab.c"
+#line 2315 "y.tab.c"
     break;
 
-  case 36: /* statement: expression_statement  */
-#line 519 "parser.y"
+  case 38: /* statement: expression_statement  */
+#line 533 "parser.y"
                                   {
                 (yyval.grammerInfo) = new grammer_info("statement: expression_statement",(yyvsp[0].grammerInfo)->text);
                 free((yyvsp[0].grammerInfo));
 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2665 "y.tab.c"
+#line 2326 "y.tab.c"
     break;
 
-  case 37: /* statement: compound_statement  */
-#line 525 "parser.y"
+  case 39: /* statement: compound_statement  */
+#line 539 "parser.y"
                                 {
                 (yyval.grammerInfo) = new grammer_info("statement: compound_statement",(yyvsp[0].grammerInfo)->text);
                 free((yyvsp[0].grammerInfo));
 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2676 "y.tab.c"
+#line 2337 "y.tab.c"
     break;
 
-  case 38: /* statement: FOR LPAREN expression_statement expression_statement expression RPAREN statement  */
-#line 531 "parser.y"
+  case 40: /* statement: FOR LPAREN expression_statement expression_statement expression RPAREN statement  */
+#line 545 "parser.y"
                                                                                               {
                 (yyval.grammerInfo) = new grammer_info("statement: FOR LPAREN expression_statement expression_statement expression RPAREN statement","for("+(yyvsp[-4].grammerInfo)->text+(yyvsp[-3].grammerInfo)->text+(yyvsp[-2].grammerInfo)->text+")\n"+(yyvsp[0].grammerInfo)->text);
                 free((yyvsp[-4].grammerInfo)); free((yyvsp[-3].grammerInfo)); free((yyvsp[-2].grammerInfo)); free((yyvsp[0].grammerInfo));
                 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);  
             }
-#line 2687 "y.tab.c"
+#line 2348 "y.tab.c"
     break;
 
-  case 39: /* statement: IF LPAREN expression RPAREN statement ELSE statement  */
-#line 537 "parser.y"
-                                                                  {
-                (yyval.grammerInfo) = new grammer_info("statement: IF LPAREN expression RPAREN statement ELSE statement","if("+(yyvsp[-4].grammerInfo)->text+")\n"+(yyvsp[-2].grammerInfo)->text+"\nelse\n"+(yyvsp[0].grammerInfo)->text);
-                free((yyvsp[-4].grammerInfo)); free((yyvsp[-2].grammerInfo)); free((yyvsp[0].grammerInfo));   
+  case 41: /* $@6: %empty  */
+#line 551 "parser.y"
+                           {
+                    //code 
+                    writeCode("JMP "+Lendif) ;
+                    writeCode(Lelse+":");
+                    //end 
+                }
+#line 2359 "y.tab.c"
+    break;
+
+  case 42: /* statement: ifprefix ELSE $@6 statement  */
+#line 556 "parser.y"
+                            {
+                (yyval.grammerInfo) = new grammer_info("statement: IF LPAREN expression RPAREN statement ELSE statement",(yyvsp[-3].grammerInfo)->text+"else\n"+(yyvsp[0].grammerInfo)->text);
                 
+                //code 
+                writeCode(Lendif+":");
+                //
+
+                free((yyvsp[-3].grammerInfo)); free((yyvsp[0].grammerInfo)); // free($9);   
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2698 "y.tab.c"
+#line 2374 "y.tab.c"
     break;
 
-  case 40: /* statement: IF LPAREN expression RPAREN statement  */
-#line 543 "parser.y"
-                                                                         {
-                (yyval.grammerInfo) = new grammer_info("statement: IF LPAREN expression RPAREN statement","if("+(yyvsp[-2].grammerInfo)->text+")\n"+(yyvsp[0].grammerInfo)->text);
-                free((yyvsp[-2].grammerInfo)); free((yyvsp[0].grammerInfo));
+  case 43: /* statement: ifprefix  */
+#line 566 "parser.y"
+                                            {
+                (yyval.grammerInfo) = new grammer_info("statement: IF LPAREN expression RPAREN statement",(yyvsp[0].grammerInfo)->text);
+                
+                //code
+                writeCode(Lelse+":"); 
+                //end 
 
+                free((yyvsp[0].grammerInfo)); //free($6);
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2709 "y.tab.c"
+#line 2389 "y.tab.c"
     break;
 
-  case 41: /* statement: WHILE LPAREN expression RPAREN statement  */
-#line 549 "parser.y"
+  case 44: /* statement: WHILE LPAREN expression RPAREN statement  */
+#line 576 "parser.y"
                                                       {
                 (yyval.grammerInfo) = new grammer_info("statement: WHILE LPAREN expression RPAREN statement","while("+(yyvsp[-2].grammerInfo)->text+")\n"+(yyvsp[0].grammerInfo)->text);
                 free((yyvsp[-2].grammerInfo)); free((yyvsp[0].grammerInfo));
 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2720 "y.tab.c"
+#line 2400 "y.tab.c"
     break;
 
-  case 42: /* statement: PRINTLN LPAREN variable RPAREN SEMICOLON  */
-#line 555 "parser.y"
+  case 45: /* statement: PRINTLN LPAREN variable RPAREN SEMICOLON  */
+#line 582 "parser.y"
                                                       {
                 (yyval.grammerInfo) = new grammer_info("statement: PRINTLN LPAREN ID RPAREN SEMICOLON","printf("+(yyvsp[-2].grammerInfo)->text+");");
+
+
+                //code
+                writeCode("MOV AX, ["+(yyvsp[-2].grammerInfo)->value+"]");
+                writeCode("CALL PRINT") ; 
+                //end 
+
                 free((yyvsp[-2].grammerInfo));
 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);  
             }
-#line 2731 "y.tab.c"
+#line 2418 "y.tab.c"
     break;
 
-  case 43: /* statement: RETURN expression SEMICOLON  */
-#line 561 "parser.y"
+  case 46: /* statement: RETURN expression SEMICOLON  */
+#line 595 "parser.y"
                                          {
                 (yyval.grammerInfo) = new grammer_info("statement: RETURN expression SEMICOLON","return "+(yyvsp[-1].grammerInfo)->text+";");
                 if( currentFunction == nullptr )
@@ -2748,11 +2435,11 @@ yyreduce:
 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2752 "y.tab.c"
+#line 2439 "y.tab.c"
     break;
 
-  case 44: /* statement: error SEMICOLON  */
-#line 577 "parser.y"
+  case 47: /* statement: error SEMICOLON  */
+#line 611 "parser.y"
                               {
                 // yyerror("syntax error, invalid statement");
 
@@ -2760,36 +2447,36 @@ yyreduce:
                 (yyval.grammerInfo) = new grammer_info("statement: error");
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2764 "y.tab.c"
+#line 2451 "y.tab.c"
     break;
 
-  case 45: /* expression_statement: SEMICOLON  */
-#line 586 "parser.y"
+  case 48: /* expression_statement: SEMICOLON  */
+#line 620 "parser.y"
                                 {
                         (yyval.grammerInfo) = new grammer_info("expression_statement: SEMICOLON",";");
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
 
                     }
-#line 2774 "y.tab.c"
+#line 2461 "y.tab.c"
     break;
 
-  case 46: /* expression_statement: expression SEMICOLON  */
-#line 591 "parser.y"
+  case 49: /* expression_statement: expression SEMICOLON  */
+#line 625 "parser.y"
                                            {
                         (yyval.grammerInfo) = new grammer_info("expression_statement: expression SEMICOLON",(yyvsp[-1].grammerInfo)->text+";");
                         
                         //code 
-                        writeCode("POP AX\n");
+                        writeCode("POP AX");
                         //end 
                         free((yyvsp[-1].grammerInfo));
 
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                     }
-#line 2789 "y.tab.c"
+#line 2476 "y.tab.c"
     break;
 
-  case 47: /* expression: logic_expression  */
-#line 602 "parser.y"
+  case 50: /* expression: logic_expression  */
+#line 636 "parser.y"
                              {
                 (yyval.grammerInfo) = new grammer_info("expression: logic_expression",(yyvsp[0].grammerInfo)->text);
                 (yyval.grammerInfo)->type = (yyvsp[0].grammerInfo)->type;
@@ -2800,37 +2487,51 @@ yyreduce:
                 //end 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2804 "y.tab.c"
+#line 2491 "y.tab.c"
     break;
 
-  case 48: /* expression: variable ASSIGNOP logic_expression  */
-#line 612 "parser.y"
-                                                 {
-                (yyval.grammerInfo) = new grammer_info("expression: variable ASSIGNOP logic_expression",(yyvsp[-2].grammerInfo)->text+"="+(yyvsp[0].grammerInfo)->text);
-                if( (yyvsp[-2].grammerInfo)->type != (yyvsp[0].grammerInfo)->type ){
-                    if( ((yyvsp[-2].grammerInfo)->type == _int_ && (yyvsp[0].grammerInfo)->type == _float_) || ((yyvsp[-2].grammerInfo)->type==_float_&&(yyvsp[0].grammerInfo)->type==_int_) ){
-                        (yyval.grammerInfo)->type = (yyvsp[-2].grammerInfo)->type; // type conversion 
+  case 51: /* $@7: %empty  */
+#line 646 "parser.y"
+                       {
+                //code 
+                if( (yyvsp[0].grammerInfo)->array == true ){
+                    writeCode("PUSH SI","saving the address SI") ;
+                }
+                //
+            }
+#line 2503 "y.tab.c"
+    break;
+
+  case 52: /* expression: variable $@7 ASSIGNOP logic_expression  */
+#line 652 "parser.y"
+                                        {
+                (yyval.grammerInfo) = new grammer_info("expression: variable ASSIGNOP logic_expression",(yyvsp[-3].grammerInfo)->text+"="+(yyvsp[0].grammerInfo)->text);
+                if( (yyvsp[-3].grammerInfo)->type != (yyvsp[0].grammerInfo)->type ){
+                    if( ((yyvsp[-3].grammerInfo)->type == _int_ && (yyvsp[0].grammerInfo)->type == _float_) || ((yyvsp[-3].grammerInfo)->type==_float_&& (yyvsp[0].grammerInfo)->type==_int_) ){
+                        (yyval.grammerInfo)->type = (yyvsp[-3].grammerInfo)->type; // type conversion 
                     }
                     else {
-                        writeError((yyvsp[-1].symbolInfo)->getName()+" operator ,"+"type mismatch "+(yyvsp[-2].grammerInfo)->type+(yyvsp[-1].symbolInfo)->getName()+(yyvsp[0].grammerInfo)->type);
+                        writeError((yyvsp[-1].symbolInfo)->getName()+" operator ,"+"type mismatch "+(yyvsp[-3].grammerInfo)->type+(yyvsp[-1].symbolInfo)->getName()+(yyvsp[0].grammerInfo)->type);
                         (yyval.grammerInfo)->type = _unknown_;
                     }
                 }
                 //code
                 // writeCode("MOV AX, [SP]\n");
-                writeCode("POP AX\n");
-                writeCode("MOV ["+(yyvsp[-2].grammerInfo)->value+"], AX\n"); 
-                writeCode("PUSH AX\n");
+                writeCode("POP AX");
+                if((yyvsp[-3].grammerInfo)->array == true )
+                    writeCode("POP SI","retrieving the address SI"); 
+                writeCode("MOV ["+(yyvsp[-3].grammerInfo)->value+"], AX"); 
+                writeCode("PUSH AX");
                 //end 
 
-                free((yyvsp[-2].grammerInfo)); free((yyvsp[-1].symbolInfo)); free((yyvsp[0].grammerInfo));
+                free((yyvsp[-3].grammerInfo)); free((yyvsp[0].grammerInfo)); free((yyvsp[-1].symbolInfo));
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2830 "y.tab.c"
+#line 2531 "y.tab.c"
     break;
 
-  case 49: /* variable: ID  */
-#line 634 "parser.y"
+  case 53: /* variable: ID  */
+#line 676 "parser.y"
                {
                 (yyval.grammerInfo) = new grammer_info((yyvsp[0].symbolInfo)->getName());
                 symbol* foundSymbol = symbolTable->lookup((yyvsp[0].symbolInfo)->getName());
@@ -2846,17 +2547,18 @@ yyreduce:
                     // writeCode("MOV DX, "+foundSymbol->getValue()+"\n");
                     // comment("load variable: "+foundSymbol->getName()) ;
                     (yyval.grammerInfo)->value = "BP+"+foundSymbol->getValue();
+                    (yyval.grammerInfo)->array = false ;
                 }
 
                 free((yyvsp[0].symbolInfo));
 
                 writeLog("variable: ID",(yyval.grammerInfo)->text);
             }
-#line 2856 "y.tab.c"
+#line 2558 "y.tab.c"
     break;
 
-  case 50: /* variable: ID LTHIRD expression RTHIRD  */
-#line 655 "parser.y"
+  case 54: /* variable: ID LTHIRD expression RTHIRD  */
+#line 698 "parser.y"
                                           {
                 (yyval.grammerInfo) = new grammer_info("variable: ID LTHIRD expression RTHIRD",(yyvsp[-3].symbolInfo)->getName()+"["+(yyvsp[-1].grammerInfo)->text+"]");
                 symbol* foundSymbol = symbolTable->lookup((yyvsp[-3].symbolInfo)->getName());
@@ -2883,23 +2585,23 @@ yyreduce:
                 
                 //code 
                 if( ok ){
-                    writeCode("POP BX\n");
-                    writeCode("SHL BX, 2\n");
-                    writeCode("NEG BX\n");
-                    writeCode("ADD BX, "+foundSymbol->getValue()+"\n");
-                    writeCode("ADD BX, BP\n");
+                    writeCode("POP SI");
+                    writeCode("SHL SI, 1");
+                    writeCode("NEG SI");
+                    writeCode("ADD SI, "+foundSymbol->getValue());
+                    // writeCode("ADD BX, BP");
                     // writeCode()
-                    (yyval.grammerInfo)->value = "BX";
+                    (yyval.grammerInfo)->value = "BP+SI";
                 }
                 //end 
                 free((yyvsp[-3].symbolInfo)); free((yyvsp[-1].grammerInfo));
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 2899 "y.tab.c"
+#line 2601 "y.tab.c"
     break;
 
-  case 51: /* logic_expression: rel_expression  */
-#line 694 "parser.y"
+  case 55: /* logic_expression: rel_expression  */
+#line 737 "parser.y"
                                    {
                         (yyval.grammerInfo) = new grammer_info(*(yyvsp[0].grammerInfo));
                         (yyval.grammerInfo)->name = "logic_expression: rel_expression";
@@ -2910,11 +2612,11 @@ yyreduce:
                         free((yyvsp[0].grammerInfo));
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                     }
-#line 2914 "y.tab.c"
+#line 2616 "y.tab.c"
     break;
 
-  case 52: /* logic_expression: rel_expression LOGICOP rel_expression  */
-#line 704 "parser.y"
+  case 56: /* logic_expression: rel_expression LOGICOP rel_expression  */
+#line 747 "parser.y"
                                                                     {
                         (yyval.grammerInfo) = new grammer_info("logic_expression: rel_expression LOGICOP rel_expression",(yyvsp[-2].grammerInfo)->text+" "+(yyvsp[-1].symbolInfo)->getName()+" "+(yyvsp[0].grammerInfo)->text);
                         if( (yyvsp[-2].grammerInfo)->type != _int_ || (yyvsp[0].grammerInfo)->type != _int_ )
@@ -2922,41 +2624,41 @@ yyreduce:
                         (yyval.grammerInfo)->type = _int_;
 
                         //code
-                        writeCode("POP BX\n");
-                        writeCode("POP AX\n"); 
+                        writeCode("POP BX");
+                        writeCode("POP AX"); 
                         if( (yyvsp[-1].symbolInfo)->getName() == "&&" ){
                             string L1 = newLabel(), L2 = newLabel() ;
-                            writeCode("CMP AX, 0\n");
-                            writeCode("JE "+L1+"\n");
-                            writeCode("CMP BX, 0\n");
-                            writeCode("JE "+L1+"\n");
-                            writeCode("PUSH 1\n");
-                            writeCode("JMP "+L2+"\n");
-                            writeCode(L1+":\n");
-                            writeCode("PUSH 0\n");
-                            writeCode(L2+":\n");
+                            writeCode("CMP AX, 0");
+                            writeCode("JE "+L1);
+                            writeCode("CMP BX, 0");
+                            writeCode("JE "+L1);
+                            writeCode("PUSH 1");
+                            writeCode("JMP "+L2);
+                            writeCode(L1+":");
+                            writeCode("PUSH 0");
+                            writeCode(L2+":");
                         } 
                         else if( (yyvsp[-1].symbolInfo)->getName() == "||") {
                              string L1 = newLabel(), L2 = newLabel() ;
-                            writeCode("CMP AX, 0\n");
-                            writeCode("JNE "+L1+"\n");
-                            writeCode("CMP BX, 0\n");
-                            writeCode("JNE "+L1+"\n");
-                            writeCode("PUSH 0\n");
-                            writeCode("JMP "+L2+"\n");
-                            writeCode(L1+":\n");
-                            writeCode("PUSH 1\n");
-                            writeCode(L2+":\n");
+                            writeCode("CMP AX, 0");
+                            writeCode("JNE "+L1);
+                            writeCode("CMP BX, 0");
+                            writeCode("JNE "+L1);
+                            writeCode("PUSH 0");
+                            writeCode("JMP "+L2);
+                            writeCode(L1+":");
+                            writeCode("PUSH 1sn");
+                            writeCode(L2+":");
                         }
                         //end  
 
                         free((yyvsp[-2].grammerInfo)); free((yyvsp[0].grammerInfo));
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text); }
-#line 2956 "y.tab.c"
+#line 2658 "y.tab.c"
     break;
 
-  case 53: /* rel_expression: simple_expression  */
-#line 742 "parser.y"
+  case 57: /* rel_expression: simple_expression  */
+#line 785 "parser.y"
                                       {
                         (yyval.grammerInfo) = new grammer_info(*(yyvsp[0].grammerInfo));
                         (yyval.grammerInfo)->name = "rel_expression: simple_expression";
@@ -2967,54 +2669,54 @@ yyreduce:
                         free((yyvsp[0].grammerInfo));
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                     }
-#line 2971 "y.tab.c"
+#line 2673 "y.tab.c"
     break;
 
-  case 54: /* rel_expression: simple_expression RELOP simple_expression  */
-#line 752 "parser.y"
+  case 58: /* rel_expression: simple_expression RELOP simple_expression  */
+#line 795 "parser.y"
                                                                         {
                         (yyval.grammerInfo) = new grammer_info("rel_expression: simple_expression RELOP simple_expression",(yyvsp[-2].grammerInfo)->text+(yyvsp[-1].symbolInfo)->getName()+(yyvsp[0].grammerInfo)->text);
                         (yyval.grammerInfo)->type = _int_;
                         (yyval.grammerInfo)->value = (yyvsp[-1].symbolInfo)->getName();
                         // code
-                        writeCode("POP BX\n");
-                        writeCode("POP AX\n") ;
-                        writeCode("CMP AX,BX\n");
+                        writeCode("POP BX");
+                        writeCode("POP AX") ;
+                        writeCode("CMP AX,BX");
                         string L1 = newLabel(), L2= newLabel() ;
                         
                         if( (yyvsp[-1].symbolInfo)->getName() == ">" ){
-                            writeCode("JG "+L1+"\n");
+                            writeCode("JG "+L1);
                         }
                         else if((yyvsp[-1].symbolInfo)->getName() == ">=" ){
-                            writeCode("JGE "+L1+"\n");
+                            writeCode("JGE "+L1);
                         }
                         else if( (yyvsp[-1].symbolInfo)->getName() == "<") {
-                            writeCode("JL "+L1+"\n");
+                            writeCode("JL "+L1);
                         }
                         else if( (yyvsp[-1].symbolInfo)->getName() == "<=") {
-                            writeCode("JLE "+L1+"\n");
+                            writeCode("JLE "+L1);
                         }
                         else if( (yyvsp[-1].symbolInfo)->getName() == "==") {
-                            writeCode("JE "+L1+"\n");
+                            writeCode("JE "+L1);
                         }
                         else if( (yyvsp[-1].symbolInfo)->getName() == "!=") {
-                            writeCode("JNE "+L1+"\n");
+                            writeCode("JNE "+L1);
                         }
-                        writeCode("PUSH 0\n");
-                        writeCode("JMP "+L2+"\n");
-                        writeCode(L1+":\n");
-                        writeCode("PUSH 1\n") ;
-                        writeCode(L2+":\n");
+                        writeCode("PUSH 0");
+                        writeCode("JMP "+L2);
+                        writeCode(L1+":");
+                        writeCode("PUSH 1") ;
+                        writeCode(L2+":");
                         // end 
 
                         free((yyvsp[-2].grammerInfo)); free((yyvsp[0].grammerInfo));
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                     }
-#line 3014 "y.tab.c"
+#line 2716 "y.tab.c"
     break;
 
-  case 55: /* simple_expression: term  */
-#line 791 "parser.y"
+  case 59: /* simple_expression: term  */
+#line 834 "parser.y"
                          {
                         (yyval.grammerInfo) = new grammer_info(*(yyvsp[0].grammerInfo));
                         (yyval.grammerInfo)->name = "simple_expression: term"; 
@@ -3025,11 +2727,11 @@ yyreduce:
                         free((yyvsp[0].grammerInfo));
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                     }
-#line 3029 "y.tab.c"
+#line 2731 "y.tab.c"
     break;
 
-  case 56: /* simple_expression: simple_expression ADDOP term  */
-#line 801 "parser.y"
+  case 60: /* simple_expression: simple_expression ADDOP term  */
+#line 844 "parser.y"
                                                            {
                         (yyval.grammerInfo) = new grammer_info("simple_expression: simple_expression ADDOP term",(yyvsp[-2].grammerInfo)->text+(yyvsp[-1].symbolInfo)->getName()+(yyvsp[0].grammerInfo)->text);
                         if( (yyvsp[-2].grammerInfo)->type != (yyvsp[0].grammerInfo)->type ){
@@ -3044,39 +2746,39 @@ yyreduce:
                         else (yyval.grammerInfo)->type=(yyvsp[-2].grammerInfo)->type ;
 
                         //code
-                        writeCode("POP AX\n");
-                        writeCode("POP BX\n"); 
+                        writeCode("POP AX");
+                        writeCode("POP BX"); 
                         if( (yyvsp[-1].symbolInfo)->getName() == "+") {
-                            writeCode("ADD BX, AX\n");
+                            writeCode("ADD BX, AX");
                         }
-                        else writeCode("SUB BX, AX\n");
-                        writeCode("PUSH BX\n") ;
+                        else writeCode("SUB BX, AX");
+                        writeCode("PUSH BX") ;
                         //end 
 
                         free((yyvsp[-2].grammerInfo)); free((yyvsp[0].grammerInfo));
 
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                     }
-#line 3061 "y.tab.c"
+#line 2763 "y.tab.c"
     break;
 
-  case 57: /* term: unary_expression  */
-#line 829 "parser.y"
+  case 61: /* term: unary_expression  */
+#line 872 "parser.y"
                          {
             (yyval.grammerInfo) = new grammer_info(*(yyvsp[0].grammerInfo));
             (yyval.grammerInfo)->name = "term: unary_expression";
             free((yyvsp[0].grammerInfo));
             // code 
-            writeCode("PUSH CX\n");
+            writeCode("PUSH CX");
             //end
             
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
         }
-#line 3076 "y.tab.c"
+#line 2778 "y.tab.c"
     break;
 
-  case 58: /* term: term MULOP unary_expression  */
-#line 839 "parser.y"
+  case 62: /* term: term MULOP unary_expression  */
+#line 882 "parser.y"
                                      {
             (yyval.grammerInfo) = new grammer_info("term: term MULOP unary_expression",(yyvsp[-2].grammerInfo)->text+(yyvsp[-1].symbolInfo)->getName()+(yyvsp[0].grammerInfo)->text);
             if( (yyvsp[-1].symbolInfo)->getName() == "%" ){
@@ -3096,18 +2798,18 @@ yyreduce:
             else (yyval.grammerInfo)->type = (yyvsp[-2].grammerInfo)->type ;
 
             //code 
-            writeCode("POP AX\n") ;
+            writeCode("POP AX") ;
             if( (yyvsp[-1].symbolInfo)->getName() == "*"){
-                writeCode("MUL CX\n");
-                writeCode("PUSH AX\n");
+                writeCode("MUL CX");
+                writeCode("PUSH AX");
             }
             else if( (yyvsp[-1].symbolInfo)->getName() == "/"){
-                writeCode("DIV CX\n");
-                writeCode("PUSH AX\n");
+                writeCode("DIV CX");
+                writeCode("PUSH AX");
             }
             else if( (yyvsp[-1].symbolInfo)->getName()=="%") {
-                writeCode("DIV CX\n") ;
-                writeCode("PUSH DX\n") ;
+                writeCode("DIV CX") ;
+                writeCode("PUSH DX") ;
             }
             //end 
 
@@ -3115,11 +2817,11 @@ yyreduce:
 
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text); 
         }
-#line 3119 "y.tab.c"
+#line 2821 "y.tab.c"
     break;
 
-  case 59: /* unary_expression: ADDOP unary_expression  */
-#line 878 "parser.y"
+  case 63: /* unary_expression: ADDOP unary_expression  */
+#line 921 "parser.y"
                                            {
                         (yyval.grammerInfo) = new grammer_info(*(yyvsp[0].grammerInfo));
                         (yyval.grammerInfo)->text = string((yyvsp[-1].symbolInfo)->getName()+(yyvsp[0].grammerInfo)->text);
@@ -3127,34 +2829,35 @@ yyreduce:
                         
                         //code 
                         if((yyvsp[-1].symbolInfo)->getName() == "-") 
-                            writeCode("NEG CX\n");
+                            writeCode("NEG CX");
                         //end code ;
                         
                         free((yyvsp[-1].symbolInfo));
 
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                     }
-#line 3138 "y.tab.c"
+#line 2840 "y.tab.c"
     break;
 
-  case 60: /* unary_expression: NOT unary_expression  */
-#line 892 "parser.y"
+  case 64: /* unary_expression: NOT unary_expression  */
+#line 935 "parser.y"
                                                   {
                         (yyval.grammerInfo) = new grammer_info("unary_expression: NOT unary_expression",(yyvsp[-1].symbolInfo)->getName()+(yyvsp[0].grammerInfo)->text);
                         (yyval.grammerInfo)->type = _int_;
                         //code 
-                        writeCode("NOT CX\n");
+                        writeCode("NOT CX");
+                        writeCode("AND CX, 1");
                         //end code ;
                         
                         
                         free((yyvsp[-1].symbolInfo)); free((yyvsp[0].grammerInfo));
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                     }
-#line 3154 "y.tab.c"
+#line 2857 "y.tab.c"
     break;
 
-  case 61: /* unary_expression: factor  */
-#line 903 "parser.y"
+  case 65: /* unary_expression: factor  */
+#line 947 "parser.y"
                                      {
                         (yyval.grammerInfo) = new grammer_info(*(yyvsp[0].grammerInfo));
                         (yyval.grammerInfo)->name = "unary_expression: factor"; 
@@ -3163,28 +2866,28 @@ yyreduce:
                         free((yyvsp[0].grammerInfo));
                         writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                     }
-#line 3167 "y.tab.c"
+#line 2870 "y.tab.c"
     break;
 
-  case 62: /* factor: variable  */
-#line 913 "parser.y"
+  case 66: /* factor: variable  */
+#line 957 "parser.y"
                  {
             (yyval.grammerInfo) = new grammer_info(*(yyvsp[0].grammerInfo));
             (yyval.grammerInfo)->name = "factor: variable"; 
             
             // code 
-            writeCode("MOV CX,["+(yyvsp[0].grammerInfo)->value+"]\n");
+            writeCode("MOV CX,["+(yyvsp[0].grammerInfo)->value+"]");
             // end code 
             
             free((yyvsp[0].grammerInfo));
 
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
         }
-#line 3184 "y.tab.c"
+#line 2887 "y.tab.c"
     break;
 
-  case 63: /* factor: ID LPAREN argument_list RPAREN  */
-#line 925 "parser.y"
+  case 67: /* factor: ID LPAREN argument_list RPAREN  */
+#line 969 "parser.y"
                                              {
             (yyval.grammerInfo) = new grammer_info("factor: ID LPAREN argument_list RPAREN",(yyvsp[-3].symbolInfo)->getName()+"("+(yyvsp[-1].grammerInfo)->text+")");
             symbol* foundSymbol = symbolTable->lookup((yyvsp[-3].symbolInfo)->getName());
@@ -3219,44 +2922,44 @@ yyreduce:
 
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
         }
-#line 3223 "y.tab.c"
+#line 2926 "y.tab.c"
     break;
 
-  case 64: /* factor: LPAREN expression RPAREN  */
-#line 959 "parser.y"
+  case 68: /* factor: LPAREN expression RPAREN  */
+#line 1003 "parser.y"
                                        {
             (yyval.grammerInfo) = new grammer_info("factor: LPAREN expression RPAREN","("+(yyvsp[-1].grammerInfo)->text+")");
             (yyval.grammerInfo)->type = (yyvsp[-1].grammerInfo)->type;
             
             //code 
-            writeCode("POP CX\n");
+            writeCode("POP CX");
             //
             
             free((yyvsp[-1].grammerInfo));
 
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
         }
-#line 3240 "y.tab.c"
+#line 2943 "y.tab.c"
     break;
 
-  case 65: /* factor: CONST_INT  */
-#line 971 "parser.y"
+  case 69: /* factor: CONST_INT  */
+#line 1015 "parser.y"
                         {
             (yyval.grammerInfo) = new grammer_info("factor: CONST_INT",(yyvsp[0].symbolInfo)->getName());
             (yyval.grammerInfo)->type = _int_;
 
             //code 
-            writeCode("MOV CX, "+(yyvsp[0].symbolInfo)->getName()+"\n") ;
+            writeCode("MOV CX, "+(yyvsp[0].symbolInfo)->getName()) ;
             // end code ;
             free((yyvsp[0].symbolInfo));
 
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);  
         }
-#line 3256 "y.tab.c"
+#line 2959 "y.tab.c"
     break;
 
-  case 66: /* factor: CONST_FLOAT  */
-#line 982 "parser.y"
+  case 70: /* factor: CONST_FLOAT  */
+#line 1026 "parser.y"
                           {
             (yyval.grammerInfo) = new grammer_info("factor: CONST_FLOAT",(yyvsp[0].symbolInfo)->getName());
             (yyval.grammerInfo)->type = _float_;
@@ -3264,11 +2967,11 @@ yyreduce:
 
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
         }
-#line 3268 "y.tab.c"
+#line 2971 "y.tab.c"
     break;
 
-  case 67: /* factor: variable INCOP  */
-#line 989 "parser.y"
+  case 71: /* factor: variable INCOP  */
+#line 1033 "parser.y"
                              {
             (yyval.grammerInfo) = new grammer_info("factor: variable INCOP",(yyvsp[-1].grammerInfo)->text+"++");
             (yyval.grammerInfo)->type = (yyvsp[-1].grammerInfo)->type ;
@@ -3276,11 +2979,11 @@ yyreduce:
 
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
         }
-#line 3280 "y.tab.c"
+#line 2983 "y.tab.c"
     break;
 
-  case 68: /* factor: variable DECOP  */
-#line 996 "parser.y"
+  case 72: /* factor: variable DECOP  */
+#line 1040 "parser.y"
                              {
             (yyval.grammerInfo) = new grammer_info("factor: variable DECOP",(yyvsp[-1].grammerInfo)->text+"--");
             (yyval.grammerInfo)->type = (yyvsp[-1].grammerInfo)->type ;
@@ -3288,11 +2991,11 @@ yyreduce:
 
             writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
         }
-#line 3292 "y.tab.c"
+#line 2995 "y.tab.c"
     break;
 
-  case 69: /* argument_list: arguments  */
-#line 1005 "parser.y"
+  case 73: /* argument_list: arguments  */
+#line 1049 "parser.y"
                           {
                     (yyval.grammerInfo) = new grammer_info("argument_list: arguments",(yyvsp[0].grammerInfo)->text);
                     (yyval.grammerInfo)->ids = (yyvsp[0].grammerInfo)->ids;
@@ -3300,11 +3003,11 @@ yyreduce:
 
                     writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
                 }
-#line 3304 "y.tab.c"
+#line 3007 "y.tab.c"
     break;
 
-  case 70: /* arguments: arguments COMMA logic_expression  */
-#line 1014 "parser.y"
+  case 74: /* arguments: arguments COMMA logic_expression  */
+#line 1058 "parser.y"
                                              {
                 (yyval.grammerInfo) = new grammer_info("arguments: arguments COMMA logic_expression",(yyvsp[-2].grammerInfo)->text+","+(yyvsp[0].grammerInfo)->text);
                 (yyval.grammerInfo)->ids = (yyvsp[-2].grammerInfo)->ids;
@@ -3313,11 +3016,11 @@ yyreduce:
 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 3317 "y.tab.c"
+#line 3020 "y.tab.c"
     break;
 
-  case 71: /* arguments: logic_expression  */
-#line 1022 "parser.y"
+  case 75: /* arguments: logic_expression  */
+#line 1066 "parser.y"
                                   {
                 (yyval.grammerInfo) = new grammer_info("arguments: logic_expression",(yyvsp[0].grammerInfo)->text);
                 (yyval.grammerInfo)->ids.push_back({"argument",(yyvsp[0].grammerInfo)->type,(yyvsp[0].grammerInfo)->array?1:-1});
@@ -3325,11 +3028,11 @@ yyreduce:
                 
                 writeLog((yyval.grammerInfo)->name,(yyval.grammerInfo)->text);
             }
-#line 3329 "y.tab.c"
+#line 3032 "y.tab.c"
     break;
 
 
-#line 3333 "y.tab.c"
+#line 3036 "y.tab.c"
 
       default: break;
     }
@@ -3554,7 +3257,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 1031 "parser.y"
+#line 1075 "parser.y"
 
 
 int main(int argc, char **argv){
@@ -3571,7 +3274,10 @@ int main(int argc, char **argv){
     codefile = fstream("code.asm", ios_base::out);
 
     codefile << "\.MODEL SMALL\n\.STACK 400H\n\.DATA\n" ;
-    codefile <<"\.CODE\n" ;
+    codefile<<"NUM_STR DB \'000000$\'\n";
+    codefile <<"\.CODE\nCALL main\n" ;
+    
+
     cout.rdbuf(logfile.rdbuf());
 
     activeFunctions.push(dummySymbol);
@@ -3579,7 +3285,45 @@ int main(int argc, char **argv){
     yyin = fp;
 
     yyparse();
-
+    
+    codefile <<"PRINT PROC\n"
+    "\tMOV BX, 8000H\n"
+    "\tAND BX, AX\n"
+    "\tCMP BX, 0\n"
+    "\tJZ NOT_NEG\n"
+    "\n"
+    "\tMOV BX, AX\n"
+    "\tMOV DL, 2DH\n"
+    "\tMOV AH, 2\n"
+    "\tINT 21H\n"
+    "\tMOV AX, BX\n"
+    "\tNEG AX\n"
+    "\n"
+    "\tNOT_NEG:\n"
+    "\tLEA SI, NUM_STR\n"
+    "\tADD SI, 6\n"
+    "\t\n"
+    "\tPRINT_LOOP:\n"
+    "\tDEC SI\n"
+    "\tMOV DX, 0\n"
+    "\tMOV CX, 10\n"
+    "\tDIV CX\n"
+    "\tADD DL, \'0\'\n"
+    "\tMOV [SI], DL\n"
+    "\n"
+    "\tCMP AX, 0\n"
+    "\tJNE PRINT_LOOP\n"
+    "\tMOV DX, SI \n"
+    "\tMOV AH, 9\n"
+    "\tINT 21H\n"
+    "\n"
+    "\tMOV DL, 0AH\n"
+    "\tMOV AH, 2\n"
+    "\tINT 21H\n"
+    "\tMOV DL, 0DH\n"
+    "\tINT 21H\n"
+    "\tRET\n"
+    "PRINT ENDP\n";
     fclose(fp);
     // delete symbolTable;
     free(symbolTable);

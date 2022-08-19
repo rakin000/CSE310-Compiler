@@ -36,6 +36,8 @@ int label_count = 0 ;
 string newLabel(){
     return "L"+to_string(label_count++);
 }
+string Lif,Lelse,Lendif;
+string pendingCode = "" ;
 
 
 void yyerror(const char *s){
@@ -47,12 +49,14 @@ void yyerror(const char *s){
 }
 
 #define writeLog(grammer,text) logfile<<"Line "<<line_count<<": "<<grammer<<"\n\n"<<text<<"\n"<<endl;
-#define comment(text) codefile<<"; Line "<<line_count<<": "<<text<<endl; 
+#define comment(text) codefile<<"; Line "<<line_count<<": "<<text; 
 
-void writeCode(string s){
+void writeCode(string s,string c=""){
     for(int i=0;i<tab_count;i++)
         codefile <<"\t" ;
     codefile<<s;
+    if( c!="" ) comment(c) ;
+    codefile<<"\n" ;
 }
 void writeError(string s){
     error_count++;
@@ -79,7 +83,7 @@ void writeError(string s){
 %type<grammerInfo> parameter_list compound_statement statements statement expression expression_statement 
 %type<grammerInfo> variable logic_expression rel_expression term factor simple_expression argument_list arguments 
 %type<grammerInfo> unary_expression
-
+%type<grammerInfo> ifprefix
 
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE 
@@ -87,8 +91,8 @@ void writeError(string s){
 
 %define parse.error verbose
 
-%destructor { free($<symbolInfo>$); } <symbolInfo>
-%destructor { free($<grammerInfo>$); } <grammerInfo>
+/* %destructor { free($<symbolInfo>$); } <symbolInfo>  */
+/* %destructor { free($<grammerInfo>$); } <grammerInfo> */
 
 %%
 start:  program {
@@ -139,7 +143,6 @@ var_declaration: type_specifier declaration_list SEMICOLON {
                     for(int i=0;i<$2->ids.size();i++){
                         $2->ids[i].type = $1->text;
                         symbol* foundSymbol = symbolTable->lookup_current($2->ids[i].name ) ; 
-
                         if( foundSymbol == nullptr ){
                             offset_bp -= 2;
                             dec_cnt++;
@@ -151,12 +154,13 @@ var_declaration: type_specifier declaration_list SEMICOLON {
                             symbolTable->insert(foundSymbol);
                             if( $2->ids[i].array_size != -1 ){
                                 offset_bp -= 2*($2->ids[i].array_size-1) ;
+                                dec_cnt += $2->ids[i].array_size-1;
                             }
 
                             // code 
                             if( symbolTable->current_scope()->get_id() == "1" ){
                                 // codefile << $2->ids[i].name << " DW " << "?\n";
-                                writeCode($2->ids[i].name+" DW "+"?\n");
+                                writeCode($2->ids[i].name+" DW "+"?");
                             } 
                             else {
                                 // writeCode("PUSH 0\n");
@@ -171,7 +175,7 @@ var_declaration: type_specifier declaration_list SEMICOLON {
                     }
                     //code 
                     if( symbolTable->current_scope()->get_id() != "1" ) 
-                        writeCode("ADD SP, "+to_string(dec_cnt*-2)+"\n");
+                        writeCode("ADD SP, "+to_string(dec_cnt*-2));
                     //end 
 
 
@@ -352,15 +356,13 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
 
                         //code 
                         // codefile << $2->getName() << " PROC: \n" ;
-                        writeCode($2->getName() +" PROC\n");
+                        writeCode($2->getName() +" PROC");
                         tab_count++;
                         if( $2->getName() == "main" ){
-                            writeCode("MOV AX, @DATA\n");
-                            writeCode("MOV DS, AX");
-                            comment("load data to DS");
+                            writeCode("MOV AX, @DATA");
+                            writeCode("MOV DS, AX","load data to DS");
                         }
-                        writeCode("MOV BP, SP\n") ;
-                        comment("save SP") ;
+                        writeCode("MOV BP, SP","save SP") ;
                         // end code 
                         offset_bp = 0;
                         
@@ -384,11 +386,11 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
 
                     // code 
                     if( $2->getName() == "main"){
-                        writeCode("MOV AH, 4CH\n") ;
-                        writeCode("INT 21H\n") ;
+                        writeCode("MOV AH, 4CH") ;
+                        writeCode("INT 21H") ;
                     }
                     --tab_count;
-                    writeCode($2->getName()+" ENDP\n") ;               
+                    writeCode($2->getName()+" ENDP") ;               
                     //end code 
 
                     offset_bp = 0;
@@ -422,15 +424,13 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                         inFunction = 1;
 
                         //code 
-                        writeCode($2->getName()+" PROC\n");
+                        writeCode($2->getName()+" PROC");
                         tab_count++;
                         if( $2->getName() == "main" ){
-                            writeCode("MOV AX, @DATA\n");
-                            writeCode("MOV DS, AX");
-                            comment("load data to DS");
+                            writeCode("MOV AX, @DATA");
+                            writeCode("MOV DS, AX","load data to DS");
                         }
-                        writeCode("MOV BP, SP\n") ;
-                        comment("save SP") ;
+                        writeCode("MOV BP, SP","save SP") ;
                         // end code 
 
                         offset_bp = 0;
@@ -439,11 +439,11 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                     
                     // code 
                     if( $2->getName() == "main"){
-                        writeCode("MOV AH, 4CH\n") ;
-                        writeCode("INT 21H\n") ;
+                        writeCode("MOV AH, 4CH") ;
+                        writeCode("INT 21H") ;
                     }
                     --tab_count;
-                    writeCode($2->getName()+" ENDP\n") ;               
+                    writeCode($2->getName()+" ENDP") ;               
                     //end code 
                     
                     offset_bp = 0; 
@@ -510,6 +510,22 @@ statements: statements statement {
                 writeLog($$->name,$$->text);
             }
             ;
+ifprefix : IF LPAREN expression RPAREN { 
+                    // Lif = newLabel();
+                    Lelse = newLabel();
+                    Lendif = newLabel();
+                    //code
+                    writeCode("POP AX");
+                    writeCode("CMP AX,0");
+                    writeCode("JE "+Lelse) ;
+                    // write
+                    //end
+                } statement {
+                    $$ = new grammer_info("statement: IF LPAREN expression RPAREN statement ELSE statement","if("+$3->text+")\n"+$6->text+"\n");
+                
+                    delete $3;
+                }
+            ;
 statement:  var_declaration {
                 $$ = new grammer_info("statement: var_declaration",$1->text);
                 free($1);
@@ -534,16 +550,29 @@ statement:  var_declaration {
                 
                 writeLog($$->name,$$->text);  
             }
-            |IF LPAREN expression RPAREN statement ELSE statement {
-                $$ = new grammer_info("statement: IF LPAREN expression RPAREN statement ELSE statement","if("+$3->text+")\n"+$5->text+"\nelse\n"+$7->text);
-                free($3); free($5); free($7);   
+            |ifprefix ELSE {
+                    //code 
+                    writeCode("JMP "+Lendif) ;
+                    writeCode(Lelse+":");
+                    //end 
+                } statement {
+                $$ = new grammer_info("statement: IF LPAREN expression RPAREN statement ELSE statement",$1->text+"else\n"+$4->text);
                 
+                //code 
+                writeCode(Lendif+":");
+                //
+
+                free($1); free($4); // free($9);   
                 writeLog($$->name,$$->text);
             }
-            |IF LPAREN expression RPAREN statement %prec LOWER_THAN_ELSE {
-                $$ = new grammer_info("statement: IF LPAREN expression RPAREN statement","if("+$3->text+")\n"+$5->text);
-                free($3); free($5);
+            |ifprefix %prec LOWER_THAN_ELSE {
+                $$ = new grammer_info("statement: IF LPAREN expression RPAREN statement",$1->text);
+                
+                //code
+                writeCode(Lelse+":"); 
+                //end 
 
+                free($1); //free($6);
                 writeLog($$->name,$$->text);
             }
             |WHILE LPAREN expression RPAREN statement {
@@ -554,6 +583,13 @@ statement:  var_declaration {
             }
             |PRINTLN LPAREN variable RPAREN SEMICOLON {
                 $$ = new grammer_info("statement: PRINTLN LPAREN ID RPAREN SEMICOLON","printf("+$3->text+");");
+
+
+                //code
+                writeCode("MOV AX, ["+$3->value+"]");
+                writeCode("CALL PRINT") ; 
+                //end 
+
                 free($3);
 
                 writeLog($$->name,$$->text);  
@@ -592,7 +628,7 @@ expression_statement: SEMICOLON {
                         $$ = new grammer_info("expression_statement: expression SEMICOLON",$1->text+";");
                         
                         //code 
-                        writeCode("POP AX\n");
+                        writeCode("POP AX");
                         //end 
                         free($1);
 
@@ -609,25 +645,33 @@ expression: logic_expression {
                 //end 
                 writeLog($$->name,$$->text);
             }
-            | variable ASSIGNOP logic_expression {
-                $$ = new grammer_info("expression: variable ASSIGNOP logic_expression",$1->text+"="+$3->text);
-                if( $1->type != $3->type ){
-                    if( ($1->type == _int_ && $3->type == _float_) || ($1->type==_float_&&$3->type==_int_) ){
+            | variable {
+                //code 
+                if( $1->array == true ){
+                    writeCode("PUSH SI","saving the address SI") ;
+                }
+                //
+            } ASSIGNOP logic_expression {
+                $$ = new grammer_info("expression: variable ASSIGNOP logic_expression",$1->text+"="+$4->text);
+                if( $1->type != $4->type ){
+                    if( ($1->type == _int_ && $4->type == _float_) || ($1->type==_float_&& $4->type==_int_) ){
                         $$->type = $1->type; // type conversion 
                     }
                     else {
-                        writeError($2->getName()+" operator ,"+"type mismatch "+$1->type+$2->getName()+$3->type);
+                        writeError($3->getName()+" operator ,"+"type mismatch "+$1->type+$3->getName()+$4->type);
                         $$->type = _unknown_;
                     }
                 }
                 //code
                 // writeCode("MOV AX, [SP]\n");
-                writeCode("POP AX\n");
-                writeCode("MOV ["+$1->value+"], AX\n"); 
-                writeCode("PUSH AX\n");
+                writeCode("POP AX");
+                if($1->array == true )
+                    writeCode("POP SI","retrieving the address SI"); 
+                writeCode("MOV ["+$1->value+"], AX"); 
+                writeCode("PUSH AX");
                 //end 
 
-                free($1); free($2); free($3);
+                free($1); free($4); free($3);
                 writeLog($$->name,$$->text);
             }
             ;
@@ -646,6 +690,7 @@ variable:   ID {
                     // writeCode("MOV DX, "+foundSymbol->getValue()+"\n");
                     // comment("load variable: "+foundSymbol->getName()) ;
                     $$->value = "BP+"+foundSymbol->getValue();
+                    $$->array = false ;
                 }
 
                 free($1);
@@ -678,13 +723,13 @@ variable:   ID {
                 
                 //code 
                 if( ok ){
-                    writeCode("POP BX\n");
-                    writeCode("SHL BX, 2\n");
-                    writeCode("NEG BX\n");
-                    writeCode("ADD BX, "+foundSymbol->getValue()+"\n");
-                    writeCode("ADD BX, BP\n");
+                    writeCode("POP SI");
+                    writeCode("SHL SI, 1");
+                    writeCode("NEG SI");
+                    writeCode("ADD SI, "+foundSymbol->getValue());
+                    // writeCode("ADD BX, BP");
                     // writeCode()
-                    $$->value = "BX";
+                    $$->value = "BP+SI";
                 }
                 //end 
                 free($1); free($3);
@@ -708,31 +753,31 @@ logic_expression:   rel_expression {
                         $$->type = _int_;
 
                         //code
-                        writeCode("POP BX\n");
-                        writeCode("POP AX\n"); 
+                        writeCode("POP BX");
+                        writeCode("POP AX"); 
                         if( $2->getName() == "&&" ){
                             string L1 = newLabel(), L2 = newLabel() ;
-                            writeCode("CMP AX, 0\n");
-                            writeCode("JE "+L1+"\n");
-                            writeCode("CMP BX, 0\n");
-                            writeCode("JE "+L1+"\n");
-                            writeCode("PUSH 1\n");
-                            writeCode("JMP "+L2+"\n");
-                            writeCode(L1+":\n");
-                            writeCode("PUSH 0\n");
-                            writeCode(L2+":\n");
+                            writeCode("CMP AX, 0");
+                            writeCode("JE "+L1);
+                            writeCode("CMP BX, 0");
+                            writeCode("JE "+L1);
+                            writeCode("PUSH 1");
+                            writeCode("JMP "+L2);
+                            writeCode(L1+":");
+                            writeCode("PUSH 0");
+                            writeCode(L2+":");
                         } 
                         else if( $2->getName() == "||") {
                              string L1 = newLabel(), L2 = newLabel() ;
-                            writeCode("CMP AX, 0\n");
-                            writeCode("JNE "+L1+"\n");
-                            writeCode("CMP BX, 0\n");
-                            writeCode("JNE "+L1+"\n");
-                            writeCode("PUSH 0\n");
-                            writeCode("JMP "+L2+"\n");
-                            writeCode(L1+":\n");
-                            writeCode("PUSH 1\n");
-                            writeCode(L2+":\n");
+                            writeCode("CMP AX, 0");
+                            writeCode("JNE "+L1);
+                            writeCode("CMP BX, 0");
+                            writeCode("JNE "+L1);
+                            writeCode("PUSH 0");
+                            writeCode("JMP "+L2);
+                            writeCode(L1+":");
+                            writeCode("PUSH 1sn");
+                            writeCode(L2+":");
                         }
                         //end  
 
@@ -754,34 +799,34 @@ rel_expression:     simple_expression {
                         $$->type = _int_;
                         $$->value = $2->getName();
                         // code
-                        writeCode("POP BX\n");
-                        writeCode("POP AX\n") ;
-                        writeCode("CMP AX,BX\n");
+                        writeCode("POP BX");
+                        writeCode("POP AX") ;
+                        writeCode("CMP AX,BX");
                         string L1 = newLabel(), L2= newLabel() ;
                         
                         if( $2->getName() == ">" ){
-                            writeCode("JG "+L1+"\n");
+                            writeCode("JG "+L1);
                         }
                         else if($2->getName() == ">=" ){
-                            writeCode("JGE "+L1+"\n");
+                            writeCode("JGE "+L1);
                         }
                         else if( $2->getName() == "<") {
-                            writeCode("JL "+L1+"\n");
+                            writeCode("JL "+L1);
                         }
                         else if( $2->getName() == "<=") {
-                            writeCode("JLE "+L1+"\n");
+                            writeCode("JLE "+L1);
                         }
                         else if( $2->getName() == "==") {
-                            writeCode("JE "+L1+"\n");
+                            writeCode("JE "+L1);
                         }
                         else if( $2->getName() == "!=") {
-                            writeCode("JNE "+L1+"\n");
+                            writeCode("JNE "+L1);
                         }
-                        writeCode("PUSH 0\n");
-                        writeCode("JMP "+L2+"\n");
-                        writeCode(L1+":\n");
-                        writeCode("PUSH 1\n") ;
-                        writeCode(L2+":\n");
+                        writeCode("PUSH 0");
+                        writeCode("JMP "+L2);
+                        writeCode(L1+":");
+                        writeCode("PUSH 1") ;
+                        writeCode(L2+":");
                         // end 
 
                         free($1); free($3);
@@ -812,13 +857,13 @@ simple_expression:  term {
                         else $$->type=$1->type ;
 
                         //code
-                        writeCode("POP AX\n");
-                        writeCode("POP BX\n"); 
+                        writeCode("POP AX");
+                        writeCode("POP BX"); 
                         if( $2->getName() == "+") {
-                            writeCode("ADD BX, AX\n");
+                            writeCode("ADD BX, AX");
                         }
-                        else writeCode("SUB BX, AX\n");
-                        writeCode("PUSH BX\n") ;
+                        else writeCode("SUB BX, AX");
+                        writeCode("PUSH BX") ;
                         //end 
 
                         free($1); free($3);
@@ -831,7 +876,7 @@ term:   unary_expression {
             $$->name = "term: unary_expression";
             free($1);
             // code 
-            writeCode("PUSH CX\n");
+            writeCode("PUSH CX");
             //end
             
             writeLog($$->name,$$->text);
@@ -855,18 +900,18 @@ term:   unary_expression {
             else $$->type = $1->type ;
 
             //code 
-            writeCode("POP AX\n") ;
+            writeCode("POP AX") ;
             if( $2->getName() == "*"){
-                writeCode("MUL CX\n");
-                writeCode("PUSH AX\n");
+                writeCode("MUL CX");
+                writeCode("PUSH AX");
             }
             else if( $2->getName() == "/"){
-                writeCode("DIV CX\n");
-                writeCode("PUSH AX\n");
+                writeCode("DIV CX");
+                writeCode("PUSH AX");
             }
             else if( $2->getName()=="%") {
-                writeCode("DIV CX\n") ;
-                writeCode("PUSH DX\n") ;
+                writeCode("DIV CX") ;
+                writeCode("PUSH DX") ;
             }
             //end 
 
@@ -882,7 +927,7 @@ unary_expression:   ADDOP unary_expression {
                         
                         //code 
                         if($1->getName() == "-") 
-                            writeCode("NEG CX\n");
+                            writeCode("NEG CX");
                         //end code ;
                         
                         free($1);
@@ -893,7 +938,8 @@ unary_expression:   ADDOP unary_expression {
                         $$ = new grammer_info("unary_expression: NOT unary_expression",$1->getName()+$2->text);
                         $$->type = _int_;
                         //code 
-                        writeCode("NOT CX\n");
+                        writeCode("NOT CX");
+                        writeCode("AND CX, 1");
                         //end code ;
                         
                         
@@ -915,7 +961,7 @@ factor: variable {
             $$->name = "factor: variable"; 
             
             // code 
-            writeCode("MOV CX,["+$1->value+"]\n");
+            writeCode("MOV CX,["+$1->value+"]");
             // end code 
             
             free($1);
@@ -961,7 +1007,7 @@ factor: variable {
             $$->type = $2->type;
             
             //code 
-            writeCode("POP CX\n");
+            writeCode("POP CX");
             //
             
             free($2);
@@ -973,7 +1019,7 @@ factor: variable {
             $$->type = _int_;
 
             //code 
-            writeCode("MOV CX, "+$1->getName()+"\n") ;
+            writeCode("MOV CX, "+$1->getName()) ;
             // end code ;
             free($1);
 
@@ -989,15 +1035,24 @@ factor: variable {
 	    | variable INCOP {
             $$ = new grammer_info("factor: variable INCOP",$1->text+"++");
             $$->type = $1->type ;
+            
+            //code 
+            writeCode("MOV CX,["+$1->value+"]");
+            //end 
+            
             free($1);
-
             writeLog($$->name,$$->text);
         } 
 	    | variable DECOP {
             $$ = new grammer_info("factor: variable DECOP",$1->text+"--");
             $$->type = $1->type ;
+            
+            //code 
+            writeCode("MOV CX,["+$1->value+"]");
+            //end 
+            
+            
             free($1);
-
             writeLog($$->name,$$->text);
         }
 	    ;
@@ -1044,7 +1099,10 @@ int main(int argc, char **argv){
     codefile = fstream("code.asm", ios_base::out);
 
     codefile << "\.MODEL SMALL\n\.STACK 400H\n\.DATA\n" ;
-    codefile <<"\.CODE\n" ;
+    codefile<<"NUM_STR DB \'000000$\'\n";
+    codefile <<"\.CODE\nCALL main\n" ;
+    
+
     cout.rdbuf(logfile.rdbuf());
 
     activeFunctions.push(dummySymbol);
@@ -1052,7 +1110,45 @@ int main(int argc, char **argv){
     yyin = fp;
 
     yyparse();
-
+    
+    codefile <<"PRINT PROC\n"
+    "\tMOV BX, 8000H\n"
+    "\tAND BX, AX\n"
+    "\tCMP BX, 0\n"
+    "\tJZ NOT_NEG\n"
+    "\n"
+    "\tMOV BX, AX\n"
+    "\tMOV DL, 2DH\n"
+    "\tMOV AH, 2\n"
+    "\tINT 21H\n"
+    "\tMOV AX, BX\n"
+    "\tNEG AX\n"
+    "\n"
+    "\tNOT_NEG:\n"
+    "\tLEA SI, NUM_STR\n"
+    "\tADD SI, 6\n"
+    "\t\n"
+    "\tPRINT_LOOP:\n"
+    "\tDEC SI\n"
+    "\tMOV DX, 0\n"
+    "\tMOV CX, 10\n"
+    "\tDIV CX\n"
+    "\tADD DL, \'0\'\n"
+    "\tMOV [SI], DL\n"
+    "\n"
+    "\tCMP AX, 0\n"
+    "\tJNE PRINT_LOOP\n"
+    "\tMOV DX, SI \n"
+    "\tMOV AH, 9\n"
+    "\tINT 21H\n"
+    "\n"
+    "\tMOV DL, 0AH\n"
+    "\tMOV AH, 2\n"
+    "\tINT 21H\n"
+    "\tMOV DL, 0DH\n"
+    "\tINT 21H\n"
+    "\tRET\n"
+    "PRINT ENDP\n";
     fclose(fp);
     // delete symbolTable;
     free(symbolTable);

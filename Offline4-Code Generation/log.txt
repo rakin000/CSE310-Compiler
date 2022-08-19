@@ -316,25 +316,29 @@ Line 6: unary_expression: factor
 
 b
 
+Line 6: unary_expression: NOT unary_expression
+
+!b
+
 Line 6: term: unary_expression
 
-b
+!b
 
 Line 6: simple_expression: term
 
-b
+!b
 
 Line 6: rel_expression: simple_expression
 
-b
+!b
 
 Line 6: logic_expression: rel_expression LOGICOP rel_expression
 
-a && b
+a && !b
 
 Line 6: expression: logic_expression
 
-a && b
+a && !b
 
 Line 7: factor: CONST_INT
 
@@ -506,7 +510,7 @@ c[1]=c[0];
 
 Line 9: statement: IF LPAREN expression RPAREN statement ELSE statement
 
-if(a && b)
+if(a && !b)
 c[0]++;
 else
 c[1]=c[0];
@@ -517,7 +521,7 @@ int a,b,c[3];
 a=1*(2+3)%3;
 b=1<5;
 c[0]=2;
-if(a && b)
+if(a && !b)
 c[0]++;
 else
 c[1]=c[0];
@@ -536,7 +540,7 @@ int a,b,c[3];
 a=1*(2+3)%3;
 b=1<5;
 c[0]=2;
-if(a && b)
+if(a && !b)
 c[0]++;
 else
 c[1]=c[0];
@@ -556,7 +560,7 @@ int a,b,c[3];
 a=1*(2+3)%3;
 b=1<5;
 c[0]=2;
-if(a && b)
+if(a && !b)
 c[0]++;
 else
 c[1]=c[0];
@@ -570,7 +574,7 @@ int a,b,c[3];
 a=1*(2+3)%3;
 b=1<5;
 c[0]=2;
-if(a && b)
+if(a && !b)
 c[0]++;
 else
 c[1]=c[0];
@@ -649,7 +653,7 @@ int a,b,c[3];
 a=1*(2+3)%3;
 b=1<5;
 c[0]=2;
-if(a && b)
+if(a && !b)
 c[0]++;
 else
 c[1]=c[0];
@@ -664,7 +668,7 @@ int a,b,c[3];
 a=1*(2+3)%3;
 b=1<5;
 c[0]=2;
-if(a && b)
+if(a && !b)
 c[0]++;
 else
 c[1]=c[0];
@@ -679,7 +683,7 @@ int a,b,c[3];
 a=1*(2+3)%3;
 b=1<5;
 c[0]=2;
-if(a && b)
+if(a && !b)
 c[0]++;
 else
 c[1]=c[0];
