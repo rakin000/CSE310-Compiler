@@ -36,8 +36,8 @@ int label_count = 0 ;
 string newLabel(){
     return "L"+to_string(label_count++);
 }
-string Lif,Lelse,Lendif;
-string pendingCode = "" ;
+string Lif,Lelse,Lend,Lbegin;
+queue<string> pendingCode;
 
 vector<string> temp ; 
 int temp_count = 0;
@@ -47,12 +47,13 @@ string newTemp() {
         temp.push_back(t) ;
         temp_count++;
     }
-    return temp[temp_count];
+    return temp[temp_count-1];
 }
 void removeTemp() {
     temp_count--;
     temp_count = max(0,temp_count) ;
 }
+int removeTempCount = 0;
 
 void yyerror(const char *s){
     error_count++;
@@ -527,7 +528,7 @@ statements: statements statement {
 ifprefix : IF LPAREN expression RPAREN { 
                     // Lif = newLabel();
                     Lelse = newLabel();
-                    Lendif = newLabel();
+                    Lend = newLabel();
                     //code
                     writeCode("POP AX");
                     writeCode("CMP AX,0");
@@ -548,8 +549,8 @@ statement:  var_declaration {
             }
             |expression_statement {
                 $$ = new grammer_info("statement: expression_statement",$1->text);
+                
                 free($1);
-
                 writeLog($$->name,$$->text);
             }
             |compound_statement {
@@ -558,7 +559,12 @@ statement:  var_declaration {
 
                 writeLog($$->name,$$->text);
             }
-            |FOR LPAREN expression_statement expression_statement expression RPAREN statement {
+            |FOR LPAREN expression_statement {
+                    Lbegin = newLabel() ;
+                    Lend = newLabel() ;
+
+                    writeCode(Lbegin+":", "begin for loop");
+                } expression_statement expression RPAREN statement {
                 $$ = new grammer_info("statement: FOR LPAREN expression_statement expression_statement expression RPAREN statement","for("+$3->text+$4->text+$5->text+")\n"+$7->text);
                 free($3); free($4); free($5); free($7);
                 
@@ -566,14 +572,14 @@ statement:  var_declaration {
             }
             |ifprefix ELSE {
                     //code 
-                    writeCode("JMP "+Lendif) ;
+                    writeCode("JMP "+Lend) ;
                     writeCode(Lelse+":");
                     //end 
                 } statement {
                 $$ = new grammer_info("statement: IF LPAREN expression RPAREN statement ELSE statement",$1->text+"else\n"+$4->text);
                 
                 //code 
-                writeCode(Lendif+":");
+                writeCode(Lend+":");
                 //
 
                 free($1); free($4); // free($9);   
@@ -589,10 +595,33 @@ statement:  var_declaration {
                 free($1); //free($6);
                 writeLog($$->name,$$->text);
             }
-            |WHILE LPAREN expression RPAREN statement {
-                $$ = new grammer_info("statement: WHILE LPAREN expression RPAREN statement","while("+$3->text+")\n"+$5->text);
-                free($3); free($5);
+            |WHILE LPAREN {
+                    Lbegin = newLabel() ;
+                    // Lif = newLabel(); 
+                    Lend = newLabel() ;
 
+                    writeCode(Lbegin+":", "begin while loop");
+                } expression {
+                    writeCode("POP AX");
+                    writeCode("CMP AX, 0");
+                    writeCode("PUSHF");
+                    while( !pendingCode.empty() ){
+                        writeCode(pendingCode.front()) ;
+                        pendingCode.pop();
+                    }
+                    while( removeTempCount ){
+                        removeTemp();
+                        removeTempCount-- ;
+                    }
+                    writeCode("POPF");
+                    writeCode("JE "+Lend) ;
+                } RPAREN statement {
+                $$ = new grammer_info("statement: WHILE LPAREN expression RPAREN statement","while("+$3->text+")\n"+$5->text);
+                
+                writeCode("JMP "+Lbegin);
+                writeCode(Lend+":","end while loop");
+                
+                free($3); free($5);
                 writeLog($$->name,$$->text);
             }
             |PRINTLN LPAREN variable RPAREN SEMICOLON {
@@ -600,7 +629,7 @@ statement:  var_declaration {
 
 
                 //code
-                writeCode("MOV AX, ["+$3->value+"]");
+                writeCode("MOV AX, [BP+"+$3->value+"]");
                 writeCode("CALL PRINT") ; 
                 //end 
 
@@ -643,6 +672,14 @@ expression_statement: SEMICOLON {
                         
                         //code 
                         writeCode("POP AX");
+                        while( !pendingCode.empty() ){
+                            writeCode(pendingCode.front()) ;
+                            pendingCode.pop();
+                        }
+                        while( removeTempCount ){
+                            removeTemp();
+                            removeTempCount-- ;
+                        }
                         //end 
                         free($1);
 
@@ -681,7 +718,7 @@ expression: logic_expression {
                 writeCode("POP AX");
                 if($1->array == true )
                     writeCode("POP SI","retrieving the address SI"); 
-                writeCode("MOV ["+$1->value+"], AX"); 
+                writeCode("MOV [BP+"+$1->value+"], AX"); 
                 writeCode("PUSH AX");
                 //end 
 
@@ -703,7 +740,7 @@ variable:   ID {
                 if( foundSymbol != nullptr ){
                     // writeCode("MOV DX, "+foundSymbol->getValue()+"\n");
                     // comment("load variable: "+foundSymbol->getName()) ;
-                    $$->value = "BP+"+foundSymbol->getValue();
+                    $$->value = ""+foundSymbol->getValue();
                     $$->array = false ;
                 }
 
@@ -743,7 +780,7 @@ variable:   ID {
                     writeCode("ADD SI, "+foundSymbol->getValue());
                     // writeCode("ADD BX, BP");
                     // writeCode()
-                    $$->value = "BP+SI";
+                    $$->value = "SI";
                 }
                 //end 
                 free($1); free($3);
@@ -790,7 +827,7 @@ logic_expression:   rel_expression {
                             writeCode("PUSH 0");
                             writeCode("JMP "+L2);
                             writeCode(L1+":");
-                            writeCode("PUSH 1sn");
+                            writeCode("PUSH 1");
                             writeCode(L2+":");
                         }
                         //end  
@@ -920,10 +957,12 @@ term:   unary_expression {
                 writeCode("PUSH AX");
             }
             else if( $2->getName() == "/"){
+                writeCode("MOV DX, 0", "to avoid overflow error");
                 writeCode("DIV CX");
                 writeCode("PUSH AX");
             }
             else if( $2->getName()=="%") {
+                writeCode("MOV DX, 0", "to avoid overflow error");
                 writeCode("DIV CX") ;
                 writeCode("PUSH DX") ;
             }
@@ -975,7 +1014,7 @@ factor: variable {
             $$->name = "factor: variable"; 
             
             // code 
-            writeCode("MOV CX,["+$1->value+"]");
+            writeCode("MOV CX,[BP+"+$1->value+"]");
             // end code 
             
             free($1);
@@ -1051,7 +1090,12 @@ factor: variable {
             $$->type = $1->type ;
             
             //code 
-            writeCode("MOV CX,["+$1->value+"]");
+            writeCode("MOV CX,[BP+"+$1->value+"]");
+            string t1 = newTemp() ;
+            writeCode("MOV "+t1+", "+$1->value);
+            pendingCode.push(string("MOV SI, "+t1));
+            pendingCode.push(string("INC [BP+SI]"));
+            removeTempCount++;
             //end 
             
             free($1);
@@ -1062,7 +1106,12 @@ factor: variable {
             $$->type = $1->type ;
             
             //code 
-            writeCode("MOV CX,["+$1->value+"]");
+            writeCode("MOV CX,[BP+"+$1->value+"]");
+            string t1 = newTemp() ;
+            writeCode("MOV "+t1+", "+$1->value);
+            pendingCode.push(string("MOV SI, "+t1));
+            pendingCode.push(string("DEC [BP+SI]"));
+            removeTempCount++;
             //end 
             
             
