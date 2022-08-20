@@ -380,8 +380,7 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                         }
                         writeCode("MOV BP, SP","save SP") ;
                         // end code 
-                        offset_bp = 0;
-                        
+                        offset_bp = 2;
                         for(int i=0;i<$4->ids.size();i++){
                             foundSymbol = symbolTable->lookup_current($4->ids[i].name);
                             if( foundSymbol == nullptr){
@@ -407,6 +406,9 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                     }
                     --tab_count;
                     writeCode($2->getName()+" ENDP") ;               
+                    if( $2->getName() == "main" ){
+                        writeCode("END MAIN");
+                    }
                     //end code 
 
                     offset_bp = 0;
@@ -459,7 +461,10 @@ func_definition:  type_specifier ID LPAREN parameter_list RPAREN {
                         writeCode("INT 21H") ;
                     }
                     --tab_count;
-                    writeCode($2->getName()+" ENDP") ;               
+                    writeCode($2->getName()+" ENDP") ;   
+                    if( $2->getName() == "main"){
+                        writeCode("END MAIN");
+                    }            
                     //end code 
                     
                     offset_bp = 0; 
@@ -684,8 +689,23 @@ statement:  var_declaration {
                     }
                     
                 }
-                free($2);
 
+                //code
+                writeCode("POP AX");
+                writeCode("PUSHF");
+                while( !pendingCode.empty() ){
+                    writeCode(pendingCode.front()) ;
+                    pendingCode.pop();
+                }
+                while( removeTempCount ){
+                    removeTemp();
+                    removeTempCount-- ;
+                }
+                writeCode("POPF");
+                writeCode("RET"); 
+                //end 
+
+                free($2);
                 writeLog($$->name,$$->text);
             }
             | error SEMICOLON {
@@ -1058,8 +1078,13 @@ factor: variable {
 
             writeLog($$->name,$$->text);
         } 
-	    | ID LPAREN argument_list RPAREN {
-            $$ = new grammer_info("factor: ID LPAREN argument_list RPAREN",$1->getName()+"("+$3->text+")");
+	    | ID {
+                //code 
+                writeCode("PUSH BP","save pointer to current variable start");
+                //end 
+            }
+            LPAREN argument_list RPAREN {
+            $$ = new grammer_info("factor: ID LPAREN argument_list RPAREN",$1->getName()+"("+$4->text+")");
             symbol* foundSymbol = symbolTable->lookup($1->getName());
            
             bool ok = 0;
@@ -1068,14 +1093,14 @@ factor: variable {
             }
             else if( !foundSymbol->isFunction() )
                 writeError("identifier "+$1->to_string()+" is not a function.");
-            else if( foundSymbol->getParams().size() != $3->ids.size() ){
+            else if( foundSymbol->getParams().size() != $4->ids.size() ){
                 writeError("identifier "+$1->to_string()+" doesn't match with the definition, number of args.");
             }  
             else {
                 int i ;
                 for(i=0;i<foundSymbol->getParams().size();i++)
-                    if( foundSymbol->getParams()[i].type != $3->ids[i].type){ //(foundSymbol->getParams()[i].array_size>0) != ($3->ids[i].array_size>0) 
-                        writeError( to_string(i+1)+"th argument type doesn't match with definition, defined "+foundSymbol->getParams()[i].type+", called by "+$3->ids[i].type);
+                    if( foundSymbol->getParams()[i].type != $4->ids[i].type){ //(foundSymbol->getParams()[i].array_size>0) != ($4->ids[i].array_size>0) 
+                        writeError( to_string(i+1)+"th argument type doesn't match with definition, defined "+foundSymbol->getParams()[i].type+", called by "+$4->ids[i].type);
                     }    
                 if( i == foundSymbol->getParams().size() )
                     ok = 1;    
@@ -1084,7 +1109,10 @@ factor: variable {
             
             //code 
             if( ok ) {
-                // writeCode("CALL "+found)
+                writeCode("CALL "+$1->getName()) ;
+                writeCode("MOV CX, AX");
+                writeCode("ADD SP, "+to_string($4->ids[i].size()*2) ) ;
+                writeCode("POP BP");
             }
             //endcode 
             
@@ -1160,8 +1188,8 @@ factor: variable {
 argument_list:  arguments {
                     $$ = new grammer_info("argument_list: arguments",$1->text);
                     $$->ids = $1->ids;
+                    
                     free($1);
-
                     writeLog($$->name,$$->text);
                 }
 			    ;
@@ -1170,15 +1198,18 @@ arguments:  arguments COMMA logic_expression {
                 $$ = new grammer_info("arguments: arguments COMMA logic_expression",$1->text+","+$3->text);
                 $$->ids = $1->ids;
                 $$->ids.push_back({"arg",$3->type,$3->array?1:-1});
+                
                 free($1); free($3);
-
                 writeLog($$->name,$$->text);
             }
 	        |logic_expression {
                 $$ = new grammer_info("arguments: logic_expression",$1->text);
                 $$->ids.push_back({"argument",$1->type,$1->array?1:-1});
-                free($1);
                 
+                //code
+                // writeCode("") 
+                //end 
+                free($1);
                 writeLog($$->name,$$->text);
             }
 	        ;
