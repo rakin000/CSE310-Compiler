@@ -1,9 +1,65 @@
 .MODEL SMALL
 .STACK 400H
 .DATA
-NUM_STR DB '000000$'    
-tmp0 dw ?
+NUM_STR DB '000000$'
 .CODE
+f PROC
+	MOV BP, SP; Line 1: save SP
+	MOV CX, 2
+	PUSH CX
+	MOV CX,[BP+2]
+	POP AX
+	MUL CX
+	PUSH AX
+	POP AX
+	PUSHF
+	POPF
+	RET
+	MOV CX, 9
+	PUSH CX
+	POP AX
+	MOV [BP+2], AX
+	PUSH AX
+	POP AX
+	PUSHF
+	POPF
+f ENDP
+g PROC
+	MOV BP, SP; Line 6: save SP
+	ADD SP, -2
+	PUSH BP; Line 8: save pointer to current variable start
+	MOV CX,[BP+2]
+	PUSH CX
+	CALL f
+	MOV CX, AX
+	ADD SP, 2
+	POP BP
+	PUSH CX
+	MOV CX,[BP+2]
+	PUSH CX
+	POP AX
+	POP BX
+	ADD BX, AX
+	PUSH BX
+	MOV CX,[BP+4]
+	PUSH CX
+	POP AX
+	POP BX
+	ADD BX, AX
+	PUSH BX
+	POP AX
+	MOV [BP+-2], AX
+	PUSH AX
+	POP AX
+	PUSHF
+	POPF
+	MOV CX,[BP+-2]
+	PUSH CX
+	POP AX
+	PUSHF
+	POPF
+	RET
+g ENDP  
 PRINT PROC
 	MOV BX, 8000H
 	AND BX, AX
@@ -45,65 +101,10 @@ PRINT ENDP
 
 main PROC
 	MOV AX, @DATA
-	MOV DS, AX; Line 1: load data to DS
-	MOV BP, SP; Line 1: save SP
-	ADD SP, -8
-	MOV CX, 0
-	PUSH CX
-	POP AX
-	MOV [BP+-4], AX
-	PUSH AX
-	POP AX
-	PUSHF
-	POPF
+	MOV DS, AX; Line 12: load data to DS
+	MOV BP, SP; Line 12: save SP
+	ADD SP, -4
 	MOV CX, 1
-	PUSH CX
-	POP AX
-	MOV [BP+-6], AX
-	PUSH AX
-	POP AX
-	PUSHF
-	POPF
-	MOV CX, 0
-	PUSH CX
-	POP AX
-	MOV [BP+-8], AX
-	PUSH AX
-	POP AX
-	PUSHF
-	POPF
-	L0:; Line 5: begin FOR loop
-	MOV CX,[BP+-8]
-	PUSH CX
-	MOV CX, 4
-	PUSH CX
-	POP BX
-	POP AX
-	CMP AX,BX
-	JL L4
-	PUSH 0
-	JMP L5
-	L4:
-	PUSH 1
-	L5:
-	POP AX
-	PUSHF
-	POPF
-	CMP AX, 0
-	JE L3
-	JMP L2
-	L1:; Line 5: FOR loop post operation
-	MOV CX,[BP+-8]
-	MOV tmp0, -8
-	PUSH CX
-	POP AX
-	PUSHF
-	MOV SI, tmp0
-	INC WORD [BP+SI]
-	POPF
-	JMP L0
-	L2:
-	MOV CX, 3
 	PUSH CX
 	POP AX
 	MOV [BP+-2], AX
@@ -111,36 +112,39 @@ main PROC
 	POP AX
 	PUSHF
 	POPF
-	L6:; Line 7: begin while loop
+	MOV CX, 2
+	PUSH CX
+	POP AX
+	MOV [BP+-4], AX
+	PUSH AX
+	POP AX
+	PUSHF
+	POPF
+	PUSH BP; Line 16: save pointer to current variable start
 	MOV CX,[BP+-2]
-	MOV tmp0, -2
 	PUSH CX
-	POP AX
-	CMP AX, 0
-	PUSHF
-	MOV SI, tmp0
-	DEC WORD [BP+SI]
-	POPF
-	JE L7
 	MOV CX,[BP+-4]
-	MOV tmp0, -4
+	PUSH CX
+	CALL g
+	MOV CX, AX
+	ADD SP, 4
+	POP BP
 	PUSH CX
 	POP AX
+	MOV [BP+-2], AX
+	PUSH AX
+	POP AX
 	PUSHF
-	MOV SI, tmp0
-	INC WORD [BP+SI]
 	POPF
-	JMP L6
-	L7:; Line 9: end while loop
-	JMP L1
-	L3:; Line 10: FOR loop end
 	MOV AX, [BP+-2]
 	CALL PRINT
-	MOV AX, [BP+-4]
-	CALL PRINT
-	MOV AX, [BP+-6]
-	CALL PRINT
+	MOV CX, 0
+	PUSH CX
+	POP AX
+	PUSHF
+	POPF
+	RET
 	MOV AH, 4CH
 	INT 21H
 main ENDP
-end main
+END MAIN

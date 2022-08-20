@@ -1111,7 +1111,7 @@ factor: variable {
             if( ok ) {
                 writeCode("CALL "+$1->getName()) ;
                 writeCode("MOV CX, AX");
-                writeCode("ADD SP, "+to_string($4->ids[i].size()*2) ) ;
+                writeCode("ADD SP, "+to_string($4->ids.size()*2) ) ;
                 writeCode("POP BP");
             }
             //endcode 
