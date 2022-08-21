@@ -1385,8 +1385,8 @@ int main(int argc, char **argv){
         }
         tfile.close() ;
     }
-    else final_code<<"\n"<<endl ;
-
+    else final_code<<endl ;
+    
     final_code.close() ;
 // coptimize 
     optimize_code("code.asm");
