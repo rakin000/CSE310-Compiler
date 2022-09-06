@@ -1,1 +1,3 @@
-Hopefully i will be making a compiler
+CSE310-Compiler
+=====================
+Simple C compiler
